@@ -10,7 +10,7 @@ for( let property in user) {
 let key = prompt("What do you want to know about the user?", "name");
   
 // access by variable
-alert( key in user); // John (if enter "name")
+alert(key in user); // John (if enter "name")
 
 let __proto__ = prompt("Which fruit to buy?", "apple");
 
@@ -72,7 +72,7 @@ alert(sum); */
 
 //TASK4:Multiply numeric properties by 2
 
-function multiplyNumeric(obj) {
+/* function multiplyNumeric(obj) {
   for (let prop in obj) {
     if (typeof obj[prop] == "number") {
       obj[prop] *= 2;
@@ -93,4 +93,67 @@ multiplyNumeric(menu);
 
 for (let key2 in menu) {
   alert(menu[key2]);
-}
+} */
+
+
+/* let user = {
+    name: "John",
+    age: 30,
+  
+    sayHi() {
+      alert( this.name ); // leads to an error
+    }
+  
+  };
+  
+  
+  let admin = user;
+
+ /*  user = null;
+  admin.sayHi(); */
+
+/*   user = null;
+for(let key in admin) {
+  alert(key)
+} */
+
+/* let user = {};
+
+let admin = user;
+admin.name = "asdbjdf";
+user = null;
+alert(admin.name); */
+
+/* 
+function makeUser() {
+  return {
+    name: "John",
+    ref() {
+      return this;
+    }
+  };
+};
+
+let user = makeUser();
+
+alert( user.ref().name ); // John
+ */
+
+let calculator = {
+  read() { 
+    this.x = +prompt('x?', '');
+    this.y = +prompt('y?', '');
+  },
+  sum() {
+    let sum = this.x + this.y;
+    return sum;
+  },
+  mul() {
+    let mul = this.x * this.y;
+    return mul;
+  }
+};
+
+calculator.read();
+alert( calculator.sum() );
+alert( calculator.mul() );
