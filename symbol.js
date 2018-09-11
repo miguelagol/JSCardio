@@ -14,6 +14,3 @@ let id2 = Symbol.for("name");
 
 
 alert( Symbol.keyFor(Symbol.for("name")) );
-
-
-  

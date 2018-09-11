@@ -1,5 +1,5 @@
 "use strict"
-let login = prompt("Who's there?", '');
+/* let login = prompt("Who's there?", '');
 if (login == "Admin") {
     let password = prompt("Password?", '');
     if (password == "TheMaster") {
@@ -17,4 +17,5 @@ else if (login == '' || login == null) {
 }
 else {
     alert("I don't know you");
-}
+} */
+
