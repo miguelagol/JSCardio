@@ -1,216 +1,90 @@
-/* let str = "Hello";
-console.log(str.toUpperCase());
-console.log(str.test); */
+/* --------------------REMEMBER--------------------
+There are 7 basic types in JavaScript.
+    - number - for numbers of any kind: integer or floating-point.
+    - string - for strings. A string may have one or more characters, there’s no separate single-character type.
+    - boolean - for true/false.
+    - null - for unknown values – a standalone type that has a single value null.
+    - undefined - for unassigned values – a standalone type that has a single value undefined.
+    - object - for more complex data structures.
+    - symbol - for unique identifiers.
+*/
 
-/* let str = "konr";
-let str2;
-str2 = str[0].toUpperCase() + str[1] + str[2] + str[3];
+// NUMBER
+let n = 27;
+n = 15.42;
 
+// Besides regular numbers, there are so-called “special numeric values” which also belong to that type: Infinity, -Infinity and NaN.
 
-console.log(str2) */
-
-
-/* // NUMBERS TASK 1 - Sum numbers from the visitor
-
-let x = +prompt('Enter the first number', 0);
-let y = +prompt('Enter the second number', 0);
-
-alert(x + y); */
-
-// NUMBERS TASK 2 - Repeat until the input is a number
-
-/* function readNumber() {
-    let num;
-    while (!isFinite(num)) {
-        num = +prompt('Enter the numeric value', 0);
-    };
-    if (num === null || num === '') {
-        alert(null);
-    }
-    else alert(num);
-}
-
-readNumber(); */
-
-// STRINGS TASK 1 - Uppercast the first character
-/* //Vol1
-function ucFirst(str) {
-    let len = str.length;
-    let strUC;
-    strUC = str[0].toUpperCase();
-    for (i = 1; i < len; i++) {
-        strUC += str[i]
-    }
-    alert(strUC);
-}
+console.log(1 / 0); // Infinity
+console.log('not a number' / 3 + 4); // NaN
 
 
-let string = prompt('Enter a word', '');
-ucFirst(string);
+// STRING
+// In JavaScript, there are 3 types of quotes.
 
-//Vol2
-function ucFirst2(str) {
-    console.log(str[0].toUpperCase() + str.slice(1));
-}
+let str = "Hello"; // Double quotes
+let str2 = 'Hello'; // Single quotes
+let str3 = `Hello`; // Backticks - They allow us to embed variables and expressions into a string by wrapping them in ${…}
 
-ucFirst2("zbysio") */
+// embed a variiable
+console.log(`Hi, Hey, ${str}`); // Hi, Hey, Hello
 
-//STRINGS TASK 2 - CHeck for spam
+// embed an expresion
+console.log(`The result is ${1 + 2}`); // The result is 3
 
-/* function checkSpam(str) {
-    str = str.toLowerCase();
-    if ( str.includes('viagra') || str.includes('xxx') ) {
-        console.log(true);
-    }
-    else { console.log(false) }
-}
-
-checkSpam('buy ViAgRa now');
-checkSpam('free xxxxxx');
-checkSpam('innocent rabbit');
- */
-
-//STRINGS TASK 3 - Truncate the string
-
-/* function truncate(str, maxlength) {
-    let length = str.length;
-    if (length > maxlength) {
-        console.log(str.substring(0, maxlength - 1) + "...")
-    }
-    else console.log(str)
-}
-
-truncate("What I'd like to tell on this topic is:", 20);
-truncate("Hi everyone!", 20);
- */
+console.log("The result is ${1+2}"); // The result is ${1+2}
 
 
-// STRINGS TASK 4 - Extract the money
+// BOOLEAN
+// The boolean type has only two values: true and false
 
-/* function extractCurrencyValue(str) {
-    console.log( +str.substring(1) );
-}
-
-extractCurrencyValue('$120'); */
+let nameFieldChecked = true;
+let ageFieldChecked = false;
 
 
-/* let array = [ "one", "two", "three"];
+// NULL value
+// It’s just a special value which has the sense of “nothing”, “empty” or “value unknown”
 
-console.log(array);
-array[3] = "four"
-console.log(array);
-console.log(array.length);
-array.pop();
-console.log(array.pop());
-array.push("four");
-console.log(array);
-array.shift();
-console.log(array);
-array.unshift("one");
-console.log(array)
-
-let array2 = [];
-array2[9] = 5;
-array2.name = "array";
-console.log(array2);
-for (let key of array2) {
-    console.log(key)
-} */
-/* for (let key2 in array2) {   // we shouldn't use for..in for arrays
-    console.log(key2)
-} */
+let age = null;
 
 
-// ARRAYS TASK 2 - Array operations
+// UNDEFINED value
+// The meaning of undefined is “value is not assigned”
 
-/* let styles = ["Jazz", "Blues"];
-console.log(styles);
-styles[2] = "Rock-n-Roll";
-console.log(styles);
-function replaceMiddle(array) {
-    if (array.length%2 !== 0) {
-        array[array.length - 2] = "Classics"
-    }
-}
-replaceMiddle(styles);
-console.log(styles);
-styles.shift();
-console.log(styles);
-styles.unshift("Rap", "Reggae");
-console.log(styles);
-
-// ARRAYS TASK 3 - Calling in an array context
-let arr = ["a", "b"];
-
-arr.push(function() {
-  console.log( this );
-})
-
-arr[2](); */
-
-// ARRAYS TASK 4 - Sum input numbers
-
-/* function sumInput() {
-    let numbers = [];
-
-    while (true) {
-        let input = prompt('Enter a value want to add?', 0);
-
-        if (input == "" || input == null || !isFinite(input)) break;
-            
-        numbers.push(+input);
-    }
-
-    let sum = 0
-    for (let number of numbers) {
-        sum += number;
-    }
-    
-    alert(sum);
-}
-sumInput(); */
-
-// ARRAYS TASK 5 - Create an extendable calculator
-
-/* function Calculator() {
-    calculate(str) {
-
-    }
-}
-
-let calc = new Calculator();
-alert ( calc.calculate("3 + 7") ); */
-
-//ARRAYS TASK 6 - A maximal subarray
-
-function getMaxSubSum(arr) {
-    let subarray = 0;
-    for (let i = 0; i < arr.length; i++) {
-        let sum = 0;
-        for (let j = i; j < arr.length; j++) {
-            sum += arr[j];
-            subarray = Math.max(sum, subarray);
-        }
-    }
-    console.log(subarray);
-}
-
-getMaxSubSum([-1, 2, 3, -9]);
-getMaxSubSum([2, -1, 2, 3, -9]);
-getMaxSubSum([-1, 2, 3, -9, 11]);
-getMaxSubSum([-2, -1, 1, 2]);
-getMaxSubSum([100, -9, 2, -3, 5]);
-getMaxSubSum([1, 2, 3]);
-getMaxSubSum([-1, -2, -3]);
+let x;
+console.log(x); // undefined
 
 
-let arr = ["I", "study", "JavaScript", "right", "now"];
+// The TYPEOF operator
+/*  
+The typeof operator returns the type of the argument.
+It supports two forms of syntax:
+    - As an operator: typeof x.
+    - Function style: typeof(x).
+*/
 
-// remove 3 first elements and replace them with another
-arr.splice(0, 3, "Let's", "dance");
+console.log(typeof 6); // number
+console.log(typeof "6"); // string
+console.log(typeof "John"); // string
+console.log(typeof 0); // number
+console.log(typeof null); // object !!! - This is an officially recognized ERROR of typeof
+console.log(typeof undefined); // undefined
+console.log(typeof true); // boolean
+console.log(typeof Symbol("id")); // symbol
+console.log(typeof Math); // object
 
-alert(arr) // now ["Let's", "dance", "right", "now"]
 
-let removed = arr.splice(0, 2);
+/* --------------------REMEMBER--------------------
+The typeof operator allows us to see which type is stored in the variable.
+    - Two forms: typeof x or typeof(x).
+    - Returns a string with the name of the type, like "string".
+    - For null returns "object" – that’s an error in the language, it’s not an object in fact.
+*/
 
-alert(removed); // "I", "study" <-- array of removed elements
+
+// TASK 1 - What is the output of the script?
+let name = "John";
+
+console.log(`Hello ${1}`); // Hello 1
+console.log(`Hello ${"name"}`); // Hello name
+console.log(`Hello ${name}`); // Hello John
