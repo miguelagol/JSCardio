@@ -32,6 +32,7 @@ console.log(message); // Hello world!
     - Variable naming - The name must contain only letters, digits, symbols $ and _. The first character must not be a digit.
 */
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // CONSTANTS
 // To declare a constant (unchanging) variable, one can use const instead of let

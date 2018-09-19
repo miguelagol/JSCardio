@@ -18,6 +18,7 @@ n = 15.42;
 console.log(1 / 0); // Infinity
 console.log('not a number' / 3 + 4); // NaN
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // STRING
 // In JavaScript, there are 3 types of quotes.
@@ -34,6 +35,7 @@ console.log(`The result is ${1 + 2}`); // The result is 3
 
 console.log("The result is ${1+2}"); // The result is ${1+2}
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // BOOLEAN
 // The boolean type has only two values: true and false
@@ -41,12 +43,14 @@ console.log("The result is ${1+2}"); // The result is ${1+2}
 let nameFieldChecked = true;
 let ageFieldChecked = false;
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // NULL value
 // It’s just a special value which has the sense of “nothing”, “empty” or “value unknown”
 
 let age = null;
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // UNDEFINED value
 // The meaning of undefined is “value is not assigned”
@@ -54,6 +58,7 @@ let age = null;
 let x;
 console.log(x); // undefined
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // The TYPEOF operator
 /*  
@@ -81,6 +86,7 @@ The typeof operator allows us to see which type is stored in the variable.
     - For null returns "object" – that’s an error in the language, it’s not an object in fact.
 */
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - What is the output of the script?
 let name = "John";
