@@ -52,10 +52,12 @@ console.log(true == [1]);
 console.log(false == 0);
 console.log(false == "0");
 console.log(false == "");
+console.log(false == " ");
 console.log(false == []);
 console.log(false == [[]]);
 console.log(false == [0]);
 console.log(0 == "");
+console.log(0 == " ");
 console.log(0 == []);
 console.log(0 == [[]]);
 console.log(null == undefined);
@@ -64,6 +66,7 @@ console.log(null == 0);
 console.log("0" == '');
 console.log("0" == []);
 console.log('' == [0]);
+console.log("" == " ");
 
 // Remember that for maths and other comparisons < > <= >= values null/undefined are converted to a number.
 // Null becomes 0, while undefined becomes NaN.
