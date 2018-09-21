@@ -149,6 +149,55 @@ console.log(c, d); // 2 1
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Logical operators
+// OR ||
+// result = a || b;
+console.log(true || true); // true
+console.log(true || false); // true
+console.log(false || true); // true
+console.log(false || false); // false
+
+// Multiple OR ||
+// result = value1 || value2 || value3;
+/*  OR seeks the first truthy value.
+    The OR || operator does the following:
+    - Evaluate operands from left to right.
+    - For each operand, convert it to boolean. If the result is true, then stop and return the original value of that operand.
+    - If all other operands have been assessed (i.e. all were false), return the last operand.
+*/
+console.log(1 || 0); // 1 (1 is truthy)
+console.log(true || 'no matter what'); // true (true is truthy)
+console.log(null || 1); // 1 (1 is the first truthy value)
+console.log(null || 0 || 1); // 1 (the first truthy value)
+console.log(undefined || null || 0); // 0 (all falsy, returns the last value)
+
+// AND &&
+// result = a && b;
+console.log( true && true ); // true
+console.log( false && true ); // false
+console.log( true && false ); // false
+console.log( false && false ); // false
+
+// Multiple AND &&
+// result = value1 && value2 && value3;
+/*  AND seeks the first falsy value.
+    The AND && operator does the following:
+    - Evaluate operands from left to right.
+    - For each operand, convert it to a boolean. If the result is false, stop and return the original value of that operand.
+    - If all other operands have been assessed (i.e. all were truthy), return the last operand.
+*/
+console.log( 1 && 0 ); // 0, (because first operand is truthy)
+console.log( 1 && 5 ); // 5 (both operands are truthy)
+console.log( null && 5 ); // null
+console.log( 0 && "no matter what" ); // 0
+
+// NOT !
+// result = !value;
+console.log( !true ); // false
+console.log( !0 ); // true
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
 // Modify-in-place
 
 let n = 2;
@@ -166,3 +215,47 @@ console.log(m); // 20
 // Each of them is evaluated, but the result of only the last one is returned.
 let a = (1 + 2, 3 + 4);
 console.log(a); // 7 (the result of 3 + 4)
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - What the code below will output?
+console.log( console.log(1) || 2 || console.log(3) );
+
+// first 1 and then 2, because
+// The call to console.log() does not return a value, it returns undefined.
+console.log(typeof(console.log(1)));
+/*  1. The first OR || evaluates it’s left operand console.log(1). That shows the first message with 1.
+    2. The console.log returns undefined, so OR goes on to the second operand searching for a truthy value.
+    3. The second operand 2 is truthy, so the execution is halted, 2 is returned and then shown in output.
+*/
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 2 - What will this code show?
+console.log( console.log(1) && console.log(3) ); // first 1 and then undefined
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 - What will be the result?
+console.log( null || 2 && 3 || 4 ); // 3
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - Check the range between 14 and 90
+let age = prompt('How old are you?', 0);
+if (age <= 14) {
+    alert("The age is <= 14");
+} else if (age >= 90) {
+    alert("The age is >= 90");
+} else {
+    alert("The age is between 14 and 90");
+}
+
+// let (age >= 14 && age <= 90)
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Check the range outside
+let (age < 14 || age > 90)
+
+// let (!(age >= 14 && age <= 90))
