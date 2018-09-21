@@ -52,6 +52,10 @@ console.log(Boolean(null)); // false
 console.log(Boolean(undefined)); // false
 console.log(Boolean(NaN)); // false
 
+// We can use a double NOT! - but it's not recomended
+console.log(!!"123");
+console.log(!!"0");
+console.log(!!0);
 
 /* --------------------REMEMBER--------------------
 The notable exceptions where people usually make mistakes are:
