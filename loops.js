@@ -67,6 +67,47 @@ for (; k < 3;) {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Breaking the loop
+// We can force the exit loop at any moment. There’s a special break directive for that.
+let sum = 0;
+
+while (true) {
+    let value = +prompt("Enter a number", '');
+    if (!value) break; // break loop when no number is entered
+    sum += value;
+}
+
+alert('Sum: ' + sum);
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Continue to the next iteration
+/*  The continue directive is a “lighter version” of break. It doesn’t stop the whole loop.
+    Instead it stops the current iteration and forces the loop to start a new one (if the condition allows).
+*/
+for (let i = 0; i < 10; i++) {
+    if (i % 2 == 0) continue; // if true, skip the remaining part of the body
+    console.log(i); // 1, 3, 5, 7, 9
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Labels for break/continue
+/*  labelName: for (...) {
+        ...
+    }
+*/
+// The break <labelName> statement in the loop breaks out to the label.
+outer: for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+        let input = prompt(`Value at coords (${i},${j})`, '');
+        if (!input) break outer; // if an empty string or canceled, then break out of both loops
+    }
+}
+alert('Done!');
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - What is the last value alerted by this code? 
 let i = 3;
 
@@ -91,10 +132,10 @@ while (j++ < 5) console.log(j);   // 1, 2, 3, 4, 5
 
 // TASK 3 - Which values get shown by the "for" loop?
 // prefix
-for (let i = 0; i < 5; i++) console.log( i );   // 0, 1, 2, 3, 4
+for (let i = 0; i < 5; i++) console.log(i);   // 0, 1, 2, 3, 4
 
 // postfix
-for (let j = 0; j < 5; ++j) console.log( j );   // 0, 1, 2, 3, 4
+for (let j = 0; j < 5; ++j) console.log(j);   // 0, 1, 2, 3, 4
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
