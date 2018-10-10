@@ -25,12 +25,23 @@ let user = {
 // "this" in methods
 // The value of this is evaluated during the run-time.
 
+//-------------------REMEMBER------------------
+/*  1.  Look to where the function was invoked.
+    2.  Is there an object to the left of the dot? If so, that’s what the “this” keyword is referencing. If not, continue to #3.
+    3.  Was the function invoked with “call”, “apply”, or “bind”? If so, it’ll explicitly state what the “this” keyword is referencing. If not, continue to #4.
+    4.  Was the function invoked using the “new” keyword? If so, the “this” keyword is referencing the newly created object that was made by the JavaScript interpretor.
+        If not, continue to #5.
+    5.  Is “this” inside of an arrow function? If so, its reference may be found lexically in the enclosing (parent) scope. If not, continue to #6.
+    6.  Are you in “strict mode”? If yes, the “this” keyword is undefined. If not, continue to #7.
+    7.  JavaScript is weird. “this” is referencing the “window” object.
+*/
+
 // Global context
 function someFunction() {
   return this;
 }
 
-console.log(someFunction() === global);
+console.log(someFunction() === global); // true
 
 // Common usage
 const object = {
@@ -99,16 +110,19 @@ const b = {
 console.log(b.c() === b); // true
 
 
-/* const a = {
+const a = {
   b: 42,
-  c: function() {
+  c: function () {
     return this.b;
   }
 };
 
-(a.c || [])(); // 1
-(a.c)(); // 2
-(1, a.c)();  */
+const x = a.c;
+
+console.log(x()); // undefined
+console.log((a.c || [])()); // undefined
+console.log((a.c)()); // 42
+console.log((1, a.c)()); // undefined
 
 
 let user = {
@@ -180,22 +194,6 @@ user.call(); // Ilya
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Bind
-// function.bind(thisArg[, arg1[, arg2[, ...]]])
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// Apply
-// function.apply(thisArg, [argsArray])
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// Call
-// function.call(thisArg, arg1, arg2, ...)
-
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
 // TASK 1 - What is the result of this code?
 let user = {
   name: "John",
@@ -215,7 +213,7 @@ obj = {
 };
 
 obj.go();               // { go: [Function: go] }
-(obj.go)();             //  { go: [Function: go] }
+(obj.go)();             // { go: [Function: go] }
 (method = obj.go)();    // Window {...}
 (obj.go || obj.stop)(); // Window {...}
 
@@ -333,105 +331,24 @@ let ladderChain = {
 ladderChain.up().down().down().showStep(); // -1
 
 
-/* const x = {
+
+// Chaining 2
+
+const x = {
   result: 0,
   y: 2,
   half(num) {
-    this.result = num / this.y;
+    this.result += num / this.y;
     return this
   },
-  mult(x) {
-    this.result += this.y * x;
-
+  mult(z) {
+    this.result += this.y * z;
+    return this
+  },
+  res() {
+    console.log(this.result)
+    return this
   }
 }
 
-console.log(x.half(10).mult(2));
-
-function blach(x) {
-  const y = { ...x };
-  y.y = 0;
-}
-blach(x);
-console.log(x.half(4));
-
-
-
-
-
-let x;
-function identify() {
-  let
-  return this.name.toUpperCase();
-}
-
-function speak() {
-  var greeting = "Hello, I'm " + identify.call(this);
-  console.log(greeting);
-}
-
-var me = {
-
-  name: "Kyle"
-};
-
-var you = {
-  name: "Reader"
-};
-
-identify.call(me); // KYLE
-identify.call(you); // READER
-
-speak.call(me); // Hello, I'm KYLE
-speak.call(you); // Hello, I'm READER
-
-    function identify(context) {
-      return context.name.toUpperCase();
-    }
-    
-    function speak(context) {
-      var greeting = "Hello, I'm " + identify( context );
-      console.log( greeting );
-    }
-    
-    identify( you ); // READER
-    speak( me ); // Hello, I'm KYLE */
-
-
-
-/* function User(name) {
-  this.name = name;
-  this.sayHi = function () {
-    console.log("My name is:" + this.name);
-  };
-}
-
-let john = new User("John");
-
-john.sayHi(); */
-
-
-/* function Accumulator(startingValue) {
-  this.value = startingValue;
-  this.read = function (addValue) {
-    this.value += addValue;
-  };
-}
-
-let accumulator = new Accumulator(1);
-accumulator.read(6);
-accumulator.read(2);
-console.log(accumulator.value);
-
-
-function Accumulator2(startingValue) {
-  this.value = startingValue;
-  this.read = function() {
-    this.value += +prompt('How much do you want to add?', 0);
-  }
-}
-
-let accumulator2 = Accumulator2(1);
-accumulator2.read();
-accumulator2.read();
-console.log(accumulator2.value); */
+x.half(10).mult(2).res();
