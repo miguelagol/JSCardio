@@ -8,6 +8,53 @@
 // function.call(thisArg, arg1, arg2, ...)
 // “call” is a method on every function that allows you to invoke the function specifying in what context the function will be invoked.
 
+
+
+
+
+
+
+
+/* 
+let x;
+function identify() {
+  let
+  return this.name.toUpperCase();
+}
+
+function speak() {
+  var greeting = "Hello, I'm " + identify.call(this);
+  console.log(greeting);
+}
+
+var me = {
+
+  name: "Kyle"
+};
+
+var you = {
+  name: "Reader"
+};
+
+identify.call(me); // KYLE
+identify.call(you); // READER
+
+speak.call(me); // Hello, I'm KYLE
+speak.call(you); // Hello, I'm READER
+
+    function identify(context) {
+      return context.name.toUpperCase();
+    }
+    
+    function speak(context) {
+      var greeting = "Hello, I'm " + identify( context );
+      console.log( greeting );
+    }
+    
+    identify( you ); // READER
+    speak( me ); // Hello, I'm KYLE
+ */
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Apply
@@ -175,10 +222,10 @@ const user = {
     age: 27
 }
 
-sayAge();
+sayAge(); // My age is undefined
 
 global.age = 21;
-sayAge()
+sayAge() // My age is 21
 
 /*  As of ES5, if you have “strict mode” enabled, JavaScript will do the right thing and instead of defaulting to the window object will just keep “this” as undefined.
 
@@ -192,3 +239,23 @@ sayAge()
 
     sayAge() // TypeError: Cannot read property 'age' of undefined
 */
+
+function randomFunction() {
+    this.attribute = 'This is a new attribute to be created on the invoking object';
+    console.log(this);
+}
+
+randomFunction();
+
+
+
+let randomFunction = () => {
+    this.attribute = 'This is a new attribute to be created on the invoking object';
+    console.log(this);
+}
+
+randomFunction();
+
+
+
+

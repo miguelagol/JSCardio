@@ -24,6 +24,7 @@ let user = {
 
 // "this" in methods
 // The value of this is evaluated during the run-time.
+// this refers to the context of an executing function.
 
 //-------------------REMEMBER------------------
 /*  1.  Look to where the function was invoked.
@@ -35,6 +36,8 @@ let user = {
     6.  Are you in “strict mode”? If yes, the “this” keyword is undefined. If not, continue to #7.
     7.  JavaScript is weird. “this” is referencing the “window” object.
 */
+
+// Call-Site  - The place where a function is invoked in a JavaScript program is called the call-site.
 
 // Global context
 function someFunction() {

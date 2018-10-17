@@ -278,7 +278,16 @@ welcome(); // Hello! / Greetings!
 // let func = (arg1, arg2, ...argN) => expression
 /*  …This creates a function func that has arguments arg1..argN,
     evaluates the expression on the right side with their use and returns its result.
+    
+--------------------REMEMBER--------------------    
+    With arrow functions, if your function has a “concise body” (a fancy way for saying one line function),
+    then you can omit the “return” keyword and the value will be returned automatically (or implicitly).
+
+    The second major benefit as to why arrow functions are great, they don’t create their own context.
+    What that means is that typically the this keyword Just Works™ without you having to worry about 
+    what context a specific function is going to be invoked in. 
 */
+
 let sum = (a, b) => a + b;
 
 /*  The arrow function is a shorter form of:
@@ -308,9 +317,10 @@ let welcome = (age < 18) ?
     () => alert("Greetings!");
 
 welcome(); // ok now
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Multilinr arrow functions
+// Multiline arrow functions
 let sum = (a, b) => {  // the curly brace opens a multiline function
     let result = a + b;
     return result; // if we use curly braces, use return to get results

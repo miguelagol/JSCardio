@@ -1,7 +1,13 @@
+let str = "la ti da ";
+str2 = str.repeat(4).trim();
+console.log(str2);
+console.log(str2.length);
+str3 = str.repeat(4);
+console.log(str3);
+console.log(str3.length);
 
 
-
-
+// https://codepen.io/chriscoyier/post/javascript-string-methods
 
 
 

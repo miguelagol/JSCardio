@@ -346,3 +346,47 @@ for (let key2 in menu) {
   console.log(menu[key2]);
 }
 // 400, 600, "My menu"
+
+
+
+
+
+
+// TASK NEW
+
+
+/* function User(name) {
+  this.name = name;
+  this.sayHi = function () {
+    console.log("My name is:" + this.name);
+  };
+}
+
+let john = new User(" John");
+
+john.sayHi(); */
+
+/* function Accumulator(startingValue) {
+  this.value = startingValue;
+  this.read = function (addValue) {
+    this.value += addValue;
+  };
+}
+
+let accumulator = new Accumulator(1);
+accumulator.read(6);
+accumulator.read(2);
+console.log(accumulator.value);
+
+
+function Accumulator2(startingValue) {
+  this.value = startingValue;
+  this.read = function() {
+    this.value += +prompt('How much do you want to add?', 0);
+  }
+}
+
+let accumulator2 = Accumulator2(1);
+accumulator2.read();
+accumulator2.read();
+console.log(accumulator2.value); */
