@@ -4,92 +4,6 @@
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Call
-// function.call(thisArg, arg1, arg2, ...)
-// “call” is a method on every function that allows you to invoke the function specifying in what context the function will be invoked.
-
-
-
-
-
-
-
-
-/* 
-let x;
-function identify() {
-  let
-  return this.name.toUpperCase();
-}
-
-function speak() {
-  var greeting = "Hello, I'm " + identify.call(this);
-  console.log(greeting);
-}
-
-var me = {
-
-  name: "Kyle"
-};
-
-var you = {
-  name: "Reader"
-};
-
-identify.call(me); // KYLE
-identify.call(you); // READER
-
-speak.call(me); // Hello, I'm KYLE
-speak.call(you); // Hello, I'm READER
-
-    function identify(context) {
-      return context.name.toUpperCase();
-    }
-    
-    function speak(context) {
-      var greeting = "Hello, I'm " + identify( context );
-      console.log( greeting );
-    }
-    
-    identify( you ); // READER
-    speak( me ); // Hello, I'm KYLE
- */
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// Apply
-// function.apply(thisArg, [argsArray])
-let numbers = [5, 6, 2, 3, 7];
-
-var max = Math.max.apply(null, numbers);
-
-console.log(max);
-// expected output: 7
-
-var min = Math.min.apply(null, numbers);
-
-console.log(min);
-// expected output: 2
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// Bind
-// function.bind(thisArg[, arg1[, arg2[, ...]]])
-let checkBind = {
-    x: 42,
-    getX: function () {
-        return this.x;
-    }
-}
-
-let unboundGetX = checkBind.getX;
-console.log(unboundGetX()); // undefined (The function gets invoked at the global scope)
-
-let boundGetX = unboundGetX.bind(checkBind);
-console.log(boundGetX()); // 42
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
 // Binding
 /*  1.  Implicit Binding
     2.  Explicit Binding
@@ -97,6 +11,29 @@ console.log(boundGetX()); // 42
     4.  Lexical Binding
     5.  window Binding
 */
+
+// Determining this
+// Ask these questions in this order and stop when the first rule applies
+/*  1.  Is the function called with new (new binding)?
+        If so, this is the newly constructed object
+    let bar = new foo()
+
+    2.  Is the function called with call or apply (explicit binding),
+        even hidden inside a bind hard biniding?
+        If so, this is the explicity specified object
+    let bar = foo.call(obj1)
+
+    3.  Is the function called with a context (implicit binding),
+        otherwise known as an owning or containing object?
+        If so, this is that context object
+    let bar = obj1.foo()
+
+    4.  Otherwise, default the this (default binding).
+        If in strict mode, pick undefined, otherwise pick the global object
+    let bar = foo()
+*/
+
+
 
 // Implicit Binding
 const user = {
@@ -118,6 +55,56 @@ const user = {
 */
 user.greet() // Hello, my name is Tyler
 user.mother.greet() // Hello, my name is Stacey
+
+
+function foo() {
+    console.log(this.a);
+}
+
+let object1 = {
+    a: 42,
+    foo
+};
+
+let object2 = {
+    a: 2,
+    object1
+};
+
+object2.object1.foo() // 42
+
+//--------------------------------------------------------------------------------------
+
+// Implicity Lost
+
+function foo() {
+    console.log(this.a);
+}
+
+let object = {
+    a: 2,
+    foo
+};
+
+let bar = object.foo;
+
+bar() // undefined
+
+
+function foo() {
+    console.log(this.a);
+}
+
+function doFoo(fn) {
+    fn();   // <-- call-site
+}
+
+let object = {
+    a: 2,
+    foo
+};
+
+doFoo(object.foo) // undefined
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -148,7 +135,87 @@ greet2.apply(user, languages); // Hello, my name is Tyler and I know JavaScript,
 const newFn = greet2.bind(user, languages[0], languages[1], languages[2]);
 newFn() // Hello, my name is Tyler and I know JavaScript, CSS, and HTML
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+newFn.call(global); // Hello, my name is Tyler and I know JavaScript, CSS, and HTML
+// newFn HARD binds greet2's "this" to user, so that it cannot be overriden
+
+//--------------------------------------------------------------------------------------
+
+// Call
+// function.call(thisArg, arg1, arg2, ...)
+// “call” is a method on every function that allows you to invoke the function specifying in what context the function will be invoked.
+
+function identify() {
+    return this.name.toUpperCase();
+}
+
+function speak() {
+    var greeting = "Hello, I'm " + identify.call(this);
+    console.log(greeting);
+}
+
+var me = {
+    name: "Kyle"
+};
+
+var you = {
+    name: "Reader"
+};
+
+identify.call(me);
+identify.call(you);
+
+speak.call(me); // Hello, I'm KYLE
+speak.call(you); // Hello, I'm READER
+
+//--------------------------------------------------------------------------------------
+
+// Apply
+// function.apply(thisArg, [argsArray])
+let numbers = [5, 6, 2, 3, 7];
+
+let max = Math.max.apply(null, numbers);
+
+console.log(max); // 7
+
+let min = Math.min.apply(null, numbers);
+
+console.log(min); // 2
+
+
+function foo(something) {
+    console.log(this.a, something);
+    return this.a + something;
+}
+
+let object = {
+    a: 2,
+};
+
+let bar = function () {
+    return foo.apply(object, arguments);
+};
+
+let b = bar(3); // 2 3
+console.log(b) // 5
+
+//--------------------------------------------------------------------------------------
+
+// Bind
+// function.bind(thisArg[, arg1[, arg2[, ...]]])
+let checkBind = {
+    x: 42,
+    getX: function () {
+        return this.x;
+    }
+}
+
+let unboundGetX = checkBind.getX;
+console.log(unboundGetX()); // undefined (The function gets invoked at the global scope)
+
+let boundGetX = unboundGetX.bind(checkBind);
+console.log(boundGetX()); // 42
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // new Binding
 function User(name, age) {
@@ -162,6 +229,7 @@ function User(name, age) {
 }
 
 const me = new User('Tyler', 27);
+console.log(me.name); // Tyler
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -212,7 +280,7 @@ user2.greet()
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// window/global Binding
+// Default (window/global) Binding
 function sayAge() {
     console.log(`My age is ${this.age}`)
 }
@@ -240,22 +308,65 @@ sayAge() // My age is 21
     sayAge() // TypeError: Cannot read property 'age' of undefined
 */
 
-function randomFunction() {
-    this.attribute = 'This is a new attribute to be created on the invoking object';
-    console.log(this);
+
+function foo() {
+    console.log(this.a)
 }
 
-randomFunction();
+let a = 'bar';
 
+foo();
 
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-let randomFunction = () => {
-    this.attribute = 'This is a new attribute to be created on the invoking object';
-    console.log(this);
+// Everything in order
+
+// Which is more precedent, implict binding or explicit binding?
+function foo() {
+    console.log(this.a);
 }
 
-randomFunction();
+let obj1 = {
+    a: 1,
+    foo
+}
 
+let obj2 = {
+    a: 2,
+    foo
+}
 
+obj1.foo(); // 1
+obj2.foo(); // 2
 
+obj1.foo.call(obj2); // 2
+obj2.foo.call(obj1); // 1
 
+// What about New Binding?
+function foo(something) {
+    this.a = something;
+}
+
+let obj1 = {};
+
+let bar = foo.bind(obj1);
+bar(1);
+console.log(obj1.a); // 1
+
+let baz = new bar(2);
+console.log(obj1.a); // 1
+console.log(baz.a) // 2
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// *Ignored this
+// If you pass null or undefined as a this binding parameter to call, apply or bind,
+// those values are effectively ignored, and instead the default binding rule applies to the invocation.
+function foo(a, b) {
+    console.log("a:" + a + " b:" + b);
+}
+
+foo.apply(null, [2, 3]); // a:2 b:3
+
+let bar = foo.bind(null, 1);
+bar(5); // a:1 b:5
