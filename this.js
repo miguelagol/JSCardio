@@ -26,6 +26,37 @@ let user = {
 // The value of this is evaluated during the run-time.
 // this refers to the context of an executing function.
 
+// Call-Site
+/*  To understand this binding, we have to understand the call-site: the location in code where a function is called (not where it's declared).
+    We must inspect the call-site to answer the question: what's this this a reference to?
+*/
+
+function baz() {
+  // call-stack is: 'baz'
+  // so, our call-site is in the global scope
+
+  console.log('baz');
+  bar(); // <-- call-site for 'bar'
+}
+
+function bar() {
+  // call-stack is: 'baz' -> 'bar'
+  // call-site is in 'baz'
+
+  console.log('bar');
+  foo(); // <-- call-site for 'foo'
+}
+
+function foo() {
+  // call-stack is: 'baz' -> 'bar' -> 'foo'
+  // call-site is in 'bar'
+
+  console.log('foo');
+}
+
+baz(); // <-- call-site for 'baz'
+
+
 //-------------------REMEMBER------------------
 /*  1.  Look to where the function was invoked.
     2.  Is there an object to the left of the dot? If so, that’s what the “this” keyword is referencing. If not, continue to #3.
@@ -36,8 +67,6 @@ let user = {
     6.  Are you in “strict mode”? If yes, the “this” keyword is undefined. If not, continue to #7.
     7.  JavaScript is weird. “this” is referencing the “window” object.
 */
-
-// Call-Site  - The place where a function is invoked in a JavaScript program is called the call-site.
 
 // Global context
 function someFunction() {
@@ -70,7 +99,6 @@ const object2 = {
     if (!question.endsWith('?')) {
       throw new Error('This is not a question!');
     }
-
     return this.value;
   }
 }
@@ -124,6 +152,10 @@ const x = a.c;
 
 console.log(x()); // undefined
 console.log((a.c || [])()); // undefined
+/* the same as
+    const method = a.c || [];
+    (method)();
+*/
 console.log((a.c)()); // 42
 console.log((1, a.c)()); // undefined
 
