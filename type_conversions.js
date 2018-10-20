@@ -1,5 +1,4 @@
 // To String
-
 let value = true;
 console.log(typeof value); // boolean
 
@@ -62,3 +61,96 @@ The notable exceptions where people usually make mistakes are:
     - undefined is NaN as a number, not 0.
     - "0" and space-only strings like " " are true as a boolean.
 */
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Object to primitive
+/*  For objects, there’s no to-boolean conversion, because all objects are true in a boolean context.
+    So there are only string and numeric conversions.
+*/
+/*  To do the conversion, JavaScript tries to find and call three object methods:
+    1.  Call obj[Symbol.toPrimitive](hint) if the method exists,
+    2.  Otherwise if hint is "string"
+        try obj.toString() and obj.valueOf(), whatever exists.
+    3.  Otherwise if hint is "number" or "default"
+        try obj.valueOf() and obj.toString(), whatever exists.
+*/
+
+// Symbol.toPrimitive
+/*  obj[Symbol.toPrimitive] = function(hint) {
+        // return a primitive value
+        // hint = one of "string", "number", "default"
+    }
+*/
+let user = {
+    name: "John",
+    money: 1000,
+    [Symbol.toPrimitive](hint) {
+        console.log(`hint: ${hint}`);
+        return hint == "string" ? `{name: "${this.name}"}` : this.money;
+    }
+};
+
+//conversion demo:
+console.log(String(user)); // hint: string -> {name: "John"}
+console.log(+user); // hint: number -> 1000
+console.log(user + 500); // hint: default -> 1500
+
+//--------------------------------------------------------------------------------------
+
+// toString/valueOf
+/* If there’s no Symbol.toPrimitive then JavaScript tries to find them and try in the order:
+    -   toString -> valueOf for “string” hint.
+    -   valueOf -> toString otherwise. 
+*/
+let user = {
+    name: "Pete",
+    money: 100,
+
+    // for hint = "string"
+    toString() {
+        console.log("toString");
+        return `{name: "${this.name}"}`;
+    },
+
+    // for hint = "number" or hint = "default"
+    valueOf() {
+        console.log("valueOf");
+        return this.money;
+    }
+};
+
+console.log(String(user)); // toString -> {name: "Pete"}
+console.log(+user); // valueOf -> 100
+console.log(user + 200); // valueOf -> 300
+
+// In the absence of Symbol.toPrimitive and valueOf, toString will handle all primitive conversions.
+let user = {
+    name: "John",
+    toString() {
+        return this.name;
+    }
+};
+
+console.log(String(user)); // John
+console.log(user + 500); // John500
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// ToPrimitive and ToString/ToNumber
+let obj1 = {
+    toString() {    // toString handles all conversations in the absence of other methods
+        return "2";
+    }
+};
+
+console.log(obj1 * 3); // 6 (ToPrimitive gives "2", then ToNumber (because of obj1 * 3) gives 2)
+console.log(obj1 + 2); // 32 (ToPrimitive returned string -> concatenation)
+
+let obj2 = {
+    toString() {
+        return true;
+    }
+}
+
+console.log(obj2 + 2); // 3 (ToPrimitive returned boolean, then ToNumber gives 1 (because of true is not a string))
