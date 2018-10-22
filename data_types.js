@@ -88,6 +88,15 @@ The typeof operator allows us to see which type is stored in the variable.
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Methods of primitives
+/*  -   Primitives are still primitive. A single value, as desired.
+    -   The language allows access to methods and properties of strings, numbers, booleans and symbols (as if they were objects)
+    -   When this happens, a special “object wrapper” is created that provides the extra functionality, and then is destroyed.
+*/
+// The special primitives null and undefined are exceptions. They have no corresponding “wrapper objects” and provide no methods. 
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - What is the output of the script?
 let name = "John";
 
