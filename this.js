@@ -304,28 +304,6 @@ calculator.read();
 alert(calculator.sum());
 alert(calculator.mul());
 
-/* function Calculator() {
-
-  this.read = function (a, b) {
-    this.a = a;
-    this.b = b;
-  };
-
-  this.mul = function () {
-    return this.a * this.b;
-  };
-
-  this.sum = function () {
-    return this.a + this.b;
-  };
-}
-
-let calculator = new Calculator();
-calculator.read(3, 6);
-
-console.log("Sum = " + calculator.sum());
-console.log("Mul = " + calculator.mul()); */
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 5 - Chaining - Modify the code of up and down to make the calls chainable
@@ -365,10 +343,7 @@ let ladderChain = {
 
 ladderChain.up().down().down().showStep(); // -1
 
-
-
 // Chaining 2
-
 const x = {
   result: 0,
   y: 2,
