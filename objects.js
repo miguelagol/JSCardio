@@ -277,6 +277,93 @@ console.log(clone.sizes.width); // 51, see the result from the other one
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Constructor functions
+// The main purpose of constructors – to implement reusable object creation code!
+
+//------------------REMEMBER-------------------
+/*  - They are named with capital letter first
+    - They should be executed only with "new" operator
+*/
+
+/*  When a function is executed with "new" operator, it does the following steps:
+    1.  A new empty object is created and assigned to this
+    2.  The function body executes. Usually it modifies this. adds new properties to it
+    3.  The value of this is returned
+*/
+function User(name) {
+  // this = {};     (implicitly)
+
+  this.name = name;
+  this.isAdmin = false;
+
+  // return this;   (implicitly)
+}
+
+let user = new User("John"); // Object constructor
+
+console.log(user.name); // John
+console.log(user.isAdmin); // false
+
+//------------------------------------------------------------------------------------------
+
+// Dual-syntax constructors: new.target 
+// Inside a function, we can check whether it was called with "new" or without it
+function User() {
+  console.log(new.target);
+}
+
+User(); // undefined
+new User(); // [Function: User]
+
+
+function User(name) {
+  if (!new.target) {         // if you run me without "new"
+    return new User(name);  // ... I will add "new" for you
+  }
+  this.name = name;
+}
+
+let John = User("John"); // redirects call to new User
+console.log(John.name); // John
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Return from constructors
+/*  If in a constructor function is a return statement, then the rule is simple:
+      - If return is called with object, then it is returned instead of this
+      - If return is called with a primitive, it’s ignored
+*/
+function BigUser() {
+  this.name = "User";
+  return { name: "Godzilla" };  // return an object
+}
+
+console.log(new BigUser().name); // Godzilla
+
+
+function SmallUser() {
+  this.name = "User";
+  return
+}
+
+console.log(new SmallUser().name); // User
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Methods in constructor
+function User(name) {
+  this.name = name;
+  this.sayHi = function () {
+    console.log("My name is:" + this.name);
+  };
+}
+
+let john = new User(" John");
+
+john.sayHi(); // My name is: John
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK1 - Hello, object
 let user = {};
 user.name = "John";
@@ -347,26 +434,56 @@ for (let key2 in menu) {
 }
 // 400, 600, "My menu"
 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// TASK NEW 1 - Two functions - one object
+// Is it possible to create functions A and B such as new A() = new B()?
+// This is false
+function A() { }
+function B() { }
 
+let a = new A;
+let b = new B;
 
+console.log(a == b); // false
 
+// This is true
+let Obj = {};
 
-// TASK NEW
+function A() { return Obj; }
+function B() { return Obj; }
 
+console.log(new A() == new B()); // true
 
-/* function User(name) {
-  this.name = name;
-  this.sayHi = function () {
-    console.log("My name is:" + this.name);
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK NEW 2 - Create new calculator
+function Calculator() {
+
+  this.read = function (a, b) {
+    this.a = a;
+    this.b = b;
+  };
+
+  this.mul = function () {
+    return this.a * this.b;
+  };
+
+  this.sum = function () {
+    return this.a + this.b;
   };
 }
 
-let john = new User(" John");
+let calculator = new Calculator();
+calculator.read(3, 6);
 
-john.sayHi(); */
+console.log("Sum = " + calculator.sum()); // Sum = 9
+console.log("Mul = " + calculator.mul()); // Mul = 18
 
-/* function Accumulator(startingValue) {
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK NEW 3 - Create new accumulator
+function Accumulator(startingValue) {
   this.value = startingValue;
   this.read = function (addValue) {
     this.value += addValue;
@@ -376,17 +493,4 @@ john.sayHi(); */
 let accumulator = new Accumulator(1);
 accumulator.read(6);
 accumulator.read(2);
-console.log(accumulator.value);
-
-
-function Accumulator2(startingValue) {
-  this.value = startingValue;
-  this.read = function() {
-    this.value += +prompt('How much do you want to add?', 0);
-  }
-}
-
-let accumulator2 = Accumulator2(1);
-accumulator2.read();
-accumulator2.read();
-console.log(accumulator2.value); */
+console.log(accumulator.value); // 9
