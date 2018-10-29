@@ -1,6 +1,6 @@
 // Ways to write a number
 let billion = 1000000000;
-let billion2 = 1e9;  // 1 billion, literally: 1 and 9 zeroes
+let billion2 = 1e9; // 1 billion, literally: 1 and 9 zeroes
 let ms = 1e-6;
 
 console.log(billion == billion2); // true
@@ -10,8 +10,7 @@ console.log(ms); // 0,000001
 
 // Hexadecimal numbers
 console.log(0xff); // 255
-console.log(0xFF); // 255
-
+// console.log(0xFF); // 255
 
 // Octal numeral system
 let a = 0o377;
@@ -44,9 +43,9 @@ console.log(num.toString(10)); // 255
 // Note the two dots!
 // If we want to call a method directly on a number then we need to place two dots .. after it.
 // If we place one more dot, then JavaScript knows that the decimal part is empty and now goes the method.
-console.log(123456..toString(36)); // 2n9c
+console.log((123456).toString(36)); // 2n9c
 // or
-console.log((123456).toString(36)) // 2n9c
+console.log((123456).toString(36)); // 2n9c
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +71,7 @@ console.log(Math.ceil(-5.32)); // -5
 //--------------------------------------------------------------------------------------
 
 // Math.round()
-// Math.round(number) returns the value of a number rounded to the nearest integer
+// Math.round(number) returns the value of a number rounded to the nearest integer (0..4 lead down while 5..9 lead up)
 console.log(Math.round(5.07)); // 5
 console.log(Math.round(5.5)); // 6
 console.log(Math.round(5.92)); // 6
@@ -99,7 +98,8 @@ console.log(Math.floor(num * 100) / 100); // 1.23
 console.log(typeof (Math.floor(num * 100) / 100)); // number
 
 // 2.   .toFixed()
-//      number.toFixed(n) rounds the number to n digits after the points (the nearest integer) and returns a string representation of the result
+//      number.toFixed(n) rounds the number to n digits after the points (the nearest integer - 0..4 lead down while 5..9 lead up)
+//      and returns a string representation of the result
 let num = 1.23;
 console.log(num.toFixed(1)); // 1.2
 
@@ -148,22 +148,22 @@ console.log(0.1 + 0.2); // 0.30000000000000004
 
 // A number is stored in memory in its binary form.
 // But fractions like 0.1, 0.2 that look simple in the decimal numeric system are actually unending fractions in their binary form.
-console.log(0.1.toFixed(20)); // 0.10000000000000000555
+console.log((0.1).toFixed(20)); // 0.10000000000000000555
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // isFinite / isNaN
 // isNaN(value) converts its argument to a number and then test it for being NaN
 console.log(isNaN(NaN)); // true
-console.log(isNaN("13")); // false
-console.log(isNaN("abc")); // true
+console.log(isNaN('13')); // false
+console.log(isNaN('abc')); // true
 
 // the value NaN is unigue in that it does not equal anything
 console.log(NaN === NaN); // false
 
 // isFinite(value) converts its argument to a number and returns true if it's a regular number (not NaN/Infinity/-Infinity)
-console.log(isFinite("13")); // true
-console.log(isFinite("abc")); // false
+console.log(isFinite('13')); // true
+console.log(isFinite('abc')); // false
 console.log(isFinite(Infinity)); // false
 
 // the value NaN is unigue in that it does not equal anything
@@ -198,20 +198,96 @@ console.log(parseInt('0xff', 16)); // 255
 let x = +prompt('Enter the first number', 0);
 let y = +prompt('Enter the second number', 0);
 
-alert(x + y);
+alert(`Sum = ${x + y}`);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 2 - Repeat until the input is a number
+// TASK 2 - Why 6.35.toFixed(1) == 6.3?
+console.log((6.35).toFixed(1)); // 6.3
+
+// Because of lossing precision (the decimal fraction 6.35 is an endless binary)
+// Let's see
+let num = 2.35;
+console.log(num.toFixed(1)); // 2.4
+console.log(num.toFixed(20)); // 2.35000000000000008882
+
+let num2 = 2.65;
+console.log(num2.toFixed(1)); // 2.6
+console.log(num2.toFixed(20)); // 2.64999999999999991118
+
+let num3 = 5.35;
+console.log(num3.toFixed(1)); // 5.3
+console.log(num3.toFixed(20)); // 5.34999999999999964473
+
+let num4 = 5.65;
+console.log(num4.toFixed(1)); // 5.7
+console.log(num4.toFixed(20)); // 5.65000000000000035527
+
+let num5 = 8.35;
+console.log(num5.toFixed(1)); // 8.3
+console.log(num5.toFixed(20)); // 8.34999999999999964473
+
+let num6 = 8.65;
+console.log(num6.toFixed(1)); // 8.7
+console.log(num6.toFixed(20)); // 8.65000000000000035527
+
+console.log((6.36 * 10).toFixed(0) / 10); // 6.4
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 - Repeat until the input is a number
 function readNumber() {
-    let num;
-    while (!isFinite(num)) {
-        num = +prompt('Enter the numeric value', 0);
-    };
-    if (num === null || num === '') {
-        alert(null);
-    }
-    else alert(num);
+   let num;
+
+   while (!isFinite(num)) {
+      num = +prompt('Enter the numeric value', 0);
+   }
+
+   if (num === null || num === '') {
+      alert(null);
+   } else alert(num);
 }
 
 readNumber();
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - This loop is infinite. It never ends. Why?
+/*  let i = 0;
+
+    while (i != 10) {
+        i += 0.2;    // loss of precision
+    }
+*/
+let i = 0;
+while (i < 11) {
+   i += 0.2;
+   if (i > 9.8 && i < 10.2) console.log(i);
+}
+// 9.999999999999996
+// 10.199999999999996
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - A random number from min to max
+function random(min, max) {
+   return min + Math.random() * (max - min);
+}
+
+console.log(random(1, 5));
+console.log(random(1, 5));
+console.log(random(1, 5));
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - A random integer from min to max
+function randomInteger(min, max) {
+   let random = min + Math.random() * (max - min);
+   return random.toFixed(0);
+}
+
+console.log(randomInteger(1, 5));
+console.log(randomInteger(1, 5));
+console.log(randomInteger(1, 5));
+console.log(randomInteger(1, 5));
+console.log(randomInteger(1, 5));
