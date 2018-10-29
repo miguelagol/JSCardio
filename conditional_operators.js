@@ -1,4 +1,4 @@
-"use strict"
+'use strict';
 /* --------------------REMEMBER-------------------
     This values are falsy and thus bypass the if block
     if (false)
@@ -27,26 +27,32 @@ if (year == 2015) alert('You are right!');
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Else
-let year2 = prompt('In which year was ECMAScript-2015 specification published?', '');
+let year2 = prompt(
+   'In which year was ECMAScript-2015 specification published?',
+   '',
+);
 
 if (year == 2015) {
-    alert('You guessed it right!');
+   alert('You guessed it right!');
 } else {
-    alert('How can you be so wrong?'); // any value except 2015
+   alert('How can you be so wrong?'); // any value except 2015
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Else if - several condition
 
-let year3 = prompt('In which year was ECMAScript-2015 specification published?', '');
+let year3 = prompt(
+   'In which year was ECMAScript-2015 specification published?',
+   '',
+);
 
 if (year3 < 2015) {
-    alert('Too early...');
+   alert('Too early...');
 } else if (year3 > 2015) {
-    alert('Too late');
+   alert('Too late');
 } else {
-    alert('Exactly!');
+   alert('Exactly!');
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,7 +62,7 @@ if (year3 < 2015) {
 // The condition is evaluated, if it’s truthy then value1 is returned, otherwise – value2
 let age = prompt('How old are you?', '');
 
-let accessAllowed = (age > 18) ? true : false; // The same as let accessAllowed = age > 18;
+let accessAllowed = age > 18 ? true : false; // The same as let accessAllowed = age > 18;
 /* The if..else version
     if (age > 18) {
         accessAllowed = true;
@@ -72,10 +78,14 @@ alert(accessAllowed);
 // Multiple '?'
 let age2 = prompt('age?', 18);
 
-let message = (age2 < 3) ? 'Hi, baby!' :
-    (age2 < 18) ? 'Hello!' :
-        (age2 < 100) ? 'Greetings!' :
-            'What an unusual age!';
+let message =
+   age2 < 3
+      ? 'Hi, baby!'
+      : age2 < 18
+         ? 'Hello!'
+         : age2 < 100
+            ? 'Greetings!'
+            : 'What an unusual age!';
 
 alert(message);
 
@@ -84,10 +94,10 @@ alert(message);
 // TASK 1
 let officialName = prompt(`What's the "official" name of Javascript?`, '');
 
-if (officialName == "ECMAScript") {
-    alert("Right!");
+if (officialName == 'ECMAScript') {
+   alert('Right!');
 } else {
-    alert(`You don't know? "ECMAScript"!`);
+   alert(`You don't know? "ECMAScript"!`);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,11 +106,11 @@ if (officialName == "ECMAScript") {
 let number = +prompt(`Enter a number`, 0);
 
 if (number > 0) {
-    alert(1);
+   alert(1);
 } else if (number < 0) {
-    alert(-1);
+   alert(-1);
 } else {
-    alert(0)
+   alert(0);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -108,22 +118,19 @@ if (number > 0) {
 // TASK 3
 let ask = prompt(`Whos's there?`, '');
 
-if (ask == null || ask == "") {
-    alert("Canceled.");
-} else if (ask == "Admin") {
-
-    let pass = prompt('Password?', '');
-    if (pass == null || pass == "") {
-        alert("Canceled.");
-    } else if (pass == "The Master") {
-        alert("Welcome!");
-    }
-    else {
-        alert("Wrong password.");
-    }
-
+if (ask == null || ask == '') {
+   alert('Canceled.');
+} else if (ask == 'Admin') {
+   let pass = prompt('Password?', '');
+   if (pass == null || pass == '') {
+      alert('Canceled.');
+   } else if (pass == 'The Master') {
+      alert('Welcome!');
+   } else {
+      alert('Wrong password.');
+   }
 } else {
-    alert("I don't know you");
+   alert("I don't know you");
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -137,7 +144,7 @@ if (ask == null || ask == "") {
     }
 */
 
-let result = (a + b < 4) ? "Below" : "Over";
+let result = a + b < 4 ? 'Below' : 'Over';
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -157,6 +164,10 @@ let result = (a + b < 4) ? "Below" : "Over";
 */
 
 let message =
-    (login == 'Employee') ? 'Hello' :
-        (login == 'Director') ? 'Greetings' :
-            (login == '') ? 'No login' : '';
+   login == 'Employee'
+      ? 'Hello'
+      : login == 'Director'
+         ? 'Greetings'
+         : login == ''
+            ? 'No login'
+            : '';

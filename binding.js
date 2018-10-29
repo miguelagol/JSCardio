@@ -33,97 +33,94 @@
     let bar = foo()
 */
 
-
-
 // Implicit Binding
 const user = {
-    name: 'Tyler',
-    age: 27,
-    greet() {
-        console.log(`Hello, my name is ${this.name}`); // user.name
-    },
-    mother: {
-        name: 'Stacey',
-        greet() {
-            console.log(`Hello, my name is ${this.name}`); // user.mother.name
-        }
-    }
-}
+   name: 'Tyler',
+   age: 27,
+   greet() {
+      console.log(`Hello, my name is ${this.name}`); // user.name
+   },
+   mother: {
+      name: 'Stacey',
+      greet() {
+         console.log(`Hello, my name is ${this.name}`); // user.mother.name
+      },
+   },
+};
 
 /*  In order to figure out what the this keyword is referencing, first, look to the left of the dot when the function is invoked.
     If there is a “dot”, look to the left of that dot to find the object that the this keyword is referencing.
 */
-user.greet() // Hello, my name is Tyler
-user.mother.greet() // Hello, my name is Stacey
-
+user.greet(); // Hello, my name is Tyler
+user.mother.greet(); // Hello, my name is Stacey
 
 function foo() {
-    console.log(this.a);
+   console.log(this.a);
 }
 
 let object1 = {
-    a: 42,
-    foo
+   a: 42,
+   foo,
 };
 
 let object2 = {
-    a: 2,
-    object1
+   a: 2,
+   object1,
 };
 
-object2.object1.foo() // 42
+object2.object1.foo(); // 42
 
 //--------------------------------------------------------------------------------------
 
 // Implicity Lost
 
 function foo() {
-    console.log(this.a);
+   console.log(this.a);
 }
 
 let object = {
-    a: 2,
-    foo
+   a: 2,
+   foo,
 };
 
 let bar = object.foo;
 
-bar() // undefined
-
+bar(); // undefined
 
 function foo() {
-    console.log(this.a);
+   console.log(this.a);
 }
 
 function doFoo(fn) {
-    fn();   // <-- call-site
+   fn(); // <-- call-site
 }
 
 let object = {
-    a: 2,
-    foo
+   a: 2,
+   foo,
 };
 
-doFoo(object.foo) // undefined
+doFoo(object.foo); // undefined
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Explicit Binding
 function greet() {
-    console.log(`Hello, my name is ${this.name}`);
+   console.log(`Hello, my name is ${this.name}`);
 }
 
 const user = {
-    name: 'Tyler',
-    age: 27,
-}
+   name: 'Tyler',
+   age: 27,
+};
 
 //  the first argument you pass to call will be what the this keyword inside that function is referencing.
 greet.call(user); // Hello, my name is Tyler
 
-
 function greet2(l1, l2, l3) {
-    console.log(`Hello, my name is ${this.name} and I know ${l1}, ${l2}, and ${l3}`);
+   console.log(
+      `Hello, my name is ${this.name} and I know ${l1}, ${l2}, and ${l3}`,
+   );
 }
 
 const languages = ['JavaScript', 'CSS', 'HTML'];
@@ -133,7 +130,7 @@ greet2.apply(user, languages); // Hello, my name is Tyler and I know JavaScript,
 
 //  .bind is the exact same as .call but instead of immediately invoking the function, it’ll return a new function that you can invoke at a later time
 const newFn = greet2.bind(user, languages[0], languages[1], languages[2]);
-newFn() // Hello, my name is Tyler and I know JavaScript, CSS, and HTML
+newFn(); // Hello, my name is Tyler and I know JavaScript, CSS, and HTML
 
 newFn.call(global); // Hello, my name is Tyler and I know JavaScript, CSS, and HTML
 // newFn HARD binds greet2's "this" to user, so that it cannot be overriden
@@ -145,20 +142,20 @@ newFn.call(global); // Hello, my name is Tyler and I know JavaScript, CSS, and H
 // “call” is a method on every function that allows you to invoke the function specifying in what context the function will be invoked.
 
 function identify() {
-    return this.name.toUpperCase();
+   return this.name.toUpperCase();
 }
 
 function speak() {
-    var greeting = "Hello, I'm " + identify.call(this);
-    console.log(greeting);
+   var greeting = "Hello, I'm " + identify.call(this);
+   console.log(greeting);
 }
 
 var me = {
-    name: "Kyle"
+   name: 'Kyle',
 };
 
 var you = {
-    name: "Reader"
+   name: 'Reader',
 };
 
 identify.call(me);
@@ -181,33 +178,32 @@ let min = Math.min.apply(null, numbers);
 
 console.log(min); // 2
 
-
 function foo(something) {
-    console.log(this.a, something);
-    return this.a + something;
+   console.log(this.a, something);
+   return this.a + something;
 }
 
 let object = {
-    a: 2,
+   a: 2,
 };
 
-let bar = function () {
-    return foo.apply(object, arguments);
+let bar = function() {
+   return foo.apply(object, arguments);
 };
 
 let b = bar(3); // 2 3
-console.log(b) // 5
+console.log(b); // 5
 
 //--------------------------------------------------------------------------------------
 
 // Bind
 // function.bind(thisArg[, arg1[, arg2[, ...]]])
 let checkBind = {
-    x: 42,
-    getX: function () {
-        return this.x;
-    }
-}
+   x: 42,
+   getX: function() {
+      return this.x;
+   },
+};
 
 let unboundGetX = checkBind.getX;
 console.log(unboundGetX()); // undefined (The function gets invoked at the global scope)
@@ -219,13 +215,11 @@ console.log(boundGetX()); // 42
 
 // new Binding
 function User(name, age) {
-
-    /* const this = Object.create(User.prototype)   //  JavaScript creates a new object called `this` which delegates to the User's prototype on failed lookups. If a function is called with the new keyword,
+   /* const this = Object.create(User.prototype)   //  JavaScript creates a new object called `this` which delegates to the User's prototype on failed lookups. If a function is called with the new keyword,
                                                         then it's this new object that interpretor created that the this keyword is referencing. */
-    this.name = name,
-        this.age = age
+   (this.name = name), (this.age = age);
 
-    // return this
+   // return this
 }
 
 const me = new User('Tyler', 27);
@@ -235,65 +229,68 @@ console.log(me.name); // Tyler
 
 // Lexical Binding
 const user = {
-    name: 'Tyler',
-    age: 27,
-    languages: ['JavaScript', 'Ruby', 'Python'],
-    greet() {
-        const hello = `Hello, my name is ${this.name} and I know`
+   name: 'Tyler',
+   age: 27,
+   languages: ['JavaScript', 'Ruby', 'Python'],
+   greet() {
+      const hello = `Hello, my name is ${this.name} and I know`;
 
-        const langs = this.languages.reduce(function (str, lang, i) {
+      const langs = this.languages.reduce(
+         function(str, lang, i) {
             if (i === this.languages.length - 1) {
-                return `${str} and ${lang}.`
+               return `${str} and ${lang}.`;
             }
 
-            return `${str} ${lang},`
-        }.bind(this), "")               // We need to specify that we want the anonymous function we pass to .reduce to be invoked in the context of user.
+            return `${str} ${lang},`;
+         }.bind(this),
+         '',
+      ); // We need to specify that we want the anonymous function we pass to .reduce to be invoked in the context of user.
 
-        console.log(hello + langs)
-    }
+      console.log(hello + langs);
+   },
 };
 
-user.greet()
+user.greet();
 
 // vs arrow function
 
 const user2 = {
-    name: 'Tyler',
-    age: 27,
-    languages: ['JavaScript', 'Ruby', 'Python'],
-    greet() {
-        const hello = `Hello, my name is ${this.name} and I know`
+   name: 'Tyler',
+   age: 27,
+   languages: ['JavaScript', 'Ruby', 'Python'],
+   greet() {
+      const hello = `Hello, my name is ${this.name} and I know`;
 
-        const langs = this.languages.reduce((str, lang, i) => {
-            if (i === this.languages.length - 1) {
-                return `${str} and ${lang}.`
-            }
+      const langs = this.languages.reduce((str, lang, i) => {
+         if (i === this.languages.length - 1) {
+            return `${str} and ${lang}.`;
+         }
 
-            return `${str} ${lang},`
-        }, "")
+         return `${str} ${lang},`;
+      }, '');
 
-        console.log(hello + langs)
-    }
+      console.log(hello + langs);
+   },
 };
 
-user2.greet()
+user2.greet();
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Default (window/global) Binding
 function sayAge() {
-    console.log(`My age is ${this.age}`)
+   console.log(`My age is ${this.age}`);
 }
 
 const user = {
-    name: 'Tyler',
-    age: 27
-}
+   name: 'Tyler',
+   age: 27,
+};
 
 sayAge(); // My age is undefined
 
 global.age = 21;
-sayAge() // My age is 21
+sayAge(); // My age is 21
 
 /*  As of ES5, if you have “strict mode” enabled, JavaScript will do the right thing and instead of defaulting to the window object will just keep “this” as undefined.
 
@@ -308,9 +305,8 @@ sayAge() // My age is 21
     sayAge() // TypeError: Cannot read property 'age' of undefined
 */
 
-
 function foo() {
-    console.log(this.a)
+   console.log(this.a);
 }
 
 let a = 'bar';
@@ -323,18 +319,18 @@ foo();
 
 // Which is more precedent, implict binding or explicit binding?
 function foo() {
-    console.log(this.a);
+   console.log(this.a);
 }
 
 let obj1 = {
-    a: 1,
-    foo
-}
+   a: 1,
+   foo,
+};
 
 let obj2 = {
-    a: 2,
-    foo
-}
+   a: 2,
+   foo,
+};
 
 obj1.foo(); // 1
 obj2.foo(); // 2
@@ -344,7 +340,7 @@ obj2.foo.call(obj1); // 1
 
 // What about New Binding?
 function foo(something) {
-    this.a = something;
+   this.a = something;
 }
 
 let obj1 = {};
@@ -355,7 +351,7 @@ console.log(obj1.a); // 1
 
 let baz = new bar(2);
 console.log(obj1.a); // 1
-console.log(baz.a) // 2
+console.log(baz.a); // 2
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -363,7 +359,7 @@ console.log(baz.a) // 2
 // If you pass null or undefined as a this binding parameter to call, apply or bind,
 // those values are effectively ignored, and instead the default binding rule applies to the invocation.
 function foo(a, b) {
-    console.log("a:" + a + " b:" + b);
+   console.log('a:' + a + ' b:' + b);
 }
 
 foo.apply(null, [2, 3]); // a:2 b:3

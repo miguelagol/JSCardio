@@ -6,16 +6,16 @@
 // Function Declaration
 // a function, declared as a separate statement, in the main code flow.
 function showMessage() {
-    console.log('Hello everyone!');
+   console.log('Hello everyone!');
 }
 
 showMessage(); // Hello everyone!
 
 // Function Expression
 // a function, created inside an expression or inside another syntax construct. Here, the function is created at the right side of the “assignment expression” =:
-let sayHi = function () {
-    console.log('Hello everyone!');
-};      // it must be ; here, because is variable
+let sayHi = function() {
+   console.log('Hello everyone!');
+}; // it must be ; here, because is variable
 
 sayHi(); // Hello everyone!
 console.log(sayHi); // [Function: sayHi]
@@ -29,8 +29,8 @@ func(); // Hello everyone!
 
 // Local variables
 function showMessage1() {
-    let message = "Hello, I'm JavaScript!"; // it's a local variable
-    console.log(message);
+   let message = "Hello, I'm JavaScript!"; // it's a local variable
+   console.log(message);
 }
 
 showMessage1();
@@ -41,18 +41,18 @@ console.log(message); // Error: message is not defined
 
 // Outer variables - Global
 // Global variables are visible from any function (unless shadowed by locals).
-let name = "John"; // it's a outer variable
+let name = 'John'; // it's a outer variable
 function showMessage2() {
-    console.log(`Hello, ${name}`);
+   console.log(`Hello, ${name}`);
 }
 
 showMessage2();
 
 function changeName() {
-    name = "Bob"; // changed the outer variable
+   name = 'Bob'; // changed the outer variable
 
-    let message = 'Hello, ' + name;
-    console.log(message);
+   let message = 'Hello, ' + name;
+   console.log(message);
 }
 
 console.log(name); // John (before the function call)
@@ -67,10 +67,10 @@ console.log(name); // Bob (the value was modified by the function)
 let userName = 'John';
 
 function showMessage3() {
-    let userName = "Bob"; // declare a local variable
+   let userName = 'Bob'; // declare a local variable
 
-    let message = 'Hello, ' + userName;
-    console.log(message);
+   let message = 'Hello, ' + userName;
+   console.log(message);
 }
 
 showMessage3(); // Hello, Bob (the function will create and use its own userName)
@@ -80,21 +80,22 @@ console.log(userName); // John (unchanged, the function did not access the outer
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Parameters - function arguments
-function showMessage4(from, text) { // arguments: from, text
-    console.log(from + ': ' + text);
+function showMessage4(from, text) {
+   // arguments: from, text
+   console.log(from + ': ' + text);
 }
 
 showMessage4('Ann', 'Hello!'); // Ann: Hello!
 showMessage4('Ann', "What's up?"); // Ann: What's up?
 
 function showMessage5(from, text) {
-    from = '*' + from + '*';
-    console.log(from + ': ' + text);
+   from = '*' + from + '*';
+   console.log(from + ': ' + text);
 }
 
-let from = "Ann";
+let from = 'Ann';
 
-showMessage5(from, "Hello"); // *Ann*: Hello
+showMessage5(from, 'Hello'); // *Ann*: Hello
 
 console.log(from); // Ann (the value of "from" is the same, the function modified a local copy of parameters)
 
@@ -103,23 +104,23 @@ console.log(from); // Ann (the value of "from" is the same, the function modifie
 // Default values
 // If a parameter is not provided, then its value becomes undefined.
 function showMessage6(from, text) {
-    console.log(from + ": " + text);
+   console.log(from + ': ' + text);
 }
 
-showMessage6("Ann"); // Ann: undefined
+showMessage6('Ann'); // Ann: undefined
 
-function showMessage7(from, text = "no text given") {
-    console.log(from + ": " + text);
+function showMessage7(from, text = 'no text given') {
+   console.log(from + ': ' + text);
 }
 
-showMessage7("Ann"); // Ann: no text given
+showMessage7('Ann'); // Ann: no text given
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Returning a value
 // A function can return a value back into the calling code as the result.
 function sum(a, b) {
-    return a + b;
+   return a + b;
 }
 
 let result = sum(1, 2);
@@ -127,29 +128,29 @@ console.log(result); // 3
 
 // There may be many occurrences of return in a single function.
 function checkAge(age) {
-    if (age > 18) {
-        return true;
-    } else {
-        return confirm('Got a permission from the parents?');
-    }
+   if (age > 18) {
+      return true;
+   } else {
+      return confirm('Got a permission from the parents?');
+   }
 }
 
 let age = prompt('How old are you?', 18);
 
 if (checkAge(age)) {
-    alert('Access granted');
+   alert('Access granted');
 } else {
-    alert('Access denied');
+   alert('Access denied');
 }
 
 // It is possible to use return without a value.
 function showMovie(age) {
-    if (!checkAge(age)) {
-        return;
-    }
+   if (!checkAge(age)) {
+      return;
+   }
 
-    alert("Showing you the movie"); // if checkAge(age) returns false, then showMovie won’t proceed to the alert
-    // ...
+   alert('Showing you the movie'); // if checkAge(age) returns false, then showMovie won’t proceed to the alert
+   // ...
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -172,17 +173,17 @@ function showMovie(age) {
 // One function – one action
 
 function showPrimes(n) {
-    for (let i = 2; i < n; i++) {
-        if (!isPrime(i)) continue;
-        console.log(i);
-    }
+   for (let i = 2; i < n; i++) {
+      if (!isPrime(i)) continue;
+      console.log(i);
+   }
 }
 
 function isPrime(n) {
-    for (let i = 2; i < n; i++) {
-        if (n % i == 0) return false;
-    }
-    return true;
+   for (let i = 2; i < n; i++) {
+      if (n % i == 0) return false;
+   }
+   return true;
 }
 showPrimes(22);
 
@@ -190,30 +191,36 @@ showPrimes(22);
 
 // Callback functions
 function ask(question, yes, no) {
-    if (confirm(question)) yes()
-    else no();
+   if (confirm(question)) yes();
+   else no();
 }
 
 function showOk() {
-    alert("You agreed.");
+   alert('You agreed.');
 }
 
 function showCancel() {
-    alert("You canceled the execution.");
+   alert('You canceled the execution.');
 }
 
 // usage: functions showOk, showCancel are passed as arguments to ask
-ask("Do you agree?", showOk, showCancel);
+ask('Do you agree?', showOk, showCancel);
 
 // the same as:
 function ask2(question, yes, no) {
-    if (confirm(question)) yes()
-    else no();
+   if (confirm(question)) yes();
+   else no();
 }
 
-ask2("Do you agree?",
-    function () { alert("You agreed."); },
-    function () { alert("You canceled the execution."); });
+ask2(
+   'Do you agree?',
+   function() {
+      alert('You agreed.');
+   },
+   function() {
+      alert('You canceled the execution.');
+   },
+);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //--------------------REMEMBER-------------------
@@ -224,50 +231,51 @@ ask2("Do you agree?",
     When JavaScript prepares to run the script or a code block, it first looks for Function Declarations in it and creates the functions.
     As a result, a function declared as a Function Declaration can be called earlier than it is defined.
 */
-sayHi("John"); // Hello, John
+sayHi('John'); // Hello, John
 
 function sayHi(name) {
-    console.log(`Hello, ${name}`);
+   console.log(`Hello, ${name}`);
 }
 
 // vs
-sayHi("John"); // Error: sayHi is not defined
+sayHi('John'); // Error: sayHi is not defined
 
-let sayHi = function (name) {  // (*) no magic any more
-    console.log(`Hello, ${name}`);
+let sayHi = function(name) {
+   // (*) no magic any more
+   console.log(`Hello, ${name}`);
 };
 
 //--------------------REMEMBER-------------------
 // When a Function Declaration is made within a code block, it is visible everywhere inside that block. But not outside of it.
 
-let age = prompt("What is your age?", 18);
+let age = prompt('What is your age?', 18);
 
 if (age < 18) {
-    welcome(); // Hello! | for age = 16
-    function welcome() {
-        alert("Hello!");
-    }
-    welcome(); // Hello! | for age = 16 
+   welcome(); // Hello! | for age = 16
+   function welcome() {
+      alert('Hello!');
+   }
+   welcome(); // Hello! | for age = 16
 } else {
-    function welcome() {
-        alert("Greetings!");
-    }
+   function welcome() {
+      alert('Greetings!');
+   }
 }
 
 welcome(); // Error: welcome is not defined
 
 // fix it
-let age = prompt("What is your age?", 18);
+let age = prompt('What is your age?', 18);
 let welcome;
 if (age < 18) {
-    welcome = function () {
-        alert("Hello!");
-    }
-    welcome(); // Hello!
+   welcome = function() {
+      alert('Hello!');
+   };
+   welcome(); // Hello!
 } else {
-    welcome = function () {
-        alert("Greetings!");
-    }
+   welcome = function() {
+      alert('Greetings!');
+   };
 }
 
 welcome(); // Hello! / Greetings!
@@ -305,25 +313,23 @@ let double = n => n * 2;
 console.log(double(3)); // 6
 
 // If there are no arguments, parentheses should be empty (but they should be present)
-let sayHi = () => console.log("Hello!");
+let sayHi = () => console.log('Hello!');
 
 sayHi(); // Hello!
 
+let age = prompt('What is your age?', 18);
 
-let age = prompt("What is your age?", 18);
-
-let welcome = (age < 18) ?
-    () => alert('Hello') :
-    () => alert("Greetings!");
+let welcome = age < 18 ? () => alert('Hello') : () => alert('Greetings!');
 
 welcome(); // ok now
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Multiline arrow functions
-let sum = (a, b) => {  // the curly brace opens a multiline function
-    let result = a + b;
-    return result; // if we use curly braces, use return to get results
+let sum = (a, b) => {
+   // the curly brace opens a multiline function
+   let result = a + b;
+   return result; // if we use curly braces, use return to get results
 };
 
 console.log(sum(1, 2)); // 3
@@ -340,21 +346,25 @@ console.log(sum(1, 2)); // 3
     }
 */
 function checkAge(age) {
-    return (age > 18) ? true : confirm('Do you have your parents permission to access this page?');
+   return age > 18
+      ? true
+      : confirm('Do you have your parents permission to access this page?');
 }
 
 function checkAge2(age) {
-    return (age > 18) || confirm('Do you have your parents permission to access this page?');
+   return (
+      age > 18 ||
+      confirm('Do you have your parents permission to access this page?')
+   );
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Function min(a, b)
 function min(a, b) {
-    if (a < b) {
-        return a;
-    }
-    else return b;
+   if (a < b) {
+      return a;
+   } else return b;
 }
 
 console.log(min(11, 19));
@@ -365,11 +375,11 @@ console.log(min(1, -3));
 
 // TASK 4 - Function pow(x,n)
 function pow(x, n) {
-    let result = 1;
-    for (let i = 1; i <= n; i++) {
-        result *= x;
-    }
-    return result;
+   let result = 1;
+   for (let i = 1; i <= n; i++) {
+      result *= x;
+   }
+   return result;
 }
 
 console.log(pow(3, 2));
@@ -378,10 +388,9 @@ let x = prompt('x?', '');
 let n = prompt('n?', '');
 
 if (n < 0) {
-    alert('Please use an integer greather than 0');
-}
-else {
-    alert(pow(x, n));
+   alert('Please use an integer greather than 0');
+} else {
+   alert(pow(x, n));
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -396,8 +405,8 @@ else {
         function() { alert("You agreed."); },
         function() { alert("You canceled the execution."); } ); 
 */
-let ask = confirm("Do you agree?") ?
-    () => alert("You agreed.") :
-    () => alert("You canceled the execution.");
+let ask = confirm('Do you agree?')
+   ? () => alert('You agreed.')
+   : () => alert('You canceled the execution.');
 
 ask();

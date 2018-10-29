@@ -5,7 +5,7 @@
     - Not equals. In maths the notation is ≠, in JavaScript it’s written as an assignment with an exclamation sign before it: a != b.
 */
 
-console.log(2 > 1);  // true
+console.log(2 > 1); // true
 console.log(2 == 1); // false
 console.log(2 != 1); // true
 
@@ -47,31 +47,31 @@ console.log('01' == 1); // true, string '01' becomes a number 1
 //--------------------REMEMBER--------------------
 //  TRUE
 console.log(true == 1);
-console.log(true == "1");
+console.log(true == '1');
 console.log(true == [1]);
 console.log(false == 0);
-console.log(false == "0");
-console.log(false == "");
-console.log(false == " ");
+console.log(false == '0');
+console.log(false == '');
+console.log(false == ' ');
 console.log(false == []);
 console.log(false == [[]]);
 console.log(false == [0]);
-console.log(0 == "");
-console.log(0 == " ");
+console.log(0 == '');
+console.log(0 == ' ');
 console.log(0 == []);
 console.log(0 == [[]]);
 console.log(null == undefined);
 //  FALSE
 console.log(null == 0);
-console.log("0" == '');
-console.log("0" == []);
+console.log('0' == '');
+console.log('0' == []);
 console.log('' == [0]);
-console.log("" == " ");
+console.log('' == ' ');
 
 // Remember that for maths and other comparisons < > <= >= values null/undefined are converted to a number.
 // Null becomes 0, while undefined becomes NaN.
 
-console.log(null > 0);  // false
+console.log(null > 0); // false
 console.log(null == 0); // false
 console.log(null >= 0); // true
 
