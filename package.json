@@ -1,0 +1,20 @@
+{
+   "name": "jscardio",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.html",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "format": "prettier --write \"*.{js,jsx,css,json}\" "
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+ssh://git@bitbucket.org/miguelagol/jscardio.git"
+   },
+   "author": "",
+   "license": "ISC",
+   "homepage": "https://bitbucket.org/miguelagol/jscardio#readme",
+   "devDependencies": {
+      "prettier": "^1.14.3"
+   }
+}
