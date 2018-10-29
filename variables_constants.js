@@ -1,13 +1,11 @@
-"use strict"
+'use strict';
 // The "use strict" directive switches the engine to the “modern” mode, changing the behavior of some built-in features
 // When it is located on the top of the script, then the whole script works the “modern” way.
-
 
 /* To comment a block press CTRL + SHIFT + A 
     Be carefull: Nested comments are not supported
 */
 // To comment a line press CTRL + /
-
 
 // VARIABLES
 // A variable is a “named storage” for data. To create a variable in JavaScript, we need to use the let keyword.
@@ -36,11 +34,10 @@ console.log(message); // Hello world!
 
 // CONSTANTS
 // To declare a constant (unchanging) variable, one can use const instead of let
-const myBirthday = "23.11.1990";
+const myBirthday = '23.11.1990';
 
 // myBirthday = "01.01.2001"; // error, can't reassign the constant!
 
-
 /* There is a widespread practice to use constants as aliases for difficult-to-remember values that are known prior to execution.
 Such constants are named using capital letters and underscores. */
-const COLOR_RED = "#F00";
+const COLOR_RED = '#F00';

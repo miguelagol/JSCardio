@@ -1,12 +1,12 @@
 // Method examples
 // A function that is the property of an object is called its method.
 let user = {
-  name: "John",
-  age: 30
+   name: 'John',
+   age: 30,
 };
 
-user.sayHi = function () {
-  console.log("Hello!");
+user.sayHi = function() {
+   console.log('Hello!');
 };
 
 user.sayHi(); // Hello!
@@ -15,9 +15,10 @@ user.sayHi(); // Hello!
 
 // Method shorthand
 let user = {
-  sayHi() { // same as "sayHi: function()"
-    console.log("Hello");
-  }
+   sayHi() {
+      // same as "sayHi: function()"
+      console.log('Hello');
+   },
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -32,30 +33,29 @@ let user = {
 */
 
 function baz() {
-  // call-stack is: 'baz'
-  // so, our call-site is in the global scope
+   // call-stack is: 'baz'
+   // so, our call-site is in the global scope
 
-  console.log('baz');
-  bar(); // <-- call-site for 'bar'
+   console.log('baz');
+   bar(); // <-- call-site for 'bar'
 }
 
 function bar() {
-  // call-stack is: 'baz' -> 'bar'
-  // call-site is in 'baz'
+   // call-stack is: 'baz' -> 'bar'
+   // call-site is in 'baz'
 
-  console.log('bar');
-  foo(); // <-- call-site for 'foo'
+   console.log('bar');
+   foo(); // <-- call-site for 'foo'
 }
 
 function foo() {
-  // call-stack is: 'baz' -> 'bar' -> 'foo'
-  // call-site is in 'bar'
+   // call-stack is: 'baz' -> 'bar' -> 'foo'
+   // call-site is in 'bar'
 
-  console.log('foo');
+   console.log('foo');
 }
 
 baz(); // <-- call-site for 'baz'
-
 
 //-------------------REMEMBER------------------
 /*  1.  Look to where the function was invoked.
@@ -70,21 +70,21 @@ baz(); // <-- call-site for 'baz'
 
 // Global context
 function someFunction() {
-  return this;
+   return this;
 }
 
 console.log(someFunction() === global); // true
 
 // Common usage
 const object = {
-  value: 42,
-  getAnswer(question) {
-    if (!question.endsWith('?')) {
-      throw new Error('This is not a question!');
-    }
+   value: 42,
+   getAnswer(question) {
+      if (!question.endsWith('?')) {
+         throw new Error('This is not a question!');
+      }
 
-    return this.value;
-  }
+      return this.value;
+   },
 };
 
 const answer = object.getAnswer('what is the meaning of life?');
@@ -94,58 +94,57 @@ console.log(answer); // 42
 
 // Reference
 const object2 = {
-  value: 42,
-  getAnswer(question) {
-    if (!question.endsWith('?')) {
-      throw new Error('This is not a question!');
-    }
-    return this.value;
-  }
-}
+   value: 42,
+   getAnswer(question) {
+      if (!question.endsWith('?')) {
+         throw new Error('This is not a question!');
+      }
+      return this.value;
+   },
+};
 
 const newObject = {
-  value: 3301
+   value: 3301,
 };
 
 newObject.getAnswer = object2.getAnswer;
 
-const answer = newObject.getAnswer('what is the most mysterious secret out there?');
+const answer = newObject.getAnswer(
+   'what is the most mysterious secret out there?',
+);
 console.log(answer); // 3301
-
 
 // this refers to the “closest” object, which has this function as a method
 const a = {
-  value: 42,
-  b: {
-    value: 3301,
-    getContext: function () {
-      console.log(this.value);
-      return this;
-    }
-  }
+   value: 42,
+   b: {
+      value: 3301,
+      getContext: function() {
+         console.log(this.value);
+         return this;
+      },
+   },
 };
 
 console.log(a.b.getContext() === a.b); // 3301, true
 a.b.getContext(); // 3301
 
-
 function someFunction() {
-  return this;
+   return this;
 }
 
 const b = {
-  b: 42,
-  c: someFunction
+   b: 42,
+   c: someFunction,
 };
 
 console.log(b.c() === b); // true
 
-
 const a = {
-  b: 42,
-  c: function () {
-    return this.b;
-  }
+   b: 42,
+   c: function() {
+      return this.b;
+   },
 };
 
 const x = a.c;
@@ -156,33 +155,31 @@ console.log((a.c || [])()); // undefined
     const method = a.c || [];
     (method)();
 */
-console.log((a.c)()); // 42
+console.log(a.c()); // 42
 console.log((1, a.c)()); // undefined
 
-
 let user = {
-  name: "John",
-  age: 30,
+   name: 'John',
+   age: 30,
 
-  sayHi() {
-    console.log(this.name);
-  }
+   sayHi() {
+      console.log(this.name);
+   },
 };
 
 let admin = user;
 user = null;
 
 for (let key in admin) {
-  console.log(key)        // name, age, sayHi()
+   console.log(key); // name, age, sayHi()
 }
 admin.sayHi(); // John
 
-
-let user2 = { name: "John" };
-let admin2 = { name: "Admin" };
+let user2 = { name: 'John' };
+let admin2 = { name: 'Admin' };
 
 function sayHi() {
-  console.log(this.name);
+   console.log(this.name);
 }
 
 // use the same functions in two objects
@@ -195,13 +192,12 @@ admin2.f(); // Admin  (this == admin)
 
 sayHi(); // undefined (this == global object, window in a browser)
 
-
 let user3 = {
-  name: "John",
-  hi() {
-    console.log(this.name);
-  }
-}
+   name: 'John',
+   hi() {
+      console.log(this.name);
+   },
+};
 
 let hi = user3.hi;
 hi(); // undefined
@@ -218,11 +214,11 @@ hi(); // undefined
 // Arrow functions have no "this"
 // Arrow functions don’t have their “own” this. If we reference this from such a function, it’s taken from the outer “normal” function.
 let user = {
-  firstName: "Ilya",
-  call() {
-    let callFN = () => console.log(this.firstName);
-    callFN();
-  }
+   firstName: 'Ilya',
+   call() {
+      let callFN = () => console.log(this.firstName);
+      callFN();
+   },
 };
 
 user.call(); // Ilya
@@ -231,11 +227,11 @@ user.call(); // Ilya
 
 // TASK 1 - What is the result of this code?
 let user = {
-  name: "John",
-  go: function () { console.log(this.name) }
-}
-
-  (user.go)() // Error: user is not defined
+   name: 'John',
+   go: function() {
+      console.log(this.name);
+   },
+}(user.go)(); // Error: user is not defined
 // Because a semicolon is missing after let user = {}
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -244,23 +240,25 @@ let user = {
 let obj, method;
 
 obj = {
-  go: function () { console.log(this); }
+   go: function() {
+      console.log(this);
+   },
 };
 
-obj.go();               // { go: [Function: go] }
-(obj.go)();             // { go: [Function: go] }
-(method = obj.go)();    // Window {...}
+obj.go(); // { go: [Function: go] }
+obj.go(); // { go: [Function: go] }
+(method = obj.go)(); // Window {...}
 (obj.go || obj.stop)(); // Window {...}
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - What is the result of accessing its ref? Why?
 function makeUser() {
-  return {
-    name: "John",
-    ref: this
-  };
-};
+   return {
+      name: 'John',
+      ref: this,
+   };
+}
 
 let user = makeUser();
 
@@ -269,13 +267,14 @@ console.log(user.ref.name); // undefined
 
 //vs.
 function makeUser2() {
-  return {
-    name: "John",
-    ref() {           // user.ref() is a method. And the value of this is set to the object before dot ..
-      return this;
-    }
-  };
-};
+   return {
+      name: 'John',
+      ref() {
+         // user.ref() is a method. And the value of this is set to the object before dot ..
+         return this;
+      },
+   };
+}
 
 let user2 = makeUser2();
 
@@ -286,18 +285,18 @@ console.log(user2.ref()); // { name: 'John', ref: [Function: ref] }
 
 // TASK 4 - Create a calculator
 let calculator = {
-  read() {
-    this.x = +prompt('x?', '');
-    this.y = +prompt('y?', '');
-  },
-  sum() {
-    let sum = this.x + this.y;
-    return sum;
-  },
-  mul() {
-    let mul = this.x * this.y;
-    return mul;
-  }
+   read() {
+      this.x = +prompt('x?', '');
+      this.y = +prompt('y?', '');
+   },
+   sum() {
+      let sum = this.x + this.y;
+      return sum;
+   },
+   mul() {
+      let mul = this.x * this.y;
+      return mul;
+   },
 };
 
 calculator.read();
@@ -308,16 +307,17 @@ alert(calculator.mul());
 
 // TASK 5 - Chaining - Modify the code of up and down to make the calls chainable
 let ladder = {
-  step: 0,
-  up() {
-    this.step++;
-  },
-  down() {
-    this.step--;
-  },
-  showStep: function () { // shows the current step
-    console.log(this.step);
-  }
+   step: 0,
+   up() {
+      this.step++;
+   },
+   down() {
+      this.step--;
+   },
+   showStep: function() {
+      // shows the current step
+      console.log(this.step);
+   },
 };
 
 ladder.up();
@@ -326,39 +326,46 @@ ladder.down();
 ladder.showStep(); // 1
 
 let ladderChain = {
-  step: 0,
-  up() {
-    this.step++;
-    return this;
-  },
-  down() {
-    this.step--;
-    return this;
-  },
-  showStep: function () { // shows the current step
-    console.log(this.step);
-    return this;
-  }
+   step: 0,
+   up() {
+      this.step++;
+      return this;
+   },
+   down() {
+      this.step--;
+      return this;
+   },
+   showStep: function() {
+      // shows the current step
+      console.log(this.step);
+      return this;
+   },
 };
 
-ladderChain.up().down().down().showStep(); // -1
+ladderChain
+   .up()
+   .down()
+   .down()
+   .showStep(); // -1
 
 // Chaining 2
 const x = {
-  result: 0,
-  y: 2,
-  half(num) {
-    this.result += num / this.y;
-    return this
-  },
-  mult(z) {
-    this.result += this.y * z;
-    return this
-  },
-  res() {
-    console.log(this.result)
-    return this
-  }
-}
+   result: 0,
+   y: 2,
+   half(num) {
+      this.result += num / this.y;
+      return this;
+   },
+   mult(z) {
+      this.result += this.y * z;
+      return this;
+   },
+   res() {
+      console.log(this.result);
+      return this;
+   },
+};
 
-x.half(10).mult(2).res();
+x.half(10)
+   .mult(2)
+   .res();

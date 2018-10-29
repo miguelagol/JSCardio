@@ -23,10 +23,6 @@ It monitors all objects and removes those that have become unreachable.
     -   Incremental collection – if there are many objects, and we try to walk and mark the whole object set at once, it may take some time and introduce visible delays in the execution. So the engine tries to split the garbage collection into pieces. Then the pieces are executed one by one, separately. That requires some extra bookkeeping between them to track changes, but we have many tiny delays instead of a big one.
     -   Idle-time collection – the garbage collector tries to run only while the CPU is idle, to reduce the possible effect on the execution. */
 
-
-
-
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Garbage collection

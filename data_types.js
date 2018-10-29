@@ -23,7 +23,7 @@ console.log('not a number' / 3 + 4); // NaN
 // STRING
 // In JavaScript, there are 3 types of quotes.
 
-let str = "Hello"; // Double quotes
+let str = 'Hello'; // Double quotes
 let str2 = 'Hello'; // Single quotes
 let str3 = `Hello`; // Backticks - They allow us to embed variables and expressions into a string by wrapping them in ${…}
 
@@ -33,7 +33,7 @@ console.log(`Hi, Hey, ${str}`); // Hi, Hey, Hello
 // embed an expresion
 console.log(`The result is ${1 + 2}`); // The result is 3
 
-console.log("The result is ${1+2}"); // The result is ${1+2}
+console.log('The result is ${1+2}'); // The result is ${1+2}
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -69,15 +69,14 @@ It supports two forms of syntax:
 */
 
 console.log(typeof 6); // number
-console.log(typeof "6"); // string
-console.log(typeof "John"); // string
+console.log(typeof '6'); // string
+console.log(typeof 'John'); // string
 console.log(typeof 0); // number
 console.log(typeof null); // object !!! - This is an officially recognized ERROR of typeof
 console.log(typeof undefined); // undefined
 console.log(typeof true); // boolean
-console.log(typeof Symbol("id")); // symbol
+console.log(typeof Symbol('id')); // symbol
 console.log(typeof Math); // object
-
 
 /* --------------------REMEMBER--------------------
 The typeof operator allows us to see which type is stored in the variable.
@@ -93,13 +92,13 @@ The typeof operator allows us to see which type is stored in the variable.
     -   The language allows access to methods and properties of strings, numbers, booleans and symbols (as if they were objects)
     -   When this happens, a special “object wrapper” is created that provides the extra functionality, and then is destroyed.
 */
-// The special primitives null and undefined are exceptions. They have no corresponding “wrapper objects” and provide no methods. 
+// The special primitives null and undefined are exceptions. They have no corresponding “wrapper objects” and provide no methods.
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - What is the output of the script?
-let name = "John";
+let name = 'John';
 
 console.log(`Hello ${1}`); // Hello 1
-console.log(`Hello ${"name"}`); // Hello name
+console.log(`Hello ${'name'}`); // Hello name
 console.log(`Hello ${name}`); // Hello John

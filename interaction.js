@@ -1,7 +1,7 @@
 // Alert
 // alert(message);
 // This shows a message and pauses the script execution until the user presses “OK”
-let variable = "Hello"
+let variable = 'Hello';
 alert(variable); // or alert("Hello");
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -13,7 +13,7 @@ alert(variable); // or alert("Hello");
     Default - an optional second parameter, the initial value for the input
     The call to prompt returns the text from the field or null if the input was canceled.
 */
-let age = prompt("How old are you?", 100);
+let age = prompt('How old are you?', 100);
 alert(`You are ${age} years old!`);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------

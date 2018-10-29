@@ -1,13 +1,13 @@
-"use strict"
+'use strict';
 
 // Binary +     string concatenation
 // If the binary + is applied to strings, it merges (concatenates) them
-let str = "My" + "String";
+let str = 'My' + 'String';
 console.log(str); // MyString
 
-console.log("1" + 2); // 12
-console.log("2" + 1); // 21
-console.log(2 + 2 + "1"); // 41
+console.log('1' + 2); // 12
+console.log('2' + 1); // 21
+console.log(2 + 2 + '1'); // 41
 
 /* --------------------REMEMBER--------------------
     - If any of the operands is a string, then the other one is converted to a string too
@@ -16,28 +16,27 @@ console.log(2 + 2 + "1"); // 41
 
 /*  String concatenation and conversion is a special feature of the binary plus +. 
     Other arithmetic operators work only with numbers. They always convert their operands to numbers. */
-console.log(2 - "1"); // 1
-console.log("6" / "2"); // 3
-
+console.log(2 - '1'); // 1
+console.log('6' / '2'); // 3
 
 // TASK 1 - What are results of these expressions?
-console.log("" + 1 + 0); // "10"
-console.log("" - 1 + 0); // -1
+console.log('' + 1 + 0); // "10"
+console.log('' - 1 + 0); // -1
 console.log(true + false); // 1
-console.log(6 / "3"); // 2
-console.log("2" * "3"); // 6
-console.log(4 + 5 + "px"); // "9px"
-console.log("4" + "5"); // "45"
-console.log("$" + 4 + 5); // "$45"
-console.log("4" - 2); // 2
-console.log("4px" - 2); // NaN
+console.log(6 / '3'); // 2
+console.log('2' * '3'); // 6
+console.log(4 + 5 + 'px'); // "9px"
+console.log('4' + '5'); // "45"
+console.log('$' + 4 + 5); // "$45"
+console.log('4' - 2); // 2
+console.log('4px' - 2); // NaN
 console.log(7 / 0); // Infinity
-console.log("  -9\n" + 5);
+console.log('  -9\n' + 5);
 /* 
 "  -9
 5"
 */
-console.log("  -9\n" - 5); // -14
+console.log('  -9\n' - 5); // -14
 console.log(null + 1); // 1
 console.log(undefined + 1); // NaN
 
@@ -56,10 +55,10 @@ console.log(+y); // -2
 
 // Converts non-numbers
 console.log(+true); // 1
-console.log(+"");   // 0
+console.log(+''); // 0
 
-let apple = "2";
-let orange = "3";
+let apple = '2';
+let orange = '3';
 
 console.log(apple + orange); // "23"    binary + concatenate strings
 console.log(+apple + +orange); // 5     both values converted to numbers before the binary plus
@@ -129,7 +128,8 @@ console.log(b); // 1
 
 // TASK 3
 // What are the final values of all variables a, b, c and d after the code below?
-let a = 1, b = 1;
+let a = 1,
+   b = 1;
 
 let c = ++a; // 2
 let d = b++; // 1
@@ -173,10 +173,10 @@ console.log(undefined || null || 0); // 0 (all falsy, returns the last value)
 
 // AND &&
 // result = a && b;
-console.log( true && true ); // true
-console.log( false && true ); // false
-console.log( true && false ); // false
-console.log( false && false ); // false
+console.log(true && true); // true
+console.log(false && true); // false
+console.log(true && false); // false
+console.log(false && false); // false
 
 // Multiple AND &&
 // result = value1 && value2 && value3;
@@ -186,15 +186,15 @@ console.log( false && false ); // false
     - For each operand, convert it to a boolean. If the result is false, stop and return the original value of that operand.
     - If all other operands have been assessed (i.e. all were truthy), return the last operand.
 */
-console.log( 1 && 0 ); // 0, (because first operand is truthy)
-console.log( 1 && 5 ); // 5 (both operands are truthy)
-console.log( null && 5 ); // null
-console.log( 0 && "no matter what" ); // 0
+console.log(1 && 0); // 0, (because first operand is truthy)
+console.log(1 && 5); // 5 (both operands are truthy)
+console.log(null && 5); // null
+console.log(0 && 'no matter what'); // 0
 
 // NOT !
 // result = !value;
-console.log( !true ); // false
-console.log( !0 ); // true
+console.log(!true); // false
+console.log(!0); // true
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -219,11 +219,11 @@ console.log(a); // 7 (the result of 3 + 4)
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - What the code below will output?
-console.log( console.log(1) || 2 || console.log(3) );
+console.log(console.log(1) || 2 || console.log(3));
 
 // first 1 and then 2, because
 // The call to console.log() does not return a value, it returns undefined.
-console.log(typeof(console.log(1)));
+console.log(typeof console.log(1));
 /*  1. The first OR || evaluates it’s left operand console.log(1). That shows the first message with 1.
     2. The console.log returns undefined, so OR goes on to the second operand searching for a truthy value.
     3. The second operand 2 is truthy, so the execution is halted, 2 is returned and then shown in output.
@@ -232,30 +232,31 @@ console.log(typeof(console.log(1)));
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - What will this code show?
-console.log( console.log(1) && console.log(3) ); // first 1 and then undefined
+console.log(console.log(1) && console.log(3)); // first 1 and then undefined
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - What will be the result?
-console.log( null || 2 && 3 || 4 ); // 3
+console.log(null || (2 && 3) || 4); // 3
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 4 - Check the range between 14 and 90
 let age = prompt('How old are you?', 0);
 if (age <= 14) {
-    alert("The age is <= 14");
+   alert('The age is <= 14');
 } else if (age >= 90) {
-    alert("The age is >= 90");
+   alert('The age is >= 90');
 } else {
-    alert("The age is between 14 and 90");
+   alert('The age is between 14 and 90');
 }
 
 // let (age >= 14 && age <= 90)
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 5 - Check the range outside
-let (age < 14 || age > 90)
-
-// let (!(age >= 14 && age <= 90))
+// TASK 5 - Write an if condition to check that age is NOT between 14 and 90 inclusively.
+// Variant 1
+//  let (age < 14 || age > 90)
+// Variant 2
+//  let (!(age >= 14 && age <= 90))

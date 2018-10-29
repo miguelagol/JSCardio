@@ -1,6 +1,6 @@
 // Quotes
 // In JavaScript, there are 3 types of quotes.
-let str = "Hello double"; // Double quotes
+let str = 'Hello double'; // Double quotes
 let str2 = 'Hello single'; // Single quotes
 let str3 = `Hello backsticks`; // Backticks - They allow us to embed variables and expressions into a string by wrapping them in ${…}
 
@@ -9,10 +9,10 @@ console.log(`Hi, Hey, ${str}`); // Hi, Hey, Hello double
 
 // embed an expresion
 console.log(`The result is ${1 + 2}`); // The result is 3
-console.log("The result is ${1+2}"); // The result is ${1+2}
+console.log('The result is ${1+2}'); // The result is ${1+2}
 
 function sum(a, b) {
-    return a + b;
+   return a + b;
 }
 console.log(`1 + 2 = ${sum(1, 2)}`); // 1 + 2 = 3
 
@@ -41,39 +41,39 @@ console.log(quotesList);
     \uNNNN        A unicode symbol with the hex code NNNN, for instance \u00A9 (unicode for the copyright symbol ©)
     \u{NNNNNNNN}  Some rare characters are encoded with two unicode symbols, taking up to 4 bytes. This long unicode requires braces around it.
  */
-console.log("Hello\nJohn");
+console.log('Hello\nJohn');
 /*  Hello
     John
 */
-console.log("Hello\nJohn\n");
+console.log('Hello\nJohn\n');
 /*  Hello
     John
     
 */
-console.log("Hello\rJohn");
+console.log('Hello\rJohn');
 /*  Hello
     John
 */
-console.log("Hello\rJohn\r");
+console.log('Hello\rJohn\r');
 /*  Hello
     John
 */
-console.log("Hello\tJohn"); // Hello    John
-console.log("\u{1F60D}"); // 😍 (smiling face symbol)
+console.log('Hello\tJohn'); // Hello    John
+console.log('\u{1F60D}'); // 😍 (smiling face symbol)
 
 // console.log( 'I'm the Walrus!' );    SyntaxError
-console.log('I\'m the Walrus!'); // I'm the Walrus!
+console.log("I'm the Walrus!"); // I'm the Walrus!
 console.log(`I'm the Walrus!`); // I'm the Walrus!
 
 // console.log("The backslash: \");   SyntaxError
-console.log("The backslash: \\"); // The backslash: \
+console.log('The backslash: \\'); // The backslash: \
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Methods of strings
 // .length
-let str = "Hello";
-let str2 = "Hi\nHello";
+let str = 'Hello';
+let str2 = 'Hi\nHello';
 
 console.log(str.length); // 5
 console.log(str2.length); // 8 (\n is a single "special" character)
@@ -90,7 +90,7 @@ console.log('𩷶'.length); // 2, a rare chinese hieroglyph
 // Accesssing characters
 // str[pos] / str.charAt(pos)
 
-let str = "Hello";
+let str = 'Hello';
 
 // first character
 console.log(str[0]); // H
@@ -105,21 +105,21 @@ console.log(str[100]); // undefined
 console.log(str.charAt(100)); // an empty string
 
 for (let char of str) {
-    console.log(char)
-}                          // H, e, l, l, o
+   console.log(char);
+} // H, e, l, l, o
 
 //--------------------------------------------------------------------------------------
 
 // String are immutable
 // strings can't be changed
 
-let str = "Hi";
-str[0] = "h";
+let str = 'Hi';
+str[0] = 'h';
 
 console.log(str[0]); // H
 console.log(str); // Hi
 
-let str2 = "h" + str[1];
+let str2 = 'h' + str[1];
 
 console.log(str2); // hi
 
@@ -127,7 +127,7 @@ console.log(str2); // hi
 
 // Changing the case
 // .toUpperCase()
-let str = "JavaScript";
+let str = 'JavaScript';
 
 console.log(str.toUpperCase()); // JAVASCRIPT
 console.log(str[2].toUpperCase()); // V
@@ -137,7 +137,7 @@ console.log(str[2].toUpperCase()); // V
 // .toLowerCase()
 console.log(str.toLowerCase()); // javascript
 console.log(str[4].toLowerCase()); // s
-console.log("HTML".toLowerCase()); // html
+console.log('HTML'.toLowerCase()); // html
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -152,18 +152,18 @@ let str = 'Widget with id';
 console.log(str.indexOf('Widget')); // 0
 console.log(str.indexOf('widget')); // -1
 console.log(str.indexOf('id')); // 1 ("id" is found at the position 1 ...idget with id)
-console.log(str.indexOf('id', 2)); // 12 
+console.log(str.indexOf('id', 2)); // 12
 
 let str = 'As sly as a fox, as strong as an ox';
 let target = 'as';
 let pos = 0;
 
 while (true) {
-    let foundPos = str.indexOf(target, pos);
-    if (foundPos == -1) break;
+   let foundPos = str.indexOf(target, pos);
+   if (foundPos == -1) break;
 
-    console.log(`Found at ${foundPos}`);
-    pos = foundPos + 1;
+   console.log(`Found at ${foundPos}`);
+   pos = foundPos + 1;
 }
 
 // the same as
@@ -172,8 +172,8 @@ let target2 = 'as';
 let pos2 = -1;
 
 while ((pos2 = str2.indexOf(target2, pos2 + 1)) != -1) {
-    console.log(pos2);
-}                           // 7, 17, 27
+   console.log(pos2);
+} // 7, 17, 27
 
 // and reverse order
 let str3 = 'As sly as a fox, as strong as an ox';
@@ -181,8 +181,8 @@ let target3 = 'as';
 let pos3 = str3.length;
 
 while ((pos3 = str3.lastIndexOf(target3, pos3 - 1)) != -1) {
-    console.log(pos3);
-}                           // 27, 17, 7
+   console.log(pos3);
+} // 27, 17, 7
 
 //------------------REMEMBER-------------------
 /*  Don't put indexOf in the if like this:
@@ -191,10 +191,10 @@ while ((pos3 = str3.lastIndexOf(target3, pos3 - 1)) != -1) {
 */
 
 // The bitwise NOT trick
-let str = "Key is here";
+let str = 'Key is here';
 
 if (~str.indexOf('Key')) {
-    console.log('Found it!');
+   console.log('Found it!');
 }
 
 // Becasuse of
@@ -210,7 +210,7 @@ let target = 'key';
 let includesTarget = string.indexOf(target) > -1;
 
 if (includesTarget) {
-    console.log('We found it!')
+   console.log('We found it!');
 }
 
 //--------------------------------------------------------------------------------------
@@ -300,9 +300,9 @@ console.log(str + ' ' + str.length); // I am shorter than you think 27
 
 // .replace()
 // string.replace(pattern, replacement) return a string with a pattern replaced by a replacement string
-let str = "I have first key, second Key and third key";
-let target = "key"; // string pattern
-let replace = "dog";
+let str = 'I have first key, second Key and third key';
+let target = 'key'; // string pattern
+let replace = 'dog';
 
 console.log(str.replace(target, replace)); // I have first dog, second Key and third key
 
@@ -320,7 +320,7 @@ console.log(str.replace(target3, replace)); // I have first dog, second dog and 
 
 // .split()
 // string.split(separator) takes a separator which you want to split apart the string on, and it returns an array of strings
-let str = 'Let\'s sort this string';
+let str = "Let's sort this string";
 let separator = ' ';
 
 console.log(str.split(separator)); // [ 'Let\'s', 'sort', 'this', 'string' ]
@@ -334,15 +334,15 @@ console.log(user.split(columns)); // [ 'User', 'Name', 'Surname', 'Age' ]
 
 // .repeat()
 // repeats a string a specified number of times
-let str = "Say Hi ";
+let str = 'Say Hi ';
 
-console.log(str.repeat(4)); // Say Hi Say Hi Say Hi Say Hi 
+console.log(str.repeat(4)); // Say Hi Say Hi Say Hi Say Hi
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // .match()
 // string.match(regex) retrieves the matches when matching a string against a regular expression. Returns an array of strings
-let str = 'I like dogs. I love Kora and Sisi.'
+let str = 'I like dogs. I love Kora and Sisi.';
 let target = /[A-Z]/g;
 
 console.log(str.match(target)); // [ 'I', 'I', 'K', 'S' ]
@@ -386,9 +386,11 @@ console.log(String.fromCodePoint(90)); // Z
 
 let str = '';
 for (let i = 65; i <= 220; i++) {
-    str += String.fromCodePoint(i);
+   str += String.fromCodePoint(i);
 }
-console.log(str);   /*  ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+console.log(
+   str,
+); /*  ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
                         ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿
                         ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜ
                     */
@@ -412,40 +414,41 @@ console.log('S\u0307\u0323'); // Ṩ  (S + dot above + dot below)
 console.log('S\u0323\u0307'); // Ṩ  (S + dot below + dot above)
 
 console.log('S\u0307\u0323' == 'S\u0323\u0307'); // false
-console.log("S\u0307\u0323".normalize() == "S\u0323\u0307".normalize()); // true
+console.log('S\u0307\u0323'.normalize() == 'S\u0323\u0307'.normalize()); // true
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - Uppercast the first character
 // Vol1
 function ucFirst(str) {
-    let len = str.length;
-    let strUC;
-    strUC = str[0].toUpperCase();
-    for (i = 1; i < len; i++) {
-        strUC += str[i]
-    }
-    console.log(strUC);
+   let len = str.length;
+   let strUC;
+   strUC = str[0].toUpperCase();
+   for (i = 1; i < len; i++) {
+      strUC += str[i];
+   }
+   console.log(strUC);
 }
 
-ucFirst("henio"); // Henio
+ucFirst('henio'); // Henio
 
 // Vol2
 function ucFirst2(str) {
-    console.log(str[0].toUpperCase() + str.slice(1));
+   console.log(str[0].toUpperCase() + str.slice(1));
 }
 
-ucFirst2("zbysio"); // Zbysio
+ucFirst2('zbysio'); // Zbysio
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - CHeck for spam
 function checkSpam(str) {
-    str = str.toLowerCase();
-    if (str.includes('viagra') || str.includes('xxx')) {
-        console.log(true);
-    }
-    else { console.log(false) }
+   str = str.toLowerCase();
+   if (str.includes('viagra') || str.includes('xxx')) {
+      console.log(true);
+   } else {
+      console.log(false);
+   }
 }
 
 checkSpam('buy ViAgRa now'); // true
@@ -456,21 +459,20 @@ checkSpam('innocent rabbit'); // false
 
 // TASK 3 - Truncate the string
 function truncate(str, maxlength) {
-    let length = str.length;
-    if (length > maxlength) {
-        console.log(str.slice(0, maxlength - 1) + '…')
-    }
-    else console.log(str)
+   let length = str.length;
+   if (length > maxlength) {
+      console.log(str.slice(0, maxlength - 1) + '…');
+   } else console.log(str);
 }
 
 truncate("What I'd like to tell on this topic is:", 20); // What I'd like to te…
-truncate("Hi everyone!", 20); // Hi everyone!
+truncate('Hi everyone!', 20); // Hi everyone!
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 4 - Extract the money
 function extractCurrencyValue(str) {
-    console.log(+str.slice(1));
+   console.log(+str.slice(1));
 }
 
 extractCurrencyValue('$120'); // 120
