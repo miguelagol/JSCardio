@@ -18,6 +18,10 @@ console.log(array); // [ 'one', 'four', 'three' ]
 array[3] = 'five';
 console.log(array); // [ 'one', 'four', 'three', 'five' ]
 
+// Delete an element
+delete array[3]; // delete obj.key removes a value by the key
+console.log(array); // [ 'one', 'four', 'three', <1 empty item> ]
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // .length
@@ -78,7 +82,6 @@ console.log(arr2.length); // 3
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Arrays methods
 // The data structure is deque ( queue + stack )
 
 // Queue methods
@@ -126,7 +129,7 @@ let fruits = ['Apple'];
 let array = fruits; // copy by reference
 
 array.push('Lemon');
-console.log(fruits); // [ Apple, Lemon ]
+console.log(fruits); // [ 'Apple', 'Lemon' ]
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -151,40 +154,177 @@ for (let num of numbers) {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// ARRAY SPLICE
-// arr.splice(index[, deleteCount, elem1, ..., elemN])
+// Array methods
 
+// .splice
+// array.splice(index[, deleteCount, elem1, ..., elemN])
+// It starts from the position index: removes deleteCount elements and then inserts elem1, ..., elemN at their place.
+// Returns the array of removed elements.
 let arr = ['I', 'study', 'JavaScript', 'right', 'now'];
 
 // remove 3 first elements and replace them with another
 arr.splice(0, 3, "Let's", 'dance');
+console.log(arr); // [ 'Let\'s', 'dance', 'right', 'now' ]
 
-console.log(arr); // now ["Let's", "dance", "right", "now"]
+arr.splice(2, 0, 'cuban', 'salsa');
+console.log(arr); // [ 'Let\'s', 'dance', 'cuban', 'salsa', 'right', 'now' ]
 
 let removed = arr.splice(0, 2);
+console.log(removed); // [ 'Let\'s', 'dance' ]     <-- array of removed elements
+console.log(arr);
+// negative indexes are allowed
+let arr2 = [1, 2, 5];
 
-console.log(removed); // "Let's", "dance" <-- array of removed elements
+arr2.splice(-1, 0, 3, 4);
+console.log(arr2); // [ 1, 2, 3, 4, 5 ]
 
-let array = ['one', 'two', 'three'];
+//--------------------------------------------------------------------------------------
 
-console.log(array); // [ 'one', 'two', 'three' ]
+// .slice
+// array.slice(start, end) it returns a new array where it copies all items start index "start" to "end" (NOT INCLUDING END)
+let str = 'test';
+let arr = ['t', 'e', 's', 't'];
 
-array[3] = 'four'; // Array elements are numbered, starting with zero.
-console.log(array); // [ 'one', 'two', 'three', 'four' ]
+console.log(str.slice(1, 3)); // es
+console.log(arr.slice(1, 3)); // [ 'e', 's' ]
 
-console.log(array.length); // 4
+// negative indexes are allowed
+console.log(arr.slice(-2)); // [ 's', 't' ]
 
-array.pop(); // pop takes an element from the end.
-console.log(array.pop()); // remove last element and alert it - three
+//--------------------------------------------------------------------------------------
 
-array.push('four'); // push adds ana element to the end
-console.log(array); // [ 'one', 'two', 'three', 'four' ]
+// .concat
+// array.concat(argument1 [, argument2]) joins the array with other arrays and/or items
+// It accepts any number of arguments – either arrays or values
+let arr = [1, 2];
 
-array.shift(); // Extracts the first element of the array
-console.log(array); // [ 'two', 'three', 'four' ]
+console.log(arr.concat([3, 4])); // [ 1, 2, 3, 4 ]
+console.log(arr.concat([3, 4], 5)); // [ 1, 2, 3, 4, 5 ]
+console.log(arr.concat([3, 4], [5, 6])); // [ 1, 2, 3, 4, 5, 6 ]
 
-array.unshift('one'); // Add the element to the beginning of the array
-console.log(array); // [ 'one', 'two', 'three', 'four' ]
+// Normally, it only copies elements from arrays. Other objects, even if they look like arrays, added as a whole
+let arrayLike = {
+   0: 'something',
+   length: 1,
+};
+
+console.log(arr.concat(arrayLike)); // [ 1, 2, { '0': 'something', length: 1 } ]
+
+// If an argument is an array or has Symbol.isConcatSpreadable property, then all its elements are copied.
+let arrayLike2 = {
+   0: 'something',
+   1: 'else',
+   [Symbol.isConcatSpreadable]: true,
+   length: 2,
+};
+
+console.log(arr.concat(arrayLike2)); // [ 1, 2, 'something', 'else' ]
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Searching in array
+
+// .indexOf
+// array.indexOf(item, from) looks for item starting from index from, and returns the index where it was found, otherwise -1
+let arr = [0, 1, false, 0];
+
+console.log(arr.indexOf(0)); // 0
+console.log(arr.indexOf(0, 1)); // 3
+console.log(arr.indexOf(false)); // 2
+console.log(arr.indexOf(null)); // -1
+
+// .lastIndexOf
+// array.lastIndexOf(item, from) the same as .indexOf but looks from right to left
+console.log(arr.lastIndexOf(0)); // 3
+console.log(arr.lastIndexOf(0, 1)); // 0
+
+// .includes
+// array.includes(item from) looks for item starting from index from, returns true if found
+// If we want to check for inclusion, and don’t want to know the exact index, then .includes is preferred
+console.log(arr.includes(0)); // true
+console.log(arr.includes(false)); // true
+console.log(arr.includes(null)); // false
+
+// .includes correctly handles NaN
+const arr2 = [NaN];
+console.log(arr2.includes(NaN)); // true
+
+console.log(arr2.indexOf(NaN)); // -1 (because of === comparison)
+
+//--------------------------------------------------------------------------------------
+
+// .find
+/*  let result = array.find(function(item, index, array) {
+        // should return true if the item is what we are looking for
+    });
+*/
+// The function is called repetitively for each element of the array
+// If it returns true, the search is stopped, the item is returned. If nothing found, undefined is returned.
+let users = [
+   { id: 1, name: 'John' },
+   { id: 2, name: 'Pete' },
+   { id: 3, name: 'Mary' },
+];
+
+let user = users.find(item => item.id == 2);
+
+console.log(user.name); // Pete
+
+// .findIndex
+//  it returns the index where the element was found instead of the element itself.
+let user2 = users.findIndex(item => item.id == 2);
+console.log(user2); // 1
+
+//--------------------------------------------------------------------------------------
+
+// .filter
+/*  let results = array.filter(function(item, index, array) {
+        // should return true if the item passes the filter
+    });
+*/
+// returns an array of matching elements:
+let users = [
+   { id: 1, name: 'John' },
+   { id: 2, name: 'Pete' },
+   { id: 3, name: 'Mary' },
+];
+
+let someUsers = users.filter(item => item.id < 3);
+
+console.log(someUsers.length); // 2
+console.log(someUsers); // [ { id: 1, name: 'John' }, { id: 2, name: 'Pete' } ]
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Transform an array
+
+// .map
+/*  let result = arr.map(function(item, index, array) {
+        // returns the new value instead of item
+    })
+*/
+// It calls the function for each element of the array and returns the array of results.
+let lengths = ['Bilbo', 'Gandalf', 'Nazgul'].map(item => item.length);
+console.log(lengths); // [ 5, 7, 6 ]
+
+//--------------------------------------------------------------------------------------
+
+// .sort(fn)
+// sorts the array in place
+let arr = [1, 2, 15];
+
+// the method reorders the content of arr (and returns it)
+arr.sort();
+
+console.log(arr); // 1, 15, 2
+
+//--------------------------------------------------------------------------------------
+
+// .split/  .join
+
+//--------------------------------------------------------------------------------------
+
+// .reduce/  .reduceRight
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
