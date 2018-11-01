@@ -82,7 +82,7 @@ console.log(arr2.length); // 3
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
-// The data structure is deque ( queue + stack )
+// The data structure of arrays is deque ( queue + stack )
 
 // Queue methods
 // The first pushed item is received first, that’s also called FIFO (First-In-First-Out) principle.
@@ -180,7 +180,7 @@ console.log(matrix[1][1]); // 5
 
 // .splice
 // array.splice(index[, deleteCount, elem1, ..., elemN])
-// It starts from the position index: removes deleteCount elements and then inserts elem1, ..., elemN at their place.
+// It starts from the position index, removes deleteCount elements and then inserts elem1, ..., elemN at their place.
 // Returns the array of removed elements.
 let arr = ['I', 'study', 'JavaScript', 'right', 'now'];
 
@@ -191,9 +191,10 @@ console.log(arr); // [ 'Let\'s', 'dance', 'right', 'now' ]
 arr.splice(2, 0, 'cuban', 'salsa');
 console.log(arr); // [ 'Let\'s', 'dance', 'cuban', 'salsa', 'right', 'now' ]
 
-let removed = arr.splice(0, 2);
-console.log(removed); // [ 'Let\'s', 'dance' ]     <-- array of removed elements
-console.log(arr);
+let removed = arr.splice(0, 4);
+console.log(removed); // [ 'Let\'s', 'dance', 'cuban', 'salsa' ]     <-- array of removed elements
+console.log(arr); // [ 'right', 'now' ]
+
 // negative indexes are allowed
 let arr2 = [1, 2, 5];
 
@@ -203,12 +204,13 @@ console.log(arr2); // [ 1, 2, 3, 4, 5 ]
 //--------------------------------------------------------------------------------------
 
 // .slice
-// array.slice(start, end) it returns a new array where it copies all items start index "start" to "end" (NOT INCLUDING END)
+// array.slice(start, end) it returns a new array where it copies all items start from index "start" to "end" (NOT INCLUDING END)
 let str = 'test';
 let arr = ['t', 'e', 's', 't'];
 
 console.log(str.slice(1, 3)); // es
 console.log(arr.slice(1, 3)); // [ 'e', 's' ]
+console.log(arr); // [ 't', 'e', 's', 't' ]  -> still the same
 
 // negative indexes are allowed
 console.log(arr.slice(-2)); // [ 's', 't' ]
@@ -223,6 +225,7 @@ let arr = [1, 2];
 console.log(arr.concat([3, 4])); // [ 1, 2, 3, 4 ]
 console.log(arr.concat([3, 4], 5)); // [ 1, 2, 3, 4, 5 ]
 console.log(arr.concat([3, 4], [5, 6])); // [ 1, 2, 3, 4, 5, 6 ]
+console.log(arr); // [ 1, 2 ]       <- still the same
 
 // Normally, it only copies elements from arrays. Other objects, even if they look like arrays, added as a whole
 let arrayLike = {
@@ -521,6 +524,9 @@ forEach(func)           calls func for every element, does not return anything.
 Array.isArray(arr)      checks arr for being an array.
 */
 
+//--------------------REMEMBER--------------------
+//  Methods sort, reverse and splice modify the array itself
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - What is this code going to show?
@@ -615,3 +621,106 @@ getMaxSubSum([-2, -1, 1, 2]);
 getMaxSubSum([100, -9, 2, -3, 5]);
 getMaxSubSum([1, 2, 3]);
 getMaxSubSum([-1, -2, -3]);
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Write the function camelize(str) that changes dash-separated words like “my-short-string” into camel-cased “myShortString”
+function camelize(string) {
+    let array = string.split("-");
+    for (let i = 1; i < array.length; i++) {
+        array[i] = array[i][0].toUpperCase() + array[i].slice(1);
+    }
+    let camelizeString = array.join('');
+    console.log(camelizeString);
+}
+
+camelize("background-color"); // backgroundColor
+camelize("list-style-image"); // listStyleImage
+camelize("-webkit-transition"); // WebkitTransition
+
+// or 
+function camelize2(string) {
+    return string
+        .split('-')
+        .map((str, index) => index == 0 ? str : str[0].toUpperCase() + str.slice(1))
+        .join("")
+}
+
+console.log(camelize2("background-color")); // backgroundColor
+console.log(camelize2("list-style-image")); // listStyleImage
+console.log(camelize2("-webkit-transition")); // WebkitTransition
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Write a function filterRange(arr, a, b) that gets an array arr, looks for elements between a and b in it
+//          and returns an array of them
+function filterRange(array, a, b) {
+    return array.filter((item) => (item == a) || (item > a && item < b) || (item == b))
+}
+
+let arr = [5, 3, 8, 1, 12, 0, 4];
+let filtered = filterRange(arr, 1, 5);
+
+console.log(filtered); // [ 5, 3, 1, 4 ]
+console.log(arr); // [ 5, 3, 8, 1, 12, 0, 4 ]
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 8 - Write a function filterRangeInPlace(arr, a, b) that gets an array arr and removes from it all values except those that
+//          are between a and b. The test is: a ≤ arr[i] ≤ b
+function filterRangeInPlace(array, a, b) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] < a || array[i] > b) {
+            array.splice(i, 1);
+            i--
+        }
+    }
+}
+
+let arr = [0, 5, 3, 22, 1, 12, 18, 4, 2];
+console.log(arr);
+filterRangeInPlace(arr, 1, 4);
+console.log(arr); // [ 3, 1, 4, 2 ]
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 9 - Sort in the reverse order 
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 10 - Copy and sort array
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 11 - Create an extendable calculator
+/* function Calculator() {
+    calculate(str) {
+
+    }
+}
+
+let calc = new Calculator();
+console.log(calc.calculate("3 + 7")); */
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 12 - Map to names
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 13 - Map to objects
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 14 - Sort objects
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 15 - Shuffle an array
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 16 - Get average age
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 17 - Filter unique array members
