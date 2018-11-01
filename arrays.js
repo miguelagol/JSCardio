@@ -22,7 +22,7 @@ console.log(array); // [ 'one', 'four', 'three', 'five' ]
 delete array[3]; // delete obj.key removes a value by the key
 console.log(array); // [ 'one', 'four', 'three', <1 empty item> ]
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // .length
 // array.length returns the total count of the elements in the array
@@ -51,22 +51,22 @@ console.log(arr2); // [ 1, 2 ]
 arr2.length = 5;
 console.log(arr2[2]); // undefined
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // An array can store elements of any types
 let array2 = [
-   'user',
-   { name: 'John' },
-   true,
-   function() {
-      console.log('Hello');
-   },
+    'user',
+    { name: 'John' },
+    true,
+    function () {
+        console.log('Hello');
+    },
 ];
 
 console.log(array2[1].name); // John
 array2[3](); // Hello
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // new Array()          rarely used
 let arr = new Array('apple', 'orange', 'lemon');
@@ -80,7 +80,7 @@ let arr2 = new Array(3);
 console.log(arr2[0]); // undefined      (new Array(number) has all elements undefined)
 console.log(arr2.length); // 3
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // The data structure is deque ( queue + stack )
 
@@ -122,7 +122,7 @@ console.log(arr); // [ 'Pineaple', 'Banana', 'Orange', 'Pear', 'Lemon' ]
         - update the length property
 */
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // Copy by reference
 let fruits = ['Apple'];
@@ -131,14 +131,14 @@ let array = fruits; // copy by reference
 array.push('Lemon');
 console.log(fruits); // [ 'Apple', 'Lemon' ]
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // Loops
 
 // for..of
 let numbers = ['one', 'two', 'three'];
 for (let num of numbers) {
-   console.log(num);
+    console.log(num);
 } // one, two, three
 
 /* -------------------------REMEMBER-------------------------
@@ -152,7 +152,29 @@ for (let num of numbers) {
     The for..in loop is optimized for generic objects, not arrays, and thus is 10-100 times slower.
  */
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Iterate: forEach
+/*  array.forEach(function(item, index, arr)) {
+        // ...do something with item
+    }
+*/
+// allows to run a function for every element of the array
+['Bilbo', 'Gandalf', 'Nazgul'].forEach((item, index, array) => {
+    console.log(`${item} is at index ${index} in ${array}`);
+});     // Bilbo is at index 0 in Bilbo,Gandalf,Nazgul  Gandalf is at index 1...
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Multidimensional arrays
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+console.log(matrix[1][1]); // 5
+
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // Array methods
 
@@ -204,23 +226,23 @@ console.log(arr.concat([3, 4], [5, 6])); // [ 1, 2, 3, 4, 5, 6 ]
 
 // Normally, it only copies elements from arrays. Other objects, even if they look like arrays, added as a whole
 let arrayLike = {
-   0: 'something',
-   length: 1,
+    0: 'something',
+    length: 1,
 };
 
 console.log(arr.concat(arrayLike)); // [ 1, 2, { '0': 'something', length: 1 } ]
 
 // If an argument is an array or has Symbol.isConcatSpreadable property, then all its elements are copied.
 let arrayLike2 = {
-   0: 'something',
-   1: 'else',
-   [Symbol.isConcatSpreadable]: true,
-   length: 2,
+    0: 'something',
+    1: 'else',
+    [Symbol.isConcatSpreadable]: true,
+    length: 2,
 };
 
 console.log(arr.concat(arrayLike2)); // [ 1, 2, 'something', 'else' ]
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // Searching in array
 
@@ -258,22 +280,27 @@ console.log(arr2.indexOf(NaN)); // -1 (because of === comparison)
         // should return true if the item is what we are looking for
     });
 */
+// The find method looks for a single (first) element that makes the function return true
 // The function is called repetitively for each element of the array
-// If it returns true, the search is stopped, the item is returned. If nothing found, undefined is returned.
 let users = [
-   { id: 1, name: 'John' },
-   { id: 2, name: 'Pete' },
-   { id: 3, name: 'Mary' },
+    { id: 1, name: 'John' },
+    { id: 2, name: 'Pete' },
+    { id: 3, name: 'Mary' },
 ];
 
 let user = users.find(item => item.id == 2);
 
+console.log(user); // { id: 2, name: 'Pete' }
 console.log(user.name); // Pete
+
+// If it returns true, the search is stopped, the item is returned. If nothing found, undefined is returned.
+let user2 = users.find(item => item.id < 3);
+console.log(user2); // { id: 1, name: 'John' }
 
 // .findIndex
 //  it returns the index where the element was found instead of the element itself.
-let user2 = users.findIndex(item => item.id == 2);
-console.log(user2); // 1
+let user3 = users.findIndex(item => item.id == 2);
+console.log(user3); // 1
 
 //--------------------------------------------------------------------------------------
 
@@ -284,9 +311,9 @@ console.log(user2); // 1
 */
 // returns an array of matching elements:
 let users = [
-   { id: 1, name: 'John' },
-   { id: 2, name: 'Pete' },
-   { id: 3, name: 'Mary' },
+    { id: 1, name: 'John' },
+    { id: 2, name: 'Pete' },
+    { id: 3, name: 'Mary' },
 ];
 
 let someUsers = users.filter(item => item.id < 3);
@@ -294,7 +321,7 @@ let someUsers = users.filter(item => item.id < 3);
 console.log(someUsers.length); // 2
 console.log(someUsers); // [ { id: 1, name: 'John' }, { id: 2, name: 'Pete' } ]
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // Transform an array
 
@@ -310,23 +337,191 @@ console.log(lengths); // [ 5, 7, 6 ]
 //--------------------------------------------------------------------------------------
 
 // .sort(fn)
-// sorts the array in place
-let arr = [1, 2, 15];
+// array.sort() sorts the array in place
+let arr = [2, 15, 1];
 
 // the method reorders the content of arr (and returns it)
 arr.sort();
 
+// The items are sorted as strings by default
 console.log(arr); // 1, 15, 2
 
+// To use our own sorting order, we need to supply a function of two arguments as the argument of arr.sort()
+function compareNumeric(a, b) {
+    if (a > b) return 1;
+    if (a == b) return 0;
+    if (a < b) return -1;
+}
+
+arr.sort(compareNumeric);
+console.log(arr); // 1, 2, 15
+
+// What happens in sequence?
+let arr = [8, 12, 5, 3, -1];
+arr.sort((a, b) => {
+    console.log(`comparing ${a},${b}`);
+    return a > b ? 1
+        : a === b ? 0
+            : -1;
+});
+/*  comparing 8,12
+    comparing 12,5
+    comparing 8,5
+    comparing 12,3
+    comparing 8,3
+    comparing 5,3
+    comparing 12,-1
+    comparing 8,-1
+    comparing 5,-1
+    comparing 3,-1
+*/
+
 //--------------------------------------------------------------------------------------
 
-// .split/  .join
+// reverse
+// array.reverse() reverses the order of elements in array
+let arr = [5, 43, 1, 9, 17];
+
+arr.reverse();
+console.log(arr); // [ 17, 9, 1, 43, 5 ]
 
 //--------------------------------------------------------------------------------------
 
-// .reduce/  .reduceRight
+// .split
+// string.split(delimiter, length) splits the string into an array by the given delimiter
+// second argument is optional - a limit on the array length
+let names = "Bilbo, Gandalf, Nazgul";
+let array = names.split(',');
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+for (let name of array) {
+    console.log(`A message to ${name}`);
+}       // A message to Bilbo, A message to Gandalf, A message to Nazgul 
+
+console.log(array); // [ 'Bilbo', ' Gandalf', ' Nazgul' ]
+
+let array2 = names.split(',', 2);
+
+console.log(array2); // [ 'Bilbo', ' Gandalf' ]
+
+// string.split(emptyString) splits string into letters
+let name = 'Test';
+let arr = name.split('');
+
+console.log(arr); // [ 'T', 'e', 's', 't' ]
+
+// .join
+// array.join(delimiter) creates a string off array items glued by delimiter between them 
+let array = ['Bilbo', ' Gandalf', ' Nazgul'];
+let string = array.join("; ");
+
+console.log(string); // Bilbo; Gandalf; Nazgul
+
+//--------------------------------------------------------------------------------------
+
+// .reduce
+/*  let value = array.reduce(function(previousValue, item, index, array) {
+        //...
+    }, initial);
+*/
+// it used to calculate a single value based on the array
+// previousValue is the result of the previous function call, initial for the first call
+let arr = [1, 2, 3, 4, 5];
+let result = arr.reduce((sum, current) => sum + current, 0);
+
+console.log(result); // 15
+
+// We can omit the initial value
+// (reduce takes the first element of the array as the initial value and starts the iteration from the 2nd element)
+// But if the array is empty, then reduce call without initial value gives an error
+let arr2 = [];
+
+console.log(arr2.reduce((sum, current) => sum + current)); // TypeError: Reduce of empty array with no initial value
+
+// .reduceRight
+// does the same as .reduce but goes from right to left
+let arr = [1, 2, 3, 4, 5];
+let resultRight = arr.reduceRight((sum, current) => sum - current);
+let result = arr.reduce((sum, current) => sum - current);
+
+console.log(resultRight); // -5
+console.log(result); // -13
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// toString
+let arr = [1, 2, 3];
+
+console.log(arr); // [ 1, 2, 3 ]
+console.log(String(arr)); // 1,2,3
+
+// Arrays do not have Symbol.toPrimitive
+// They implement only toString conversion (so [] becomes an empty string)
+console.log([] + 1); // 1
+console.log([1] + 1); // 11
+console.log([1, 2] + 1) // 1,21
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Array.isArray
+// Arrays are based on objects
+console.log(typeof {}); // object
+console.log(typeof []); // object
+
+// special method for ARRAYS
+console.log(Array.isArray({})); // false
+console.log(Array.isArray([])); // true
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// thisArg
+// Almost all array methods that call functions – like find, filter, map, with a notable exception of sort, accept an optional additional parameter thisArg.
+// The value of thisArg parameter becomes this for function
+let user = {
+    age: 18,
+    younger(otherUser) {
+        return otherUser.age < this.age;
+    }
+};
+
+let users = [
+    { age: 12 },
+    { age: 16 },
+    { age: 32 }
+]
+
+let youngerUsers = users.filter(user.younger, user);
+
+console.log(youngerUsers); // [ { age: 12 }, { age: 16 } ]
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Summary methods
+/*  
+push(...items)          adds items to the end,
+pop()                   extracts an item from the end,
+shift()                 extracts an item from the beginning,
+unshift(...items)       adds items to the beginning.
+splice(pos, deleteCount, ...items)      at index pos delete deleteCount elements and insert items.
+slice(start, end)       creates a new array, copies elements from position start till end (not inclusive) into it.
+concat(...items)        returns a new array: copies all members of the current one and adds items to it. If any of items is an array, then its elements are taken.
+
+indexOf/lastIndexOf(item, pos)      look for item starting from position pos, return the index or -1 if not found.
+includes(value)         returns true if the array has value, otherwise false.
+find/filter(func)       filter elements through the function, return first/all values that make it return true.
+findIndex               is like find, but returns the index instead of a value.
+
+map(func)               creates a new array from results of calling func for every element.
+sort(func)              sorts the array in-place, then returns it.
+reverse()               reverses the array in-place, then returns it.
+split/join              convert a string to array and back.
+reduce(func, initial)       calculate a single value over the array by calling func for each element and passing an intermediate result between the calls.
+
+forEach(func)           calls func for every element, does not return anything.
+
+Array.isArray(arr)      checks arr for being an array.
+*/
+
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - What is this code going to show?
 let fruits = ['Apples', 'Pear', 'Orange'];
@@ -338,7 +533,7 @@ shoppingCart.push('Banana');
 // what's in fruits?
 console.log(fruits.length); // 4
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - Array operations
 let styles = ['Jazz', 'Blues'];
@@ -348,9 +543,9 @@ styles[2] = 'Rock-n-Roll';
 console.log(styles); // [ 'Jazz', 'Blues', 'Rock-n-Roll' ]
 
 function replaceMiddle(array) {
-   if (array.length % 2 !== 0) {
-      array[(array.length - 1) / 2] = 'Classics';
-   }
+    if (array.length % 2 !== 0) {
+        array[(array.length - 1) / 2] = 'Classics';
+    }
 }
 
 replaceMiddle(styles);
@@ -362,67 +557,55 @@ console.log(styles); // [ 'Classics', 'Rock-n-Roll' ]
 styles.unshift('Rap', 'Reggae');
 console.log(styles); // [ 'Rap', 'Reggae', 'Classics', 'Rock-n-Roll' ]
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 3 - Calling in an array context - What is the result? Why?
+// TASK 3 - Calling in an array context - What is the result?
 let arr = ['a', 'b'];
 
-arr.push(function() {
-   console.log(this);
+arr.push(function () {
+    console.log(this);
 });
 
 arr[2](); // [ 'a', 'b', [Function] ]
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 4 - Sum input numbers
 function sumInput() {
-   let numbers = [];
+    let numbers = [];
 
-   while (true) {
-      let input = prompt('Enter a value want to add?', 0);
+    while (true) {
+        let input = prompt('Enter a value want to add?', 0);
 
-      if (input == '' || input == null || !isFinite(input)) break;
+        if (input == '' || input == null || !isFinite(input)) break;
 
-      numbers.push(+input);
-   }
+        numbers.push(+input);
+    }
 
-   let sum = 0;
-   for (let number of numbers) {
-      sum += number;
-   }
+    let sum = 0;
+    for (let number of numbers) {
+        sum += number;
+    }
 
-   alert(sum);
+    alert(sum);
 }
 sumInput();
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 5 - Create an extendable calculator
-/* function Calculator() {
-    calculate(str) {
-
-    }
-}
-
-let calc = new Calculator();
-console.log(calc.calculate("3 + 7")); */
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// TASK 6 - A maximal subarray
+// TASK 5 - A maximal subarray
 function getMaxSubSum(arr) {
-   let subarray = 0;
+    let subarray = 0;
 
-   for (let i = 0; i < arr.length; i++) {
-      let sum = 0;
-      for (let j = i; j < arr.length; j++) {
-         sum += arr[j];
-         subarray = Math.max(sum, subarray);
-      }
-   }
+    for (let i = 0; i < arr.length; i++) {
+        let sum = 0;
+        for (let j = i; j < arr.length; j++) {
+            sum += arr[j];
+            subarray = Math.max(sum, subarray);
+        }
+    }
 
-   console.log(subarray);
+    console.log(subarray);
 }
 
 getMaxSubSum([-1, 2, 3, -9]);
