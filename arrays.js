@@ -831,15 +831,117 @@ console.log(usersMapped[2]); // { fullName: 'Ann Smith', id: 3 }
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 14 - Sort objects
+function sortByName(array) {
+	array.sort((user1, user2) => user1.name > user2.name)
+}
+
+let jack = {
+	name: "Jack",
+	age: 34,
+};
+let mary = {
+	name: 'Mary',
+	age: 12,
+};
+let ann = {
+	name: 'Ann',
+	age: 45,
+};
+let users = [jack, mary, ann];
+
+sortByName(users);
+
+console.log(users[0].name); // Jack
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 15 - Shuffle an array
+function shuffle(array) {
+	for (let i = array.length - 1; i >= 0; i--) {
+		let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to 1
+		[array[i], array[j]] = [array[j], array[i]]; // swap elements
+	}
+	return array
+}
+
+let arr = [1, 2, 3];
+
+console.log(shuffle(arr));
+console.log(shuffle(arr));
+console.log(shuffle(arr));
+
+// test
+// counts of appearances for all possible permutations
+let count = {
+	'123': 0,
+	'132': 0,
+	'213': 0,
+	'231': 0,
+	'321': 0,
+	'312': 0
+};
+
+for (let i = 0; i < 1000000; i++) {
+	let array = [1, 2, 3];
+	shuffle(array);
+	count[array.join('')]++;
+}
+
+// show counts of all possible permutations
+for (let key in count) {
+	console.log(`${key}: ${count[key]}`);
+}
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 16 - Get average age
+function getAverageAge(array) {
+	let array2 = array.map((user) => user.age);
+	let sumAge = array2.reduce((age1, age2) => age1 + age2, 0);
+	return sumAge / array.length;
+}
+
+let jack = {
+	name: "Jack",
+	age: 34,
+};
+let mary = {
+	name: 'Mary',
+	age: 17,
+};
+let ann = {
+	name: 'Ann',
+	age: 45,
+};
+
+let users = [jack, mary, ann];
+
+console.log(getAverageAge(users)); // 32
+
+//or
+function getAverageAge2(array) {
+	return array.reduce((age1, user) => age1 + user.age, 0) / array.length;
+}
+
+console.log(getAverageAge2(users)); // 32
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 17 - Filter unique array members
+function unique(arr) {
+	let arr2 = [];
+	for (let string of arr) {
+		if (!arr2.includes(string)) {
+			arr2.push(string)
+		}
+	}
+	return arr2;
+}
+
+let strings = ["Hare", "Krishna", "Hare", "Krishna", "Krishna", "Krishna", "Hare", "Hare", ":-O"];
+
+console.log(unique(strings)); // [ "Hare", 'Krishna', ':-O' ]
+
+let strings2 = ['Ala', 'ma', 'Ala', 'kota', 'ma', 'Ala', ':)', 'kota'];
+
+console.log(unique(strings2)); // [ 'Ala', 'ma', 'kota', ':)' ]
