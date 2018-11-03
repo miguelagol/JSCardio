@@ -55,12 +55,12 @@ console.log(arr2[2]); // undefined
 
 // An array can store elements of any types
 let array2 = [
-    'user',
-    { name: 'John' },
-    true,
-    function () {
-        console.log('Hello');
-    },
+	'user',
+	{ name: 'John' },
+	true,
+	function () {
+		console.log('Hello');
+	},
 ];
 
 console.log(array2[1].name); // John
@@ -138,7 +138,7 @@ console.log(fruits); // [ 'Apple', 'Lemon' ]
 // for..of
 let numbers = ['one', 'two', 'three'];
 for (let num of numbers) {
-    console.log(num);
+	console.log(num);
 } // one, two, three
 
 /* -------------------------REMEMBER-------------------------
@@ -161,16 +161,16 @@ for (let num of numbers) {
 */
 // allows to run a function for every element of the array
 ['Bilbo', 'Gandalf', 'Nazgul'].forEach((item, index, array) => {
-    console.log(`${item} is at index ${index} in ${array}`);
+	console.log(`${item} is at index ${index} in ${array}`);
 });     // Bilbo is at index 0 in Bilbo,Gandalf,Nazgul  Gandalf is at index 1...
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // Multidimensional arrays
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+	[1, 2, 3],
+	[4, 5, 6],
+	[7, 8, 9]
 ];
 console.log(matrix[1][1]); // 5
 
@@ -229,18 +229,18 @@ console.log(arr); // [ 1, 2 ]       <- still the same
 
 // Normally, it only copies elements from arrays. Other objects, even if they look like arrays, added as a whole
 let arrayLike = {
-    0: 'something',
-    length: 1,
+	0: 'something',
+	length: 1,
 };
 
 console.log(arr.concat(arrayLike)); // [ 1, 2, { '0': 'something', length: 1 } ]
 
 // If an argument is an array or has Symbol.isConcatSpreadable property, then all its elements are copied.
 let arrayLike2 = {
-    0: 'something',
-    1: 'else',
-    [Symbol.isConcatSpreadable]: true,
-    length: 2,
+	0: 'something',
+	1: 'else',
+	[Symbol.isConcatSpreadable]: true,
+	length: 2,
 };
 
 console.log(arr.concat(arrayLike2)); // [ 1, 2, 'something', 'else' ]
@@ -286,9 +286,9 @@ console.log(arr2.indexOf(NaN)); // -1 (because of === comparison)
 // The find method looks for a single (first) element that makes the function return true
 // The function is called repetitively for each element of the array
 let users = [
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Pete' },
-    { id: 3, name: 'Mary' },
+	{ id: 1, name: 'John' },
+	{ id: 2, name: 'Pete' },
+	{ id: 3, name: 'Mary' },
 ];
 
 let user = users.find(item => item.id == 2);
@@ -314,9 +314,9 @@ console.log(user3); // 1
 */
 // returns an array of matching elements:
 let users = [
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Pete' },
-    { id: 3, name: 'Mary' },
+	{ id: 1, name: 'John' },
+	{ id: 2, name: 'Pete' },
+	{ id: 3, name: 'Mary' },
 ];
 
 let someUsers = users.filter(item => item.id < 3);
@@ -351,9 +351,9 @@ console.log(arr); // 1, 15, 2
 
 // To use our own sorting order, we need to supply a function of two arguments as the argument of arr.sort()
 function compareNumeric(a, b) {
-    if (a > b) return 1;
-    if (a == b) return 0;
-    if (a < b) return -1;
+	if (a > b) return 1;
+	if (a == b) return 0;
+	if (a < b) return -1;
 }
 
 arr.sort(compareNumeric);
@@ -361,11 +361,12 @@ console.log(arr); // 1, 2, 15
 
 // What happens in sequence?
 let arr = [8, 12, 5, 3, -1];
+
 arr.sort((a, b) => {
-    console.log(`comparing ${a},${b}`);
-    return a > b ? 1
-        : a === b ? 0
-            : -1;
+	console.log(`comparing ${a},${b}`);
+	return a > b ? 1
+		: a === b ? 0
+			: -1;
 });
 /*  comparing 8,12
     comparing 12,5
@@ -397,7 +398,7 @@ let names = "Bilbo, Gandalf, Nazgul";
 let array = names.split(',');
 
 for (let name of array) {
-    console.log(`A message to ${name}`);
+	console.log(`A message to ${name}`);
 }       // A message to Bilbo, A message to Gandalf, A message to Nazgul 
 
 console.log(array); // [ 'Bilbo', ' Gandalf', ' Nazgul' ]
@@ -480,16 +481,16 @@ console.log(Array.isArray([])); // true
 // Almost all array methods that call functions – like find, filter, map, with a notable exception of sort, accept an optional additional parameter thisArg.
 // The value of thisArg parameter becomes this for function
 let user = {
-    age: 18,
-    younger(otherUser) {
-        return otherUser.age < this.age;
-    }
+	age: 18,
+	younger(otherUser) {
+		return otherUser.age < this.age;
+	}
 };
 
 let users = [
-    { age: 12 },
-    { age: 16 },
-    { age: 32 }
+	{ age: 12 },
+	{ age: 16 },
+	{ age: 32 }
 ]
 
 let youngerUsers = users.filter(user.younger, user);
@@ -549,9 +550,9 @@ styles[2] = 'Rock-n-Roll';
 console.log(styles); // [ 'Jazz', 'Blues', 'Rock-n-Roll' ]
 
 function replaceMiddle(array) {
-    if (array.length % 2 !== 0) {
-        array[(array.length - 1) / 2] = 'Classics';
-    }
+	if (array.length % 2 !== 0) {
+		array[(array.length - 1) / 2] = 'Classics';
+	}
 }
 
 replaceMiddle(styles);
@@ -569,7 +570,7 @@ console.log(styles); // [ 'Rap', 'Reggae', 'Classics', 'Rock-n-Roll' ]
 let arr = ['a', 'b'];
 
 arr.push(function () {
-    console.log(this);
+	console.log(this);
 });
 
 arr[2](); // [ 'a', 'b', [Function] ]
@@ -578,22 +579,22 @@ arr[2](); // [ 'a', 'b', [Function] ]
 
 // TASK 4 - Sum input numbers
 function sumInput() {
-    let numbers = [];
+	let numbers = [];
 
-    while (true) {
-        let input = prompt('Enter a value want to add?', 0);
+	while (true) {
+		let input = prompt('Enter a value want to add?', 0);
 
-        if (input == '' || input == null || !isFinite(input)) break;
+		if (input == '' || input == null || !isFinite(input)) break;
 
-        numbers.push(+input);
-    }
+		numbers.push(+input);
+	}
 
-    let sum = 0;
-    for (let number of numbers) {
-        sum += number;
-    }
+	let sum = 0;
+	for (let number of numbers) {
+		sum += number;
+	}
 
-    alert(sum);
+	alert(sum);
 }
 sumInput();
 
@@ -601,17 +602,17 @@ sumInput();
 
 // TASK 5 - A maximal subarray
 function getMaxSubSum(arr) {
-    let subarray = 0;
+	let subarray = 0;
 
-    for (let i = 0; i < arr.length; i++) {
-        let sum = 0;
-        for (let j = i; j < arr.length; j++) {
-            sum += arr[j];
-            subarray = Math.max(sum, subarray);
-        }
-    }
+	for (let i = 0; i < arr.length; i++) {
+		let sum = 0;
+		for (let j = i; j < arr.length; j++) {
+			sum += arr[j];
+			subarray = Math.max(sum, subarray);
+		}
+	}
 
-    console.log(subarray);
+	console.log(subarray);
 }
 
 getMaxSubSum([-1, 2, 3, -9]);
@@ -626,12 +627,12 @@ getMaxSubSum([-1, -2, -3]);
 
 // TASK 6 - Write the function camelize(str) that changes dash-separated words like “my-short-string” into camel-cased “myShortString”
 function camelize(string) {
-    let array = string.split("-");
-    for (let i = 1; i < array.length; i++) {
-        array[i] = array[i][0].toUpperCase() + array[i].slice(1);
-    }
-    let camelizeString = array.join('');
-    console.log(camelizeString);
+	let array = string.split("-");
+	for (let i = 1; i < array.length; i++) {
+		array[i] = array[i][0].toUpperCase() + array[i].slice(1);
+	}
+	let camelizeString = array.join('');
+	console.log(camelizeString);
 }
 
 camelize("background-color"); // backgroundColor
@@ -640,10 +641,10 @@ camelize("-webkit-transition"); // WebkitTransition
 
 // or 
 function camelize2(string) {
-    return string
-        .split('-')
-        .map((str, index) => index == 0 ? str : str[0].toUpperCase() + str.slice(1))
-        .join("")
+	return string
+		.split('-')
+		.map((str, index) => index == 0 ? str : str[0].toUpperCase() + str.slice(1))
+		.join("")
 }
 
 console.log(camelize2("background-color")); // backgroundColor
@@ -655,7 +656,7 @@ console.log(camelize2("-webkit-transition")); // WebkitTransition
 // TASK 7 - Write a function filterRange(arr, a, b) that gets an array arr, looks for elements between a and b in it
 //          and returns an array of them
 function filterRange(array, a, b) {
-    return array.filter((item) => (item == a) || (item > a && item < b) || (item == b))
+	return array.filter((item) => (item == a) || (item > a && item < b) || (item == b))
 }
 
 let arr = [5, 3, 8, 1, 12, 0, 4];
@@ -663,51 +664,169 @@ let filtered = filterRange(arr, 1, 5);
 
 console.log(filtered); // [ 5, 3, 1, 4 ]
 console.log(arr); // [ 5, 3, 8, 1, 12, 0, 4 ]
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 8 - Write a function filterRangeInPlace(arr, a, b) that gets an array arr and removes from it all values except those that
 //          are between a and b. The test is: a ≤ arr[i] ≤ b
 function filterRangeInPlace(array, a, b) {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] < a || array[i] > b) {
-            array.splice(i, 1);
-            i--
-        }
-    }
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] < a || array[i] > b) {
+			array.splice(i, 1);
+			i--
+		}
+	}
 }
 
 let arr = [0, 5, 3, 22, 1, 12, 18, 4, 2];
-console.log(arr);
+
+console.log(arr); // [0, 5, 3, 22, 1, 12, 18, 4, 2]
+
 filterRangeInPlace(arr, 1, 4);
 console.log(arr); // [ 3, 1, 4, 2 ]
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 9 - Sort in the reverse order 
+let arr = [5, 2, 1, -10, 8];
+
+arr.sort((a, b) => b > a);
+console.log(arr);
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 10 - Copy and sort array
+function copySorted(array) {
+	let sortedArray = [];
+	for (let i = 0; i < array.length; i++) {
+		sortedArray[i] = array[i];
+	}
+	return sortedArray.sort();
+}
+
+let arr = ['HTML', 'JavaScript', 'CSS'];
+let sorted = copySorted(arr);
+
+console.log(arr); // [ 'HTML', 'JavaScript', 'CSS' ]
+console.log(sorted); // [ 'CSS', 'HTML', 'JavaScript' ]
+
+// or
+function copySorted2(array) {
+	return array.slice().sort();
+}
+
+let arr = ['HTML', 'JavaScript', 'CSS'];
+let sorted = copySorted2(arr);
+
+console.log(arr); // [ 'HTML', 'JavaScript', 'CSS' ]
+console.log(sorted); // [ 'CSS', 'HTML', 'JavaScript' ]
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 11 - Create an extendable calculator
-/* function Calculator() {
-    calculate(str) {
-
-    }
+function Calculator(string) {
+	this.calculate = function (string) {
+		let array = string.split(" ");
+		if (array[1] === '+') {
+			return +array[0] + +array[2];
+		}
+		else return +array[0] - +array[2]
+	}
 }
 
 let calc = new Calculator();
-console.log(calc.calculate("3 + 7")); */
+
+console.log(calc.calculate("3 + 7"));
+
+function Calculator2() {
+	let methods = {
+		'+': (a, b) => a + b,
+		'-': (a, b) => a - b,
+	};
+	this.calculate = function (string) {
+		let array = string.split(' ');
+		let a = +array[0];
+		let sign = array[1];
+		let b = +array[2];
+
+		if (!methods[sign] || isNaN(a) || isNaN(b)) {
+			return NaN;
+		}
+
+		return methods[sign](a, b);
+	}
+	this.addMethods = function (name, func) {
+		methods[name] = func;
+	}
+}
+
+let calc = new Calculator2;
+calc.addMethods('*', (a, b) => a * b);
+calc.addMethods('/', (a, b) => a / b);
+calc.addMethods('**', (a, b) => a ** b);
+
+console.log(calc.calculate("3 * 7")); // 21
+console.log(calc.calculate("18 / 6")); // 3
+console.log(calc.calculate("2 ** 5")); // 32
+console.log(calc.calculate("1 + 14")); // 15
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 12 - Map to names
+let jack = {
+	name: "Jack",
+	age: 34,
+};
+let mary = {
+	name: 'Mary',
+	age: 12,
+};
+let ann = {
+	name: 'Ann',
+	age: 45,
+};
+let users = [jack, mary, ann];
+let names = [];
+
+for (let user of users) {
+	names[users.indexOf(user)] = user.name
+}
+
+console.log(names); // [ 'John', 'Mary', 'Ann' ]
+
+// or
+let names2 = users.map(user => user.name);
+
+console.log(names2); // [ 'John', 'Mary', 'Ann' ]
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 13 - Map to objects
+let jack = {
+	name: "Jack",
+	surname: "London",
+	id: 1,
+};
+let mary = {
+	name: 'Mary',
+	surname: 'Hunt',
+	id: 2,
+};
+let ann = {
+	name: 'Ann',
+	surname: 'Smith',
+	id: 3,
+};
+let users = [jack, mary, ann];
+let usersMapped = users.map(user => userMapped = {
+	fullName: `${user.name} ${user.surname}`,
+	id: user.id,
+}
+);
+
+console.log(usersMapped[0].id); // 1
+console.log(usersMapped[1].fullName); // Mary Hunt
+console.log(usersMapped[2]); // { fullName: 'Ann Smith', id: 3 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
