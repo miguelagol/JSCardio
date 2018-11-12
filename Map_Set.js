@@ -95,6 +95,32 @@ recipeMap.forEach((value, key, map) => {
 	console.log(`${key}: ${value}`);	// cucumber: 500, tomatoes: 350, onion: 50
 })
 
+// * For objects:
+/* 	Object.keys(obj)	returns an array of keys
+		Object.values(obj)	returns an array of values
+		Object.entries(obj)	returns an array of [key, value] pairs
+*/
+let user = {
+	name: 'Jack',
+	age: 24,
+};
+
+console.log(Object.keys(user)); // [ 'name', 'age' ]
+console.log(Object.values(user)); // [ 'Jack', 24 ]
+console.log(Object.entries(user)); // [ [ 'name', 'Jack' ], [ 'age', 24 ] ]
+
+for (let value of Object.values(user)) {
+	console.log(value);		// Jack, 24
+}
+
+// the same as
+for (let value in user) {
+	console.log(user[value]);
+}
+
+//-------------------REMEMBER-------------------
+// Just like a for..in loop, Object.keys/values/entries ignore properties that use Symbol(...) as keys.
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // Set
@@ -342,3 +368,44 @@ let messages = [
 let readMessages = new WeakMap();
 
 readMessages.set(messages[0], new Date(2018, 11, 12));
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Sum the properties
+function sumSalaries(object) {
+	let sum = 0;
+	for (let salary of Object.values(object)) {
+		sum += salary;
+	}
+	return sum;
+}
+
+let salaries = {
+	'Jack': 100,
+	'Ann': 300,
+	'Mary': 250,
+};
+
+console.log(sumSalaries(salaries)); // 650
+
+// or
+function sumSalaries2(object) {
+	return Object.values(object).reduce((sum, current) => sum += current, 0);
+}
+
+console.log(sumSalaries2(salaries)); // 650
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Count properties
+function count(object) {
+	return Object.values(object).length;
+}
+
+let user = {
+	name: 'Kate',
+	age: 25,
+	isAdmin: true,
+};
+
+console.log(count(user)); // 3
