@@ -222,3 +222,123 @@ john = null;
 // there are no references except WeakMap,
 // so the object is removed both from the memory and from visitsCountMap automatically
 console.log(visitsCountMap.has(john)); // false
+
+/* 	WeakSet behaves similarly:
+	- we may only add objects to WeakSet (not primitives).
+	- an object exists in the set while it has reachable from somewhere else.
+	- it supports add, has and delete, but not size, keys() and no iterations.
+*/
+let messages = [
+	{ text: "Hello", from: "John" },
+	{ text: "How goes?", from: "John" },
+	{ text: "See you soon", from: "Alice" }
+];
+
+let unreadSet = new WeakSet(messages);
+
+console.log(unreadSet)
+console.log(unreadSet.has(messages[1])); // true
+
+// remove it from the set after reading
+unreadSet.delete(messages[1]);
+
+// and when we shift our messages history, the set is cleaned up automatically
+messages.shift();
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - Filter unique array members
+function unique(array) {
+	let uniqueValues = new Set();
+	for (let string of array) {
+		uniqueValues.add(string);
+	}
+	return uniqueValues;
+}
+
+let values = ["Hare", "Krishna", "Hare", "Krishna", "Krishna", "Krishna", "Hare", "Hare", ":-O"];
+
+console.log(unique(values)); // Set { 'Hare', 'Krishna', ':-O' }
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 2 - Write a function aclean(arr) that returns an array cleaned from anagrams.
+function aclean(array) {
+	let set = new Set();
+	let strings = [];
+	for (let word of array) {
+		let string = word.toLowerCase().split('').sort().join('')
+		if (!set.has(string)) {
+			strings.push(word);
+			set.add(string);
+		}
+	}
+	return strings;
+}
+
+let anagrams = ["nap", "teachers", "cheaters", "PAN", "ear", "era", "hectares"];
+
+console.log(aclean(anagrams)); // [ 'nap', 'teachers', 'ear' ]
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 - Iterable keys
+let map = new Map();
+
+map.set('name', 'John');
+
+let keys = [];
+
+for (let key of map.keys()) {
+	keys.push(key);
+}
+
+keys.push('more');
+
+console.log(keys); // [ 'name', 'more' ]
+
+// or
+let map = new Map();
+
+map.set('name', 'John');
+
+let keys = Array.from(map.keys());
+
+keys.push('more');
+
+console.log(keys); // [ 'name', 'more' ]
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - Store 'unread' flags
+let messages = [
+	{ text: 'Hello', from: 'John' },
+	{ text: 'How goes?', from: 'John' },
+	{ text: 'See you soon', from: 'Alice' },
+];
+
+let readMessages = new WeakSet();
+
+readMessages.add(messages[1]);
+readMessages.add(messages[0]);
+readMessages.add(messages[1]);
+
+// Was the message[0] read?;
+console.log('Read message[0]: ' + readMessages.has(messages[0])); // Read message[0]: true
+
+messages.shift();
+
+console.log(messages); // [ { text: 'How goes?', from: 'John' }, { text: 'See you soon', from: 'Alice' } ]
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Store read dates
+let messages = [
+	{ text: 'Hello', from: 'John' },
+	{ text: 'How goes?', from: 'John' },
+	{ text: 'See you soon', from: 'Alice' },
+];
+
+let readMessages = new WeakMap();
+
+readMessages.set(messages[0], new Date(2018, 11, 12));
