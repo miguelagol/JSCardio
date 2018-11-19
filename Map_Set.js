@@ -10,18 +10,18 @@
     - map.size  returns the current element count
 */
 // Map allows keys of any type
-let map = new Map;
+let map = new Map();
 
 /* 	map.set('1', 'string1');
-		map.set(1, 'number1');
-		map.set(true, 'bool1');
+        map.set(1, 'number1');
+        map.set(true, 'bool1');
 */
 
 // or
 // "chain" the calls
 map.set('1', 'string1')
-	.set(1, 'number1')
-	.set(true, 'bool1');
+   .set(1, 'number1')
+   .set(true, 'bool1');
 
 console.log(map.has(1)); // true
 
@@ -37,7 +37,7 @@ console.log(map.get('1')); // undefined
 
 // Map can also use objects as keys
 let jack = { name: 'Jack' };
-let visitsCountMap = new Map; // for every user, let's store their visists count
+let visitsCountMap = new Map(); // for every user, let's store their visists count
 
 visitsCountMap.set(jack, 123);
 
@@ -47,19 +47,17 @@ console.log(visitsCountMap.get(jack)); // 123
 
 // Map from Object
 // let map = new Map( [ [key, value] (, [key2, value2]) ] )
-let map = new Map([
-	['1', 'string1'],
-	[1, 'number1'],
-	[true, 'bool1'],
-]);
+let map = new Map([['1', 'string1'], [1, 'number1'], [true, 'bool1']]);
 
 console.log(map.get(true)); // bool1
 
 // Object.entries(object) returns an array of key/value pairs
-let map = new Map(Object.entries({
-	name: 'Jack',
-	age: 30,
-}));
+let map = new Map(
+   Object.entries({
+      name: 'Jack',
+      age: 30,
+   }),
+);
 
 console.log(map.get('name')); // Jack
 
@@ -73,27 +71,23 @@ console.log(map.get('name')); // Jack
       	// ...do something with item
     	})
 */
-let recipeMap = new Map([
-	['cucumber', 500],
-	['tomatoes', 350],
-	['onion', 50],
-]);
+let recipeMap = new Map([['cucumber', 500], ['tomatoes', 350], ['onion', 50]]);
 
 for (let vegetable of recipeMap.keys()) {
-	console.log(vegetable);			//	cucumber, tomatoes, onion
+   console.log(vegetable); //	cucumber, tomatoes, onion
 }
 
 for (let amount of recipeMap.values()) {
-	console.log(amount);  		// 500, 350, 50
+   console.log(amount); // 500, 350, 50
 }
 
 for (let entry of recipeMap.entries()) {
-	console.log(entry);		// [ 'cucumber', 500 ], [ 'tomatoes', 350 ], [ 'onion', 50 ]
+   console.log(entry); // [ 'cucumber', 500 ], [ 'tomatoes', 350 ], [ 'onion', 50 ]
 }
 
 recipeMap.forEach((value, key, map) => {
-	console.log(`${key}: ${value}`);	// cucumber: 500, tomatoes: 350, onion: 50
-})
+   console.log(`${key}: ${value}`); // cucumber: 500, tomatoes: 350, onion: 50
+});
 
 // * For objects:
 /* 	Object.keys(obj)	returns an array of keys
@@ -101,8 +95,8 @@ recipeMap.forEach((value, key, map) => {
 		Object.entries(obj)	returns an array of [key, value] pairs
 */
 let user = {
-	name: 'Jack',
-	age: 24,
+   name: 'Jack',
+   age: 24,
 };
 
 console.log(Object.keys(user)); // [ 'name', 'age' ]
@@ -110,12 +104,12 @@ console.log(Object.values(user)); // [ 'Jack', 24 ]
 console.log(Object.entries(user)); // [ [ 'name', 'Jack' ], [ 'age', 24 ] ]
 
 for (let value of Object.values(user)) {
-	console.log(value);		// Jack, 24
+   console.log(value); // Jack, 24
 }
 
 // the same as
 for (let value in user) {
-	console.log(user[value]);
+   console.log(user[value]);
 }
 
 //-------------------REMEMBER-------------------
@@ -149,7 +143,7 @@ set.add(jack);
 console.log(set.size); // 3
 
 for (let user of set) {
-	console.log(user.name); // Jack, Mary, Ann
+   console.log(user.name); // Jack, Mary, Ann
 }
 
 console.log(set.has(mary)); // true
@@ -170,20 +164,20 @@ console.log(set.has(mary)); // false
 let fruitsSet = new Set(['oranges', 'apples', 'bananas']);
 
 for (let value of fruitsSet.keys()) {
-	console.log(value);			//	oranges, apples, bananas
+   console.log(value); //	oranges, apples, bananas
 }
 
 for (let value of fruitsSet.values()) {
-	console.log(value);  		//	oranges, apples, bananas
+   console.log(value); //	oranges, apples, bananas
 }
 
 for (let entry of fruitsSet.entries()) {
-	console.log(entry);		// [ 'oranges', 'oranges' ], [ 'apples', 'apples' ], [ 'bananas', 'bananas' ]
+   console.log(entry); // [ 'oranges', 'oranges' ], [ 'apples', 'apples' ], [ 'bananas', 'bananas' ]
 }
 
 fruitsSet.forEach((value, valueAgain, set) => {
-	console.log(`${value}: ${valueAgain}`);	// oranges: oranges, apples: apples, bananas: bananas
-})
+   console.log(`${value}: ${valueAgain}`); // oranges: oranges, apples: apples, bananas: bananas
+});
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -192,7 +186,7 @@ fruitsSet.forEach((value, valueAgain, set) => {
 
 // JavaScript engine stores a value in memory while it is reachable
 // Objects Garbage collection
-let john = { name: "John" };
+let john = { name: 'John' };
 john = null;
 console.log(john.name); // Error: Cannot read property 'name' of null
 
@@ -237,7 +231,7 @@ mary = null;
 
 // The idea of WeakMap is that we can store something for an object that exists only while the object exists.
 // But we do not force the object to live by the mere fact that we store something for it.
-let john = { name: "John" };
+let john = { name: 'John' };
 
 let visitsCountMap = new WeakMap();
 
@@ -255,14 +249,14 @@ console.log(visitsCountMap.has(john)); // false
 	- it supports add, has and delete, but not size, keys() and no iterations.
 */
 let messages = [
-	{ text: "Hello", from: "John" },
-	{ text: "How goes?", from: "John" },
-	{ text: "See you soon", from: "Alice" }
+   { text: 'Hello', from: 'John' },
+   { text: 'How goes?', from: 'John' },
+   { text: 'See you soon', from: 'Alice' },
 ];
 
 let unreadSet = new WeakSet(messages);
 
-console.log(unreadSet)
+console.log(unreadSet);
 console.log(unreadSet.has(messages[1])); // true
 
 // remove it from the set after reading
@@ -275,14 +269,24 @@ messages.shift();
 
 // TASK 1 - Filter unique array members
 function unique(array) {
-	let uniqueValues = new Set();
-	for (let string of array) {
-		uniqueValues.add(string);
-	}
-	return uniqueValues;
+   let uniqueValues = new Set();
+   for (let string of array) {
+      uniqueValues.add(string);
+   }
+   return uniqueValues;
 }
 
-let values = ["Hare", "Krishna", "Hare", "Krishna", "Krishna", "Krishna", "Hare", "Hare", ":-O"];
+let values = [
+   'Hare',
+   'Krishna',
+   'Hare',
+   'Krishna',
+   'Krishna',
+   'Krishna',
+   'Hare',
+   'Hare',
+   ':-O',
+];
 
 console.log(unique(values)); // Set { 'Hare', 'Krishna', ':-O' }
 
@@ -290,19 +294,23 @@ console.log(unique(values)); // Set { 'Hare', 'Krishna', ':-O' }
 
 // TASK 2 - Write a function aclean(arr) that returns an array cleaned from anagrams.
 function aclean(array) {
-	let set = new Set();
-	let strings = [];
-	for (let word of array) {
-		let string = word.toLowerCase().split('').sort().join('')
-		if (!set.has(string)) {
-			strings.push(word);
-			set.add(string);
-		}
-	}
-	return strings;
+   let set = new Set();
+   let strings = [];
+   for (let word of array) {
+      let string = word
+         .toLowerCase()
+         .split('')
+         .sort()
+         .join('');
+      if (!set.has(string)) {
+         strings.push(word);
+         set.add(string);
+      }
+   }
+   return strings;
 }
 
-let anagrams = ["nap", "teachers", "cheaters", "PAN", "ear", "era", "hectares"];
+let anagrams = ['nap', 'teachers', 'cheaters', 'PAN', 'ear', 'era', 'hectares'];
 
 console.log(aclean(anagrams)); // [ 'nap', 'teachers', 'ear' ]
 
@@ -316,7 +324,7 @@ map.set('name', 'John');
 let keys = [];
 
 for (let key of map.keys()) {
-	keys.push(key);
+   keys.push(key);
 }
 
 keys.push('more');
@@ -338,9 +346,9 @@ console.log(keys); // [ 'name', 'more' ]
 
 // TASK 4 - Store 'unread' flags
 let messages = [
-	{ text: 'Hello', from: 'John' },
-	{ text: 'How goes?', from: 'John' },
-	{ text: 'See you soon', from: 'Alice' },
+   { text: 'Hello', from: 'John' },
+   { text: 'How goes?', from: 'John' },
+   { text: 'See you soon', from: 'Alice' },
 ];
 
 let readMessages = new WeakSet();
@@ -360,9 +368,9 @@ console.log(messages); // [ { text: 'How goes?', from: 'John' }, { text: 'See yo
 
 // TASK 5 - Store read dates
 let messages = [
-	{ text: 'Hello', from: 'John' },
-	{ text: 'How goes?', from: 'John' },
-	{ text: 'See you soon', from: 'Alice' },
+   { text: 'Hello', from: 'John' },
+   { text: 'How goes?', from: 'John' },
+   { text: 'See you soon', from: 'Alice' },
 ];
 
 let readMessages = new WeakMap();
@@ -373,24 +381,24 @@ readMessages.set(messages[0], new Date(2018, 11, 12));
 
 // TASK 6 - Sum the properties
 function sumSalaries(object) {
-	let sum = 0;
-	for (let salary of Object.values(object)) {
-		sum += salary;
-	}
-	return sum;
+   let sum = 0;
+   for (let salary of Object.values(object)) {
+      sum += salary;
+   }
+   return sum;
 }
 
 let salaries = {
-	'Jack': 100,
-	'Ann': 300,
-	'Mary': 250,
+   Jack: 100,
+   Ann: 300,
+   Mary: 250,
 };
 
 console.log(sumSalaries(salaries)); // 650
 
 // or
 function sumSalaries2(object) {
-	return Object.values(object).reduce((sum, current) => sum += current, 0);
+   return Object.values(object).reduce((sum, current) => (sum += current), 0);
 }
 
 console.log(sumSalaries2(salaries)); // 650
@@ -399,13 +407,13 @@ console.log(sumSalaries2(salaries)); // 650
 
 // TASK 7 - Count properties
 function count(object) {
-	return Object.values(object).length;
+   return Object.values(object).length;
 }
 
 let user = {
-	name: 'Kate',
-	age: 25,
-	isAdmin: true,
+   name: 'Kate',
+   age: 25,
+   isAdmin: true,
 };
 
 console.log(count(user)); // 3
