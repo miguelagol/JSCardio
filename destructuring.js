@@ -1,7 +1,7 @@
 // Destructuring assignment
 // is a special syntax that allows us to “unpack” arrays or objects into a bunch of variables, as sometimes they are more convenient.
 
-// Array destructuring
+// ARRAY DESTRUCTURING
 let array = ['Jack', 'Sparrow'];
 
 // destructuring assignment
@@ -55,6 +55,7 @@ user2.set('age', 15);
 for (let [key, value] of user2.entries()) {
    console.log(`${key}: ${value}`);    // name: Jack, age: 15
 }
+
 //--------------------------------------------------------------------------------------
 
 // The rest '...' operator
@@ -78,13 +79,94 @@ console.log(surname2); // Anonymous    (default value)
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
-// Object destructuring
+// OBJECT DESTRUCTURING
+// let {var1, var2} = {var1: ..., var2: ...}
+let options = {
+   title: "Menu",
+   width: 100,
+   height: 200,
+};
+
+let { title, width, height } = options;
+
+console.log(title); // Menu
+console.log(width); // 100
+console.log(options.height); // 200
+
+// the order does not metter
+let { height, width, title } = { title: "Menu", height: 200, width: 100 }
+
+console.log(title); // Menu
+console.log(width); // 100
+
+// we can assign a property to a variable with another name
+// let {sourceProperty: targetVariable} = {sourceProperty: ...}
+let options = {
+   title: "Menu",
+   width: 100,
+   height: 200,
+};
+
+let {width: wi, height: he, title} = options;
+
+console.log(wi); // 100
+console.log(he); // 200
+console.log(title); // Menu
 
 //--------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------
+// Default values
+let options = {
+   title: "Menu"
+};
+
+let {width = 100, title} = options;
+
+console.log(title); // Menu
+console.log(width); // 100
+
+let options = {
+   width: 200,
+};
+
+let {title = "Menu", width: wi = 300, height: he = 100} = options;
+
+console.log(title); // Menu
+console.log(wi); // 200
+console.log(he); // 100
 
 //--------------------------------------------------------------------------------------
+
+// The rest '...' operator
+let options = {
+   title: "Menu",
+   width: 100,
+   height: 200
+};
+
+let {title, ...rest} = options;
+
+console.log(rest.width); // 100
+console.log(rest.height); // 200
+
+//--------------------------------------------------------------------------------------
+
+// Be carefull with let
+
+let title, width, height;
+
+// JavaScript treats {...} in the main code flow (not inside another expression) as a code block
+{title, width, height} = {title: "Menu", width: 200, height: 100}; 
+
+console.log(title); // Error: Unexpected token =
+
+// To show JavaScript that it’s not a code block, we can wrap the whole assignment in brackets (...)
+// now ok
+let title, width, height;
+
+({title, width, height} = {title: "Menu", width: 200, height: 100});
+
+console.log(title); // Menu
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
