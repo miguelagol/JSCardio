@@ -41,7 +41,7 @@ console.log(date); // 2003-04-24T00:03:04.567Z
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // Access date components
-let current = new Date();
+let current = new Date(); // 2018-11-19T17:55:35.715Z
 
 //get the year - 4 digits
 console.log(current.getFullYear()); // 2018
@@ -53,16 +53,45 @@ console.log(current.getMonth()); // 10
 console.log(current.getDate()); // 19
 
 console.log(current.getHours()); // 18
+// the hour in UTC+0 time zone (London time without daylight savings)
+console.log(current.getUTCHours()); // 17
+
 console.log(current.getMinutes()); // 55
 console.log(current.getSeconds()); // 35
 console.log(current.getMilliseconds()); // 715
 
 // Get the day of week, from 0 (Sunday) to 6 (Saturday)
-console.log(current.getDay());
+console.log(current.getDay()); // 1
+
+// Returns the timestamp for the date – a number of milliseconds passed from the January 1st of 1970 UTC+0.
+console.log(current.getTime()); // 1542722204617
+
+// Returns the difference between the local time zone and UTC, in minutes:
+console.log(new Date().getTimezoneOffset()); // -60   -> timezone UTC-1
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // Setting date components
+/*  setFullYear(year [, month, date])
+    setMonth(month [, date])
+    setDate(date)
+    setHours(hour [, min, sec, ms])
+    setMinutes(min [, sec, ms])
+    setSeconds(sec [, ms])
+    setMilliseconds(ms)
+    setTime(milliseconds)
+
+Every one of them except setTime() has a UTC-variant, for instance: setUTCHours().
+*/
+let today = new Date();
+
+today.setHours(0);
+// still today, but the hour is changed to 0
+console.log(today); // 2018-11-19T23:34:03.177Z
+
+today.setHours(0, 0, 0, 0);
+// still today, now 00:00:00 sharp
+console.log(today); // 2018-11-19T23:00:00.000Z
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
