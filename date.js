@@ -269,22 +269,39 @@ console.log(getLastDayOfMonth(2015, 4)); // 31
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 6 - Write a function getSecondsToday() that returns the number of seconds from the beginning of today
-function getSecondsToday(date) {}
+function getSecondsToday(date) {
+   let hourZero = new Date(date);
+   hourZero.setHours(0, 0, 0, 0);
+   return (date.getTime() - hourZero.getTime()) / 1000;
+}
 
 let date = new Date();
-date.setHours(0, 0, 0, 0);
+date.setHours(10, 0, 0, 0);
 
 console.log(getSecondsToday(date)); // 36000
+
+let date2 = new Date();
+
+console.log(getSecondsToday(date2));
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - Create a function getSecondsToTomorrow() that returns the number of seconds till tomorrow
-function getSecondsToTomorrow(date) {}
+function getSecondsToTomorrow(date) {
+   let hourZero = new Date(date);
+   hourZero.setDate(hourZero.getDate() + 1);
+   hourZero.setHours(0, 0, 0, 0);
+   return (hourZero.getTime() - date.getTime()) / 1000
+}
 
 let date = new Date();
 date.setHours(23, 0, 0, 0);
 
-console.log(getSecondsToday(date)); // 3600
+console.log(getSecondsToTomorrow(date)); // 3600
+
+let date2 = new Date();
+
+console.log(getSecondsToTomorrow(date2));
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -294,10 +311,20 @@ console.log(getSecondsToday(date)); // 3600
     - Otherwise, if less than an hour, then "m min. ago".
     - Otherwise, the full date in the format "DD.MM.YY HH:mm". That is: "day.month.year hours:minutes", all in 2-digit format, e.g. 31.12.16 10:00.
 */
-function formatDate(date) {}
+function formatDate(date) {
+   let now = new Date();
+   let result = now.getTime() - date.getTime();
 
-console.log(formatDate(new Date(new Date() - 1))); // "right now"
-console.log(formatDate(new Date(new Date() - 30 * 1000))); // "30 sec. ago"
-console.log(formatDate(new Date(new Date() - 5 * 60 * 1000))); // "5 min. ago"
-// yesterday's date
-console.log(formatDate(new Date(new Date() - 86400 * 1000)));
+   return result < 1000
+      ? 'right now'
+      : result < 60000
+         ? `${result / 1000} sec. ago`
+         : result < 3600000
+            ? `${result / 60000} min. ago`
+            : `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear().toString().slice(-2)} ${date.getHours()}:${date.getMinutes()}`
+}
+
+console.log(formatDate(new Date(new Date() - 1))); // right now
+console.log(formatDate(new Date(new Date() - 30 * 1000))); // 30 sec. ago
+console.log(formatDate(new Date(new Date() - 5 * 60 * 1000))); // 5 min. ago
+console.log(formatDate(new Date(new Date() - 86400 * 1000))); // 20.11.2018 22:50
