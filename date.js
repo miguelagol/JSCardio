@@ -269,39 +269,59 @@ console.log(getLastDayOfMonth(2015, 4)); // 31
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 6 - Write a function getSecondsToday() that returns the number of seconds from the beginning of today
-function getSecondsToday(date) {
+function getSecondsToday() {
+   let hourZero = new Date();
+   hourZero.setHours(0, 0, 0, 0);
+   let now = new Date();
+   return ((now.getTime() - hourZero.getTime()) / 1000).toFixed();
+}
+
+console.log(getSecondsToday());
+
+// or
+function getSecondsToday2(date) {
    let hourZero = new Date(date);
    hourZero.setHours(0, 0, 0, 0);
-   return (date.getTime() - hourZero.getTime()) / 1000;
+   return ((date.getTime() - hourZero.getTime()) / 1000).toFixed();
 }
 
 let date = new Date();
 date.setHours(10, 0, 0, 0);
 
-console.log(getSecondsToday(date)); // 36000
+console.log(getSecondsToday2(date)); // 36000
 
 let date2 = new Date();
 
-console.log(getSecondsToday(date2));
+console.log(getSecondsToday2(date2));
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - Create a function getSecondsToTomorrow() that returns the number of seconds till tomorrow
-function getSecondsToTomorrow(date) {
+function getSecondsToTomorrow() {
+   let hourZero = new Date();
+   hourZero.setDate(hourZero.getDate() + 1);
+   hourZero.setHours(0, 0, 0, 0);
+   let now = new Date();
+   return ((hourZero.getTime() - now.getTime()) / 1000).toFixed();
+}
+console.log(getSecondsToTomorrow());
+
+// or
+function getSecondsToTomorrow2(date) {
    let hourZero = new Date(date);
    hourZero.setDate(hourZero.getDate() + 1);
    hourZero.setHours(0, 0, 0, 0);
-   return (hourZero.getTime() - date.getTime()) / 1000
+   return ((hourZero.getTime() - date.getTime()) / 1000).toFixed();
 }
 
 let date = new Date();
 date.setHours(23, 0, 0, 0);
 
-console.log(getSecondsToTomorrow(date)); // 3600
+console.log(getSecondsToTomorrow2(date)); // 3600
 
 let date2 = new Date();
 
-console.log(getSecondsToTomorrow(date2));
+console.log(getSecondsToTomorrow2(date2));
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -314,17 +334,71 @@ console.log(getSecondsToTomorrow(date2));
 function formatDate(date) {
    let now = new Date();
    let result = now.getTime() - date.getTime();
+   let sec = result / 1000;
+   let min = result / 60000;
+   let day = date.getDate();
+   let month = date.getMonth();
+   let year = date.getFullYear();
+   let hour = date.getHours();
+   let minute = date.getMinutes();
+
+   day = day < 10 ? '0' + day : day;
+   month = month < 10 ? '0' + month : month;
+   hour = hour < 10 ? '0' + hour : hour;
+   minute = minute < 10 ? '0' + minute : minute;
+   year = year.toString().slice(-2);
 
    return result < 1000
       ? 'right now'
       : result < 60000
-         ? `${result / 1000} sec. ago`
+         ? `${sec} sec. ago`
          : result < 3600000
-            ? `${result / 60000} min. ago`
-            : `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear().toString().slice(-2)} ${date.getHours()}:${date.getMinutes()}`
+            ? `${min} min. ago`
+            : `${day}.${month + 1}.${year} ${hour}:${minute}`;
 }
 
 console.log(formatDate(new Date(new Date() - 1))); // right now
 console.log(formatDate(new Date(new Date() - 30 * 1000))); // 30 sec. ago
 console.log(formatDate(new Date(new Date() - 5 * 60 * 1000))); // 5 min. ago
-console.log(formatDate(new Date(new Date() - 86400 * 1000))); // 20.11.2018 22:50
+console.log(formatDate(new Date(new Date(2018, 10, 20) - 86400 * 1000))); // 20.11.2018 22:50
+
+// or
+function formatDate2(date) {
+   let diff = new Date() - date; // the difference in milliseconds
+
+   if (diff < 1000) {
+      // less than 1 second
+      return 'right now';
+   }
+
+   let sec = Math.floor(diff / 1000); // convert diff to seconds
+
+   if (sec < 60) {
+      return sec + ' sec. ago';
+   }
+
+   let min = Math.floor(diff / 60000); // convert diff to minutes
+
+   if (min < 60) {
+      return min + ' min. ago';
+   }
+
+   // format the date
+   // add leading zeroes to single-digit day/month/hours/minutes
+   let d = date;
+   d = [
+      '0' + d.getDate(),
+      '0' + (d.getMonth() + 1),
+      '' + d.getFullYear(),
+      '0' + d.getHours(),
+      '0' + d.getMinutes(),
+   ].map(component => component.slice(-2)); // take last 2 digits of every component
+
+   // join the components into date
+   return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
+}
+
+console.log(formatDate2(new Date(new Date() - 1))); // right now
+console.log(formatDate2(new Date(new Date() - 30 * 1000))); // 30 sec. ago
+console.log(formatDate2(new Date(new Date() - 5 * 60 * 1000))); // 5 min. ago
+console.log(formatDate2(new Date(new Date(2018, 10, 20) - 86400 * 1000))); // 20.11.2018 22:50
