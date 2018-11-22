@@ -1,3 +1,5 @@
+// https://gist.github.com/hiredgun/5f331526083e455578d99b84b83a7a09
+
 // Destructuring assignment
 // is a special syntax that allows us to “unpack” arrays or objects into a bunch of variables, as sometimes they are more convenient.
 
