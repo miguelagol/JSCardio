@@ -149,3 +149,36 @@ console.log(JSON.stringify(user, null, 3));
    }
 }
 */
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// toJSON
+// An object may provide method toJSON for to-JSON conversion. JSON.stringify automatically calls it if available.
+let room = {
+    numer: 23,
+};
+
+let meetup = {
+    title: 'Conference',
+    date: new Date(Date.UTC(2017, 0, 1)),
+    room,
+};
+
+// we can see that date became a string. That’s because all dates have a built-in toJSON method which returns such kind of string.
+console.log(JSON.stringify(meetup)); // {"title":"Conference","date":"2017-01-01T00:00:00.000Z","room":{"numer":23}}
+
+let room2 = {
+    number: 12,
+    toJSON() {
+        return this.number;
+    },
+};
+
+let meetup2 = {
+    title: 'Conference',
+    room2
+};
+
+// toJSON is used both for the direct call JSON.stringify(room) and for the nested object.
+console.log(JSON.stringify(room2)); // 12
+console.log(JSON.stringify(meetup2)); // {"title":"Conference","room2":12}
