@@ -12,7 +12,8 @@ function showMessage() {
 showMessage(); // Hello everyone!
 
 // Function Expression
-// a function, created inside an expression or inside another syntax construct. Here, the function is created at the right side of the “assignment expression” =:
+// a function, created inside an expression or inside another syntax construct. Here, the function is created
+// at the right side of the “assignment expression” =:
 let sayHi = function() {
    console.log('Hello everyone!');
 }; // it must be ; here, because is variable
@@ -24,6 +25,11 @@ let func = sayHi; // without paretheses!
 // (If there were, then func = sayHi() would write the result of the call sayHi() into func, not the function sayHi itself)
 
 func(); // Hello everyone!
+
+let func2 = sayHi();
+
+console.log(func2); // Hello everyone!      undefined
+func2(); // Error: func2 is not a function
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
