@@ -51,8 +51,7 @@ let company = {
 function sumSalaries(department) {
    if (Array.isArray(department)) {
       return department.reduce((prev, curent) => prev + curent.salary, 0);
-   }
-   else {
+   } else {
       let sum = 0;
       for (let subdep of Object.values(department)) {
          sum += sumSalaries(subdep);
@@ -135,7 +134,7 @@ console.log(sumTo2(100)); // 5050
 
 // variant 3 - arithmetic progression formula
 function sumTo3(n) {
-   return (n * (1 + n) / 2)
+   return (n * (1 + n) / 2);
 }
 
 console.log(sumTo3(100)); // 5050
@@ -143,18 +142,55 @@ console.log(sumTo3(100)); // 5050
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - Calculate factorial
-function factorial(n) { }
+function factorial(n) {
+   return n == 1 ? n : n * factorial(n - 1);
+}
 
 console.log(factorial(5)); // 120
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Fibonacci numbers
-function fib(n) { }
+// slow version
+function fib(n) {
+   return (n == 1 || n == 2) ? 1 : fib(n - 1) + fib(n - 2)
+}
 
 console.log(fib(3)); // 2
 console.log(fib(7)); // 13
-console.log(fib(77)); // 5527939700884757
+
+// fast version
+function fib2(n) {
+   let fibArray = [1, 1];
+
+   for (let i = 2; i < n; i++) {
+      fibArray.push(fibArray[i - 1] + fibArray[i - 2]);
+   }
+
+   return fibArray[n - 1]
+}
+
+console.log(fib2(3)); // 2
+console.log(fib2(7)); // 13
+console.log(fib2(77)); // 5527939700884757
+
+// or
+function fib3(n) {
+   let a = 1;
+   let b = 1;
+
+   for (let i = 3; i <= n; i++) {
+      let c = a + b;
+      a = b;
+      b = c;
+   }
+
+   return b;
+}
+
+console.log(fib3(3)); // 2
+console.log(fib3(7)); // 13
+console.log(fib3(77)); // 5527939700884757
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -173,15 +209,33 @@ let list = {
    },
 };
 
-// variant 1 - for loop
-function printList(list) { }
+// variant 1 - loop
+function printList(list) {
+   while (list.next) {
+      console.log(list.value);
+      list = list.next;
+   }
+   console.log(list.value);
+}
 
-console.log(printList(list));
+printList(list);
 
 // variant 2 - recursion
-function printList2(list) { }
+function printList2(list) {
+   return list.next == null ? list.value : list.value + ' ' + printList2(list.next);
+}
 
-console.log(printList2(list));
+console.log(printList2(list)); // 1, 2, 3, 4
+
+// or
+function printList3(list) {
+   console.log(list.value);
+   if (list.next) {
+      printList3(list.next)
+   }
+}
+
+printList3(list);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -200,12 +254,29 @@ let list = {
    },
 };
 
-// variant 1 - for loop
-function printReverseList(list) { }
+// variant 1 - loop
+// let reverseArray = [];
+function printReverseList(list) {
+   let reverseArray = [];
 
-console.log(printReverseList(list));
+   while (list) {
+      reverseArray.push(list.value);
+      list= list.next;
+   }
 
+   for (let i = reverseArray.length - 1; i >= 0; i--) {
+      console.log(reverseArray[i]);
+   }
+}
+
+printReverseList(list);
+ 
 // variant 2 - recursion
-function printReverseList2(list) { }
+function printReverseList2(list) {
+   if (list.next) {
+      printReverseList2(list.next);
+   }
+   console.log(list.value);
+}
 
-console.log(printReverseList2(list));
+printReverseList2(list);
