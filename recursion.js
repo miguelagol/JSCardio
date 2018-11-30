@@ -44,8 +44,8 @@ let company = {
    sales: [{ name: 'John', salary: 1000 }, { name: 'Alice', salary: 600 }],
    development: {
       sites: [{ name: 'Peter', salary: 2000 }, { name: 'Alex', salary: 1800 }],
-      internals: [{ name: 'Jack', salary: 1300 }]
-   }
+      internals: [{ name: 'Jack', salary: 1300 }],
+   },
 };
 
 function sumSalaries(department) {
@@ -134,7 +134,7 @@ console.log(sumTo2(100)); // 5050
 
 // variant 3 - arithmetic progression formula
 function sumTo3(n) {
-   return (n * (1 + n) / 2);
+   return (n * (1 + n)) / 2;
 }
 
 console.log(sumTo3(100)); // 5050
@@ -153,7 +153,7 @@ console.log(factorial(5)); // 120
 // TASK 3 - Fibonacci numbers
 // slow version
 function fib(n) {
-   return (n == 1 || n == 2) ? 1 : fib(n - 1) + fib(n - 2)
+   return n == 1 || n == 2 ? 1 : fib(n - 1) + fib(n - 2);
 }
 
 console.log(fib(3)); // 2
@@ -167,7 +167,7 @@ function fib2(n) {
       fibArray.push(fibArray[i - 1] + fibArray[i - 2]);
    }
 
-   return fibArray[n - 1]
+   return fibArray[n - 1];
 }
 
 console.log(fib2(3)); // 2
@@ -222,7 +222,9 @@ printList(list);
 
 // variant 2 - recursion
 function printList2(list) {
-   return list.next == null ? list.value : list.value + ' ' + printList2(list.next);
+   return list.next == null
+      ? list.value
+      : list.value + ' ' + printList2(list.next);
 }
 
 console.log(printList2(list)); // 1, 2, 3, 4
@@ -231,7 +233,7 @@ console.log(printList2(list)); // 1, 2, 3, 4
 function printList3(list) {
    console.log(list.value);
    if (list.next) {
-      printList3(list.next)
+      printList3(list.next);
    }
 }
 
@@ -255,13 +257,12 @@ let list = {
 };
 
 // variant 1 - loop
-// let reverseArray = [];
 function printReverseList(list) {
    let reverseArray = [];
 
    while (list) {
       reverseArray.push(list.value);
-      list= list.next;
+      list = list.next;
    }
 
    for (let i = reverseArray.length - 1; i >= 0; i--) {
@@ -270,7 +271,7 @@ function printReverseList(list) {
 }
 
 printReverseList(list);
- 
+
 // variant 2 - recursion
 function printReverseList2(list) {
    if (list.next) {
