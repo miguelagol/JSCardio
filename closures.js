@@ -13,9 +13,9 @@ console.log(phrase); // Hello
 
 //                   Changes Lexical Environment
 // execution start   <empty>
-let phrase2;      // phrase2: undefined
-phrase2 = 'Hi';   // phrase2: Hi
-phrase2 = 'Bye';  // phrase2: Bye
+let phrase2; //      phrase2: undefined
+phrase2 = 'Hi'; //   phrase2: Hi
+phrase2 = 'Bye'; //  phrase2: Bye
 
 //--------------------REMEMBER-------------------
 /*    -  A variable is a property of a special internal object, associated with the currently executing block/function/script.
@@ -25,15 +25,16 @@ phrase2 = 'Bye';  // phrase2: Bye
 //------------------------------------------------------------------------------------------------------------------------
 
 // Function declaration
-// Function Declarations are processed not when the execution reaches them, but when a Lexical Environment is created. 
+// Function Declarations are processed not when the execution reaches them, but when a Lexical Environment is created.
 // For the global Lexical Environment, it means the moment when the script is started.
 // That is why we can call a function declaration before it is defined.
 
 //                         Changes Lexical Environment
 // execution start         say: function
-let phrase = 'Hello';   // phrase: Hello
+let phrase = 'Hello'; //   phrase: Hello
 
-function say() {        // say: function
+function say() {
+   //                      say: function
    console.log(phrase); // phrase: Hello
 }
 
@@ -44,10 +45,11 @@ function say() {        // say: function
 
 //                                        Lexical Environment     New Lexical Environment
 // execution start                        say: function
-let phrase = 'Hello';                  // phrase: Hello
+let phrase = 'Hello'; //                  phrase: Hello
 //                                        outer                   inner (the Inner Lexical Environment has the outer reference)
-function say(name) {                   // say: function           name: Pete
-   console.log(`${phrase}, ${name}`);  // phrase: Hello
+function say(name) {
+   //                                     say: function           name: Pete
+   console.log(`${phrase}, ${name}`); //  phrase: Hello
 }
 
 say('Pete');
@@ -60,8 +62,6 @@ say('Pete');
 
 //--------------------REMEMBER-------------------
 // A function gets outer variables as they are now; it uses the most recent values.
-
-
 
 let foo = 'blach';
 
