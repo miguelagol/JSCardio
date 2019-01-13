@@ -35,8 +35,8 @@ In particular, if a script is inside <head>, then document.body is unavailable, 
 */
 
 if (elem.hasChildNodes() === true) {
-      elem.childNodes[0] === elem.firstChild; // true
-      elem.childNodes[elem.childNodes.length - 1] === elem.lastChild; // true
+   elem.childNodes[0] === elem.firstChild; // true
+   elem.childNodes[elem.childNodes.length - 1] === elem.lastChild; // true
 }
 
 // DOM collections
@@ -92,3 +92,86 @@ if (elem.hasChildNodes() === true) {
    <td> and <th>:
       - td.cellIndex – the number of the cell inside the enclosing <tr>.
 */
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - How to access?
+<html>
+   <body>
+      <div>Users:</div>
+      <ul>
+         <li>John</li>
+         <li>Pete</li>
+      </ul>
+   </body>
+</html>
+
+/* 1. The <div> DOM node?
+      document.body.firstElementChild
+      document.body.children[0]
+      document.body.childNodes[1] // because the first node is space
+   2. The <ul> DOM node?
+      document.body.children[1]
+      document.body.lastElementChild
+   3. The second <li> (with Pete)?
+      document.body.lastElementChild.lastElementChild
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 2 - The sibling question
+/*    If elem – is an arbitrary DOM element node…
+   1. Is it true that elem.lastChild.nextSibling is always null?
+      Yes, true. The element elem.lastChild is always the last one, it has no nextSibling, so if there are children, then yes.
+   2. Is it true that elem.children[0].previousSibling is always null ?
+      No, wrong, because elem.children[0] is the first child among elements. But there may be non-element nodes before it.
+      So previousSibling may be a text node.
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 - Select all diagonal cells
+<table>
+   <tr>
+      <td>1:1</td>
+      <td>2:1</td>
+      <td>3:1</td>
+      <td>4:1</td>
+      <td>5:1</td>
+   </tr>
+   <tr>
+      <td>1:2</td>
+      <td>2:2</td>
+      <td>3:2</td>
+      <td>4:2</td>
+      <td>5:2</td>
+   </tr>
+   <tr>
+      <td>1:3</td>
+      <td>2:3</td>
+      <td>3:3</td>
+      <td>4:3</td>
+      <td>5:3</td>
+   </tr>
+   <tr>
+      <td>1:4</td>
+      <td>2:4</td>
+      <td>3:4</td>
+      <td>4:4</td>
+      <td>5:4</td>
+   </tr>
+   <tr>
+      <td>1:5</td>
+      <td>2:5</td>
+      <td>3:5</td>
+      <td>4:5</td>
+      <td>5:5</td>
+   </tr>
+</table>
+  
+let table = document.body.firstElementChild;
+
+for (let i = 0; i < table.rows.length; i++) {
+   td = table.rows[i].cells[i];
+   td.style.backgroundColor = 'red';
+}
