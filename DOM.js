@@ -95,6 +95,96 @@ if (elem.hasChildNodes() === true) {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Searching: getElement and querySelector
+
+// If an element has the id attribute, then there’s a global variable by the name from that id.
+// We can access the element like this
+
+<div id='elem'>
+   <div id='elem-content'>Element</div>
+</div>
+
+console.log(elem);
+console.log(window.elem);
+console.log(window['elem-content']);
+
+// but if we declare the same-named variable...
+<div id="elem"></div>
+
+let elem = 5;
+
+console.log(elem); // 5, the variable overrides the element
+
+//-------------------------------------------------------------------------------
+
+// document.getElementById(id)
+
+//--------------------REMEMBER--------------------
+// The method getElementById that can be called only on document object. 
+
+console.log(document.getElementById(elem)); // that's work
+
+//-------------------------------------------------------------------------------
+
+// element.getElementsByTagName(tagName)
+//    looks for elements with the given tag and returns the collection of them.
+//    The tag parameter can also be a star "*" for “any tags”.
+
+console.log(document.getElementsByTagName('div'));
+
+//--------------------REMEMBER--------------------
+// This method is callable in the context of any DOM element.
+// It returns a collection, not an element
+
+<table id="table">
+   <tr>
+      <td>Your age:</td>
+      <td>
+         <label>
+            <input type="radio" name="age" value="young" checked /> less than 18
+         </label>
+      </td>
+   </tr>
+</table>
+
+console.log(table.getElementsByTagName('label'));
+console.log(table.getElementsByTagName('label').value); // doesn't work, it's a collection!
+console.log(table.getElementsByTagName('input')[0].value); // that's work
+
+//-------------------------------------------------------------------------------
+
+// rarely used
+// element.getElementsByClassName(className)
+// element.getElementsByName(name)
+
+<form name="my-form">
+   <div class="article">Article</div>
+   <div class="long article">Long article</div>
+</form>
+
+let form = document.getElementsByName('my-form')[0];
+
+let articles = form.getElementsByClassName('article');
+console.log(articles.length); // 2, found two elements with class "article"
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// element.querySelectorAll
+// The call to elem.querySelectorAll(css) returns all elements inside elem matching the given CSS selector.
+
+<ul>
+   <li>The</li>
+   <li>test</li>
+</ul>
+   <ul>
+      <li>has</li>
+      <li>passed</li>
+   </ul>
+   <script>
+      let elements = document.querySelectorAll('ul > li:last-child');
+</script>
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - How to access?
 <html>
    <body>
@@ -168,10 +258,11 @@ if (elem.hasChildNodes() === true) {
       <td>5:5</td>
    </tr>
 </table>
-  
-let table = document.body.firstElementChild;
 
-for (let i = 0; i < table.rows.length; i++) {
-   td = table.rows[i].cells[i];
-   td.style.backgroundColor = 'red';
-}
+<script>
+   let table = document.body.firstElementChild;
+      
+   for (let i = 0; i < table.rows.length; i++) {td = table.rows[i].cells[i];
+      td.style.backgroundColor = 'red';
+   }
+</script>
