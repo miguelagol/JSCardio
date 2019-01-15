@@ -155,7 +155,7 @@ console.log(table.getElementsByTagName('input')[0].value); // that's work
 
 // rarely used
 // element.getElementsByClassName(className)
-// element.getElementsByName(name)
+// document.getElementsByName(name)
 
 <form name="my-form">
    <div class="article">Article</div>
@@ -171,18 +171,105 @@ console.log(articles.length); // 2, found two elements with class "article"
 
 // element.querySelectorAll
 // The call to elem.querySelectorAll(css) returns all elements inside elem matching the given CSS selector.
-
 <ul>
    <li>The</li>
    <li>test</li>
 </ul>
-   <ul>
-      <li>has</li>
-      <li>passed</li>
-   </ul>
-   <script>
-      let elements = document.querySelectorAll('ul > li:last-child');
+<ul>
+   <li>has</li>
+   <li>passed</li>
+</ul>
+
+<script>
+   let elements = document.querySelectorAll('ul > li:last-child');
+
+   for (let elem of elements) {
+      console.log(elem.innerHTML) // "test", "passed"
+   }
 </script>
+
+//-------------------------------------------------------------------------------
+
+// element.querySelector(css)
+// The call to elem.querySelector(css) returns the first element for the given CSS selector.
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Matches
+// element.matches(css)
+// The element.matches(css) does not look for anything, it merely checks if elem matches the given CSS-selector. It returns true or false.
+<a href="http://example.com/file.zip">...</a>
+<a href="http://ya.ru">...</a>
+
+<script>
+   for (let elem of document.body.children) {
+      {if (elem.matches('a[href$="zip"]')) {
+         console.log("The archive reference: " + elem.href )
+       }}
+   }
+</script>
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// CLosest
+// element.closest(css)
+// The method element.closest(css) looks the nearest ancestor that matches the CSS-selector.
+// The elem itself is also included in the search.
+<h1>Contents</h1>
+
+<div class="contents">
+  <ul class="book">
+    <li class="chapter">Chapter 1</li>
+    <li class="chapter">Chapter 1</li>
+  </ul>
+</div>
+
+<script>
+  let chapter = document.querySelector('.chapter'); // LI
+
+  console.log(chapter.closest('.book')); // UL
+  console.log(chapter.closest('.contents')); // DIV
+  console.log(chapter.closest('h1')); // null, because h1 is not an ancestor
+</script>
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Live collections
+// All methods "getElementsBy*" return a live collection.
+// Such collections always reflect the current state of the document and “auto-update” when it changes.
+// In contrast, querySelectorAll returns a static collection. It’s like a fixed array of elements.
+<div>First div</div>
+
+<script>
+  let divsBy = document.getElementsByTagName('div');
+  let divsAll = document.querySelectorAll('div');
+  console.log(divsBy.length); // 1
+  console.log(divsAll.length); // 1
+</script>
+
+<div>Second div</div>
+
+<script>
+  console.log(divsBy.length); // 2
+  console.log(divsAll.length); // 1
+</script>
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Summary
+
+/*    There are 6 main methods to search for nodes in DOM:
+
+Method	               Searches by...	   Can call on an element?	   Live?
+getElementById	         id	               -	                        -
+getElementsByName	      name	            -	                        ✔
+getElementsByTagName	   tag or '*'	      ✔	                        ✔
+getElementsByClassName	class	            ✔	                        ✔
+querySelector	         CSS-selector	   ✔	                        -
+querySelectorAll	      CSS-selector	   ✔	                        -
+
+*/
+
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - How to access?
@@ -262,7 +349,34 @@ console.log(articles.length); // 2, found two elements with class "article"
 <script>
    let table = document.body.firstElementChild;
       
-   for (let i = 0; i < table.rows.length; i++) {td = table.rows[i].cells[i];
-      td.style.backgroundColor = 'red';
+   for (let i = 0; i < table.rows.length; i++) {
+      td = table.rows[i].cells[i];
+      td.style.backgroundColor = 'red'
    }
 </script>
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - Search for elements
+/* How to find?
+
+1. The table with id="age-table".
+      document.getElementById('age-table')
+2. All label elements inside that table (there should be 3 of them).
+      let table = document.getElementById('age-table');
+      table.getElementsByTagName('label')
+      document.querySelectorAll('#age-table label')
+3. The first td in that table (with the word “Age”).
+      table.getElementsByTagName('td')[0]
+      table.rows[0].cells[0]
+      table.querySelector('td')
+4. The form with the name search.
+      let search = document.getElementsByName('search')[0]
+      document.querySelector('form[name="search"]')
+5. The first input in that form.
+      search.getElementByTagName('input')[0]
+      form.querySelector('input')
+6. The last input in that form.
+      let inputs = search.querySelectorAll('input')
+      inputs[inputs.length-1]
+*/
