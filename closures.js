@@ -75,14 +75,13 @@ say('Pete');
 // Nested function
 // A function is called “nested” when it is created inside another function.
 function sayHiBye(firstName, lastName) {
+   // helper nested function to use below
+   function getFullName() {
+      return firstName + ' ' + lastName;
+   }
 
-  // helper nested function to use below
-  function getFullName() {
-    return firstName + " " + lastName;
-  }
-
-  console.log('Hello, ' + getFullName());
-  console.log('Bye, ' + getFullName());
+   console.log('Hello, ' + getFullName());
+   console.log('Bye, ' + getFullName());
 }
 
 // or
@@ -96,11 +95,11 @@ function sayHiBye(firstName, lastName) {
 // In other words, a function is “imprinted” with a reference to the Lexical Environment where it was born.
 // And [[Environment]] is the hidden function property that has that reference.
 function makeCounter() {
-  let count = 0;
+   let count = 0;
 
-  return function() {
-    return count++;
-  }
+   return function() {
+      return count++;
+   };
 }
 
 let counter = makeCounter();
@@ -130,28 +129,28 @@ console.log(counter2()); // 0
 // if
 let phrase = 'Hello';
 
-if(true) {
-  let user = 'Jack';
+if (true) {
+   let user = 'Jack';
 
-  console.log(`${phrase}, ${user}`); // Hello, Jack
+   console.log(`${phrase}, ${user}`); // Hello, Jack
 }
 
 console.log(user); // Error: user is not defined
 
 // for, while
 // For a loop, every iteration has a separate Lexical Environment.
-for (let i = 0; i<10; i++) {
-  // each loop has its own Lexical Environment
+for (let i = 0; i < 10; i++) {
+   // each loop has its own Lexical Environment
 }
 
 console.log(i); // Error: i is not defined
 
 // code blocks
 {
-  // do some job with local variables
-  let message = 'Hello';
+   // do some job with local variables
+   let message = 'Hello';
 
-  console.log(message); // Hello
+   console.log(message); // Hello
 }
 
 console.log(message); // Error: message is not defined
@@ -160,11 +159,10 @@ console.log(message); // Error: message is not defined
 // In old scripts, one can find so-called “immediately-invoked function expressions”
 // a Function Expression is created and immediately called.
 (function() {
-  let  message = 'Hello';
+   let message = 'Hello';
 
-  console.log(message); // Hello
+   console.log(message); // Hello
 })();
-
 
 /* function() {
   let  message = 'Hello';
@@ -176,21 +174,21 @@ console.log(message); // Error: message is not defined
 
 // TASK 1 - Are counters independent?
 function makeCounter() {
-  let count = 0;
+   let count = 0;
 
-  return function() {
-    return count++;
-  };
+   return function() {
+      return count++;
+   };
 }
 
 let counter = makeCounter();
 let counter2 = makeCounter();
 
-console.log( counter() ); // 0
-console.log( counter() ); // 1
+console.log(counter()); // 0
+console.log(counter()); // 1
 
-console.log( counter2() ); // ?
-console.log( counter2() ); // ?
+console.log(counter2()); // ?
+console.log(counter2()); // ?
 
 // Yes
 // 0, 1
@@ -199,21 +197,21 @@ console.log( counter2() ); // ?
 
 // TASK 2 - Counter object - Will it work? What will it show?
 function Counter() {
-  let count = 0;
+   let count = 0;
 
-  this.up = function() {
-    return ++count;
-  };
-  this.down = function() {
-    return --count;
-  };
+   this.up = function() {
+      return ++count;
+   };
+   this.down = function() {
+      return --count;
+   };
 }
 
 let counter = new Counter();
 
-console.log( counter.up() ); // ?
-console.log( counter.up() ); // ?
-console.log( counter.down() ); // ?
+console.log(counter.up()); // ?
+console.log(counter.up()); // ?
+console.log(counter.down()); // ?
 
 // yes
 // 1, 2, 1
@@ -221,18 +219,18 @@ console.log( counter.down() ); // ?
 //------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Function in if - What will be result of the call at the last line?
-let phrase = "Hello";
+let phrase = 'Hello';
 
 if (true) {
-  let user = "John";
+   let user = 'John';
 
-  function sayHi2() {
-    console.log(`${phrase}, ${user}`);
-  }
+   function sayHi2() {
+      console.log(`${phrase}, ${user}`);
+   }
 }
 
 sayHi2(); // ?
-console.log(user)
+console.log(user);
 
 // Error: ?
 
@@ -243,9 +241,6 @@ console.log(user)
 //------------------------------------------------------------------------------------------------------------------------
 
 // TASK 5 -
-
-
-
 
 let foo = 'blach';
 
