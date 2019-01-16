@@ -127,6 +127,8 @@ console.log(counter2()); // 0
 // Lexical Environments also exist for code blocks {...}
 
 // if
+// The new Lexical Environment gets the enclosing one as the outer reference, so phrase can be found.
+// But all variables and Function Expressions declared inside if reside in that Lexical Environment and can’t be seen from the outside.
 let phrase = 'Hello';
 
 if (true) {
@@ -137,13 +139,19 @@ if (true) {
 
 console.log(user); // Error: user is not defined
 
+//--------------------------------------------------------------------------------------------
+
 // for, while
 // For a loop, every iteration has a separate Lexical Environment.
 for (let i = 0; i < 10; i++) {
    // each loop has its own Lexical Environment
 }
+// That’s actually an exception, because let i is visually outside of {...}.
+// But in fact each run of the loop has its own Lexical Environment with the current i in it.
 
 console.log(i); // Error: i is not defined
+
+//--------------------------------------------------------------------------------------------
 
 // code blocks
 {
@@ -155,6 +163,8 @@ console.log(i); // Error: i is not defined
 
 console.log(message); // Error: message is not defined
 
+//--------------------------------------------------------------------------------------------
+
 // IIFE
 // In old scripts, one can find so-called “immediately-invoked function expressions”
 // a Function Expression is created and immediately called.
@@ -163,12 +173,82 @@ console.log(message); // Error: message is not defined
 
    console.log(message); // Hello
 })();
+// The Function Expression is wrapped with parenthesis (function {...}),
+// because when JavaScript meets "function" in the main code flow, it understands it as the start of a Function Declaration.
+// But a Function Declaration must have a name
 
-/* function() {
-  let  message = 'Hello';
+// So, parenthesis are needed to show JavaScript that the function is created in the context of another expression,
+// and hence it’s a Function Expression. It needs no name and can be called immediately.
+// There are other ways to tell JavaScript that we mean Function Expression:
 
-  console.log(message); // Hello
-}(); */
+(function() {
+  console.log("Brackets around the function");
+})();
+
+(function() {
+  console.log("Brackets around the whole thing");
+}());
+
+!function() {
+  console.log("Bitwise NOT operator starts the expression");
+}();
+
++function() {
+  console.log("Unary plus starts the expression");
+}();
+
+//------------------------------------------------------------------------------------------------------------------------
+
+// Garbage Collection
+
+//  - Lexical Environment is cleaned up after the function run
+function func() {
+  let value = 123;
+  let value2 = 456;
+}
+
+func(); // after func() finishes that Lexical Environment becomes unreachable, so it’s deleted from the memory.
+
+//  - If there’s a nested function that is still reachable after the end of func,
+//    then its [[Environment]] reference keeps the outer lexical environment alive as well:
+function func() {
+  let value = 123;
+
+  function func2() {
+    console.log(value);
+  }
+
+  return func2;
+}
+
+let func2 = func(); // g is reachable, and keeps the outer lexical environment in memory
+
+func2(); // 123
+
+//  -  if f() is called many times, and resulting functions are saved, then the corresponding Lexical Environment objects will also be retained in memory
+function func() {
+  let value = Math.random();
+
+  return function() { console.log(value); };
+}
+
+// 3 functions in array, every one of them links to Lexical Environment from the corresponding f() run
+let arr = [func(), func(), func()];
+
+//  - A Lexical Environment object dies when it becomes unreachable: when no nested functions remain that reference it.
+function func() {
+  let value = 123;
+
+  function func2() {
+    console.log(value);
+  }
+
+  return func2;
+}
+
+let func2 = func(); // while func2 is alive there corresponding Lexical Environment lives
+
+func2 = null; // ...and now the memory is cleaned up
 
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -219,6 +299,7 @@ console.log(counter.down()); // ?
 //------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Function in if - What will be result of the call at the last line?
+'use strict'
 let phrase = 'Hello';
 
 if (true) {
