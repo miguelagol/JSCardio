@@ -329,9 +329,92 @@ sum(5)(-1); // 4
 //------------------------------------------------------------------------------------------------------------------------
 
 // TASK 5 - Filter through function
+function inBetween(a, b) {
+   return function(item) {
+      return a <= item && item <= b;
+   };
+}
 
+function inArray(array) {
+   return function(item) {
+      for (let arg of array) {
+         if (arg === item) {
+            return item;
+         }
+      }
+   };
+}
+
+function inArray2(array) {
+   return function(item) {
+      return array.includes(item);
+   };
+}
 let arr = [1, 2, 3, 4, 5, 6, 7];
 
-console.log(arr.filter(inBetween(3, 6))); // 3,4,5,6
+console.log(arr.filter(inBetween(3, 6))); // [3, 4, 5, 6]
 
-console.log(arr.filter(inArray([1, 2, 10]))); // 1,2
+console.log(arr.filter(inArray([1, 2, 10]))); // [1, 2]
+
+console.log(arr.filter(inArray2([1, 3, 7, 10]))); // [1, 3, 7]
+
+//------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Sort by field
+
+function byField(field) {
+   switch (field) {
+      case 'name':
+         return function(a, b) {
+            return a.name > b.name ? 1 : -1;
+         };
+      case 'surname':
+         return function(a, b) {
+            return a.surname > b.surname ? 1 : -1;
+         };
+      case 'age':
+         return function(a, b) {
+            return a.age > b.age ? 1 : -1;
+         };
+   }
+}
+
+function byField2(field) {
+   return function(a, b) {
+      return a[field] > b[field] ? 1 : -1;
+   };
+}
+let users = [
+   { name: 'John', age: 20, surname: 'Johnson' },
+   { name: 'Pete', age: 18, surname: 'Hathaway' },
+   { name: 'Ann', age: 19, surname: 'Peterson' },
+];
+
+console.log(users.sort(byField('name')));
+console.log(users.sort(byField('age')));
+console.log(users.sort(byField('surname')));
+
+console.log(users.sort(byField2('name')));
+console.log(users.sort(byField2('age')));
+console.log(users.sort(byField2('surname')));
+
+//------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Army of functions
+function makeArmy() {
+   let shooters = [];
+
+   for (let i =0; i < 10; i++){
+      let shooter = function() {
+         console.log(i); // should show its number
+      };
+      shooters.push(shooter);
+   }
+
+   return shooters;
+}
+
+let army = makeArmy();
+
+army[0]();
+army[5]();
