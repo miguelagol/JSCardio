@@ -182,20 +182,20 @@ console.log(message); // Error: message is not defined
 // There are other ways to tell JavaScript that we mean Function Expression:
 
 (function() {
-  console.log("Brackets around the function");
+   console.log('Brackets around the function');
 })();
 
 (function() {
-  console.log("Brackets around the whole thing");
-}());
+   console.log('Brackets around the whole thing');
+})();
 
-!function() {
-  console.log("Bitwise NOT operator starts the expression");
-}();
+!(function() {
+   console.log('Bitwise NOT operator starts the expression');
+})();
 
-+function() {
-  console.log("Unary plus starts the expression");
-}();
++(function() {
+   console.log('Unary plus starts the expression');
+})();
 
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -203,8 +203,8 @@ console.log(message); // Error: message is not defined
 
 //  - Lexical Environment is cleaned up after the function run
 function func() {
-  let value = 123;
-  let value2 = 456;
+   let value = 123;
+   let value2 = 456;
 }
 
 func(); // after func() finishes that Lexical Environment becomes unreachable, so it’s deleted from the memory.
@@ -212,13 +212,13 @@ func(); // after func() finishes that Lexical Environment becomes unreachable, s
 //  - If there’s a nested function that is still reachable after the end of func,
 //    then its [[Environment]] reference keeps the outer lexical environment alive as well:
 function func() {
-  let value = 123;
+   let value = 123;
 
-  function func2() {
-    console.log(value);
-  }
+   function func2() {
+      console.log(value);
+   }
 
-  return func2;
+   return func2;
 }
 
 let func2 = func(); // g is reachable, and keeps the outer lexical environment in memory
@@ -227,9 +227,11 @@ func2(); // 123
 
 //  -  if f() is called many times, and resulting functions are saved, then the corresponding Lexical Environment objects will also be retained in memory
 function func() {
-  let value = Math.random();
+   let value = Math.random();
 
-  return function() { console.log(value); };
+   return function() {
+      console.log(value);
+   };
 }
 
 // 3 functions in array, every one of them links to Lexical Environment from the corresponding f() run
@@ -237,13 +239,13 @@ let arr = [func(), func(), func()];
 
 //  - A Lexical Environment object dies when it becomes unreachable: when no nested functions remain that reference it.
 function func() {
-  let value = 123;
+   let value = 123;
 
-  function func2() {
-    console.log(value);
-  }
+   function func2() {
+      console.log(value);
+   }
 
-  return func2;
+   return func2;
 }
 
 let func2 = func(); // while func2 is alive there corresponding Lexical Environment lives
@@ -299,7 +301,7 @@ console.log(counter.down()); // ?
 //------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Function in if - What will be result of the call at the last line?
-'use strict'
+('use strict');
 let phrase = 'Hello';
 
 if (true) {
@@ -310,25 +312,26 @@ if (true) {
    }
 }
 
-sayHi2(); // ?
-console.log(user);
-
-// Error: ?
+sayHi2(); //  Hello, John
+//            Error: sayHi is not defined, in strict mode
 
 //------------------------------------------------------------------------------------------------------------------------
 
-// TASK 4 -
-
-//------------------------------------------------------------------------------------------------------------------------
-
-// TASK 5 -
-
-let foo = 'blach';
-
-function x() {
-   const foo = 'fooo';
-   return function y() {
-      return 'Misio ma ' + foo + ' lat';
+// TASK 4 - Sum with closures
+function sum(a) {
+   return function(b) {
+      console.log(a + b);
    };
 }
-console.log(x()());
+sum(1)(2); // 3
+sum(5)(-1); // 4
+
+//------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Filter through function
+
+let arr = [1, 2, 3, 4, 5, 6, 7];
+
+console.log(arr.filter(inBetween(3, 6))); // 3,4,5,6
+
+console.log(arr.filter(inArray([1, 2, 10]))); // 1,2
