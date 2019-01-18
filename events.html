@@ -1,0 +1,64 @@
+<!-- // Events -->
+<!--  Here’s a list of the most useful DOM events, just to take a look at:
+      Mouse events:
+         - click – when the mouse clicks on an element (touchscreen devices generate it on a tap).
+         - contextmenu – when the mouse right-clicks on an element.
+         - mouseover / mouseout – when the mouse cursor comes over / leaves an element.
+         - mousedown / mouseup – when the mouse button is pressed / released over an element.
+         - mousemove – when the mouse is moved.
+      Form element events:
+         - submit – when the visitor submits a <form>.
+         - focus – when the visitor focuses on an element, e.g. on an <input>.
+      Keyboard events:
+         - keydown and keyup – when the visitor presses and then releases the button.
+      Document events
+         - DOMContentLoaded – when the HTML is loaded and processed, DOM is fully built.
+      CSS events:
+         - transitionend – when a CSS-animation finishes.
+-->
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!--  Event handlers
+      To react on events we can assign a handler – a function that runs in case of an event. -->
+
+<!-- Ways to assign a handler -->
+
+<!-- HTML-attribute -->
+<!-- A handler can be set in HTML with an attribute named on<event> -->
+
+<script>
+   function eventHandler() {
+      alert('HTML + JS (HTML-attribute) \n <input onlick="eventHandler()" type="button" value="HTML + JS (HTML-attribute)"> \n <script> function eventHandler() { alert() } <//script>');
+   }   
+</script>
+
+<!-- To assign a click handler for an input, we can use onclick -->
+<input type="button" onclick="eventHandler()" value="HTML + JS (HTML-attribute)">
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- DOM property -->
+<!-- We can assign a handler using a DOM property on<event>. -->
+<input id="element" type="button" value="HTML + JS (DOM-property)">
+
+<script>
+   element.onclick = function () {
+      alert('HTML + JS (DOM-property) \n <input id="element" type="button" value="Click me"> \n <script> element.onclick = function () { alert() } <//script>');
+   }
+</script>
+
+<!--  element.onclick = function alert ' -->
+<!-- the same as -->
+<input type="button" value="Only HTML" onclick="alert(`Only HTML \n <input type='button' value='Click me' onclick='alert()'>`)">
+
+<!-- ------------------------------------------------------------------------------------------------->
+
+
+<!--------------------------------------------------------------------------------------------------->
+
+
+<!--------------------------------------------------------------------------------------------------->
+
+
+<!--------------------------------------------------------------------------------------------------->
