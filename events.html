@@ -29,36 +29,154 @@
 
 <script>
    function eventHandler() {
-      alert('HTML + JS (HTML-attribute) \n <input onlick="eventHandler()" type="button" value="HTML + JS (HTML-attribute)"> \n <script> function eventHandler() { alert() } <//script>');
-   }   
+      alert(
+         'HTML + JS (HTML-attribute) \n <input onlick="eventHandler()" type="button" value="HTML + JS (HTML-attribute)"> \n <script> function eventHandler() { alert() } <//script>',
+      );
+   }
 </script>
 
 <!-- To assign a click handler for an input, we can use onclick -->
-<input type="button" onclick="eventHandler()" value="HTML + JS (HTML-attribute)">
+<input
+   type="button"
+   onclick="eventHandler()"
+   value="HTML + JS (HTML-attribute)"
+/>
+
+<!-- The handler is always in the DOM property: the HTML-attribute is just one of the ways to initialize it. -->
 
 <!--------------------------------------------------------------------------------------------------->
 
 <!-- DOM property -->
 <!-- We can assign a handler using a DOM property on<event>. -->
-<input id="element" type="button" value="HTML + JS (DOM-property)">
+<input id="element" type="button" value="HTML + JS (DOM-property)" />
 
 <script>
-   element.onclick = function () {
-      alert('HTML + JS (DOM-property) \n <input id="element" type="button" value="Click me"> \n <script> element.onclick = function () { alert() } <//script>');
-   }
+   element.onclick = function() {
+      alert(
+         'HTML + JS (DOM-property) \n <input id="element" type="button" value="HTML + JS (DOM-property)"> \n <script> element.onclick = function () { alert() } <//script>',
+      );
+   };
 </script>
 
-<!--  element.onclick = function alert ' -->
 <!-- the same as -->
-<input type="button" value="Only HTML" onclick="alert(`Only HTML \n <input type='button' value='Click me' onclick='alert()'>`)">
+<input
+   type="button"
+   value="Only HTML"
+   onclick="alert(`Only HTML \n <input type='button' value='Only HTML' onclick='alert()'>`)"
+/>
 
-<!-- ------------------------------------------------------------------------------------------------->
+<!-- DOM-property case matters!
+      Assign a handler to elem.onclick, not elem.ONCLICK, because DOM properties are case-sensitive. -->
 
+<br />
+<br />
 
 <!--------------------------------------------------------------------------------------------------->
 
+<!-- As there’s only one onclick property, we can’t assign more than one event handler. -->
+<input type="button" id="elem" onclick="alert('Only HTML')" value="Click me" />
+<script>
+   elem.onclick = function() {
+      alert('HTML + JS');
+   };
+
+   // The same as
+   /*
+   function alertSth() {
+      alert('HTML + JS');
+   }
+   
+   elem.onclick = alertSth;    // The function should be assigned as alertSth, not alertSth()!!!
+   */
+</script>
 
 <!--------------------------------------------------------------------------------------------------->
 
+<!-- Accessing the element: this -->
+<!-- The value of this inside a handler is the element. The one which has the handler on it. -->
+<button onclick="alert(this.innerHTML)">
+   Alert Inner HTML by this.innerHTML
+</button>
 
 <!--------------------------------------------------------------------------------------------------->
+
+<!-- Don’t use setAttribute for handlers!!!
+
+   Such a call won’t work:
+      document.body.setAttribute('onclick', function() { alert(1) });
+
+   a click on <body> will generate errors,
+   because attributes are always strings, function becomes a string -->
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- addEventListener -->
+<!--  element.addEventListener(event, handler[ , phase])
+         event -  Event name, e.g. "click".
+         handler  - The handler function.
+         phase -  An optional argument, the “phase” for the handler to work.
+      
+      To remove, exactly the same arguments as addEventListener
+         element.removeEventListener(event, handler[, phase]);
+      
+      -------------------REMEMBER-------------------
+      Removal requirwe the same function
+-->
+<script>
+   /* // that doesn't work
+   elemen.addEventListener('click', () => alert('thanks'));
+   // ...
+   elemen.removeEventListener('click', () => alert('thanks')); */
+
+   // The handler won’t be removed, because removeEventListener gets another function – with the same code
+
+   // The right way
+   function handler() {
+      alert('thanks');
+   }
+   elem.addEventListener('click', handler);
+   // ...
+   elem.removeEventListener('click', handler);
+</script>
+
+<!-- Multiple calls to addEventListener allow to add multiple handlers -->
+<input id="eleme" type="button" value="Multiple calls to addEventListener" />
+<script>
+   function handler1() {
+      alert('handler 1');
+   }
+   function handler2() {
+      alert('handler 2');
+   }
+
+   eleme.onclick = () => alert('element.onclick');
+   eleme.addEventListener('click', handler1);
+   eleme.addEventListener('click', handler2);
+</script>
+
+<style>
+   input #trans {
+     transition: width 1s;
+     width: 100px;
+   }
+ 
+   .wide {
+     width: 300px;
+   }
+ </style>
+
+<input
+   type="button"
+   id="trans"
+   onclick="this.classList.toggle('wide')"
+   value="Click me">
+
+<script>
+   trans.ontransitionend = function() {
+      alert('DOM property'); // doesn't work
+   };
+
+   trans.addEventListener('transitionend', function() {
+      alert('addEventListener'); // shows up when the animation finishes
+   });
+</script>
