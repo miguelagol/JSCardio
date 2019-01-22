@@ -37,6 +37,7 @@
 
 <!-- To assign a click handler for an input, we can use onclick -->
 <input
+   class="wider"
    type="button"
    onclick="eventHandler()"
    value="HTML + JS (HTML-attribute)"
@@ -48,7 +49,12 @@
 
 <!-- DOM property -->
 <!-- We can assign a handler using a DOM property on<event>. -->
-<input id="element" type="button" value="HTML + JS (DOM-property)" />
+<input
+   id="element"
+   type="button"
+   class="wider"
+   value="HTML + JS (DOM-property)"
+/>
 
 <script>
    element.onclick = function() {
@@ -62,6 +68,7 @@
 <input
    type="button"
    value="Only HTML"
+   class="wider"
    onclick="alert(`Only HTML \n <input type='button' value='Only HTML' onclick='alert()'>`)"
 />
 
@@ -74,7 +81,13 @@
 <!--------------------------------------------------------------------------------------------------->
 
 <!-- As there’s only one onclick property, we can’t assign more than one event handler. -->
-<input type="button" id="elem" onclick="alert('Only HTML')" value="Click me" />
+<input
+   type="button"
+   id="elem"
+   class="wider"
+   onclick="alert('Only HTML')"
+   value="Click me"
+/>
 <script>
    elem.onclick = function() {
       alert('HTML + JS');
@@ -140,7 +153,12 @@
 </script>
 
 <!-- Multiple calls to addEventListener allow to add multiple handlers -->
-<input id="eleme" type="button" value="Multiple calls to addEventListener" />
+<input
+   id="eleme"
+   type="button"
+   class="wider"
+   value="Multiple calls to addEventListener"
+/>
 <script>
    function handler1() {
       alert('handler 1');
@@ -155,21 +173,27 @@
 </script>
 
 <style>
-   input #trans {
-     transition: width 1s;
-     width: 100px;
+   input {
+      transition: width 1s;
+      width: 100px;
    }
- 
-   .wide {
-     width: 300px;
-   }
- </style>
 
+   .wider {
+      width: auto;
+   }
+
+   .wide {
+      width: 300px;
+   }
+</style>
+
+<!-- There exist events that can’t be assigned via a DOM-property. Must use addEventListener. For instance, the event transitionend -->
 <input
    type="button"
    id="trans"
    onclick="this.classList.toggle('wide')"
-   value="Click me">
+   value="Click me"
+/>
 
 <script>
    trans.ontransitionend = function() {
@@ -177,6 +201,89 @@
    };
 
    trans.addEventListener('transitionend', function() {
-      alert('addEventListener'); // shows up when the animation finishes
+      alert('transitionend with addEventListener'); // shows up when the animation finishes
    });
 </script>
+<br />
+<br />
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- Event object -->
+<!-- When an event happens, the browser creates an event object, puts details into it and passes it as an argument to the handler. -->
+
+<input
+   type="button"
+   value="Show event type, element and coordinates of the click"
+   id="eventObject"
+   class="wider"
+/>
+
+<!--  event.currentTarget   - Element that handled the event. That’s exactly the same as this, unless you bind this to something else
+      event.clientX / event.clientY    - Window-relative coordinates of the cursor, for mouse events.-->
+<script>
+   eventObject.onclick = function(event) {
+      // show event type, element and coordinates of the click
+      alert(event.type + ' at ' + event.currentTarget);
+      alert('Coordinates: ' + event.clientX + ':' + event.clientY);
+   };
+</script>
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- Object handlers: handleEvent -->
+<!-- We can assign an object as an event handler using addEventListener. When an event occurs, its handleEvent method is called with it. -->
+<button id="handleEvents">Handle Event</button>
+
+<script>
+   handleEvents.addEventListener('click', {
+      handleEvent(event) {
+         alert(event.type + ' at ' + event.currentTarget);
+      },
+   });
+</script>
+
+<button id="handleMouse">Handle mouse event witch switch</button>
+
+<script>
+   class Menu {
+      handleEvent(event) {
+         switch(event.type) {
+            case 'mousedown' :
+               handleMouse.innerHTML = 'Mouse button pressed';
+               break;
+            case 'mouseup' :
+               handleMouse.innerHTML += '... and released'
+               break; 
+         }
+      }
+   }
+
+   let menu = new Menu();
+   handleMouse.addEventListener('mousedown', menu);
+   handleMouse.addEventListener('mouseup', menu);
+</script>
+
+<!-- the same as -->
+<button id="handleMouse2">Handle mouse event </button>
+
+<script>
+   class Menu2 {
+      handleEvent(event) {
+         let eventType = 'on' + event.type[0].toUpperCase() + event.type.slice(1);
+         this[eventType](event);
+      }
+      onMousedown() {
+         handleMouse2.innerHTML = 'Mouse button pressed';
+      }
+      onMouseup() {
+         handleMouse2.innerHTML += '... and released'
+      }
+   }
+   let menu2 = new Menu2();
+   handleMouse2.addEventListener('mousedown', menu2);
+   handleMouse2.addEventListener('mouseup', menu2);
+</script>
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
