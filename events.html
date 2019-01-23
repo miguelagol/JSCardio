@@ -248,13 +248,13 @@
 <script>
    class Menu {
       handleEvent(event) {
-         switch(event.type) {
-            case 'mousedown' :
+         switch (event.type) {
+            case 'mousedown':
                handleMouse.innerHTML = 'Mouse button pressed';
                break;
-            case 'mouseup' :
-               handleMouse.innerHTML += '... and released'
-               break; 
+            case 'mouseup':
+               handleMouse.innerHTML += '... and released';
+               break;
          }
       }
    }
@@ -265,25 +265,113 @@
 </script>
 
 <!-- the same as -->
-<button id="handleMouse2">Handle mouse event </button>
+<button id="handleMouse2">Handle mouse event</button>
 
 <script>
    class Menu2 {
       handleEvent(event) {
-         let eventType = 'on' + event.type[0].toUpperCase() + event.type.slice(1);
+         let eventType =
+            'on' + event.type[0].toUpperCase() + event.type.slice(1);
          this[eventType](event);
       }
       onMousedown() {
          handleMouse2.innerHTML = 'Mouse button pressed';
       }
       onMouseup() {
-         handleMouse2.innerHTML += '... and released'
+         handleMouse2.innerHTML += '... and released';
       }
    }
    let menu2 = new Menu2();
    handleMouse2.addEventListener('mousedown', menu2);
    handleMouse2.addEventListener('mouseup', menu2);
 </script>
+<br />
+<br />
 
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
+<!-- TASK 1 - Hide on click -->
+<button id="hider">Click to hide the text</button>
+<div id="text">
+   Text
+</div>
+
+<script>
+   hider.onclick = function() {
+      text.style.display = 'none'
+   }
+</script>
+<br>
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 2 - Hide self -->
+<button id="hideSelf" onclick='hideSelf.style.display = "none"'>Hide the button</button>
+
+<!-- or -->
+<!-- <button id="hideSelf" onclick='this.hidden = true'>Click to hide the button</button> -->
+<br>
+<br>
+<br>
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 3 - Which handlers run? Which alerts show up? -->
+<!--  button.addEventListener("click", () => alert("1"));
+      button.removeEventListener("click", () => alert("1"));
+      button.onclick = () => alert(2); -->
+
+      <!-- 1 and 2 -->
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 4 -->
+  <style>
+    #field {
+      width: 200px;
+      height: 150px;
+      border: 10px solid black;
+      background-color: green;
+      overflow: hidden;
+      position: relative;
+    }
+    #ball {
+       position: absolute;
+       left: 0;
+       top: 0;
+       transition: 2s all;
+    }
+  </style>
+</head>
+
+<body style="height:2000px">
+
+  <div id="field">
+    <img src="https://en.js.cx/clipart/ball.svg" id="ball">
+  </div>
+
+<script>
+  field.onclick = function (event) {
+    
+   let fieldCoords = this.getBoundingClientRect();
+    let x = event.clientX - fieldCoords.left - field.clientLeft - ball.offsetWidth/2;
+    let y = event.clientY - fieldCoords.top - field.clientTop - ball.offsetWidth/2;
+    
+
+    ball.style.left = x + 'px';
+    ball.style.top = y + 'px';
+
+  }
+  
+  
+</script>
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 5 -->
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 6 -->
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 7 -->
