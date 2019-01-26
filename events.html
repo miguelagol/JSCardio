@@ -36,12 +36,7 @@
 </script>
 
 <!-- To assign a click handler for an input, we can use onclick -->
-<input
-   class="wider"
-   type="button"
-   onclick="eventHandler()"
-   value="HTML + JS (HTML-attribute)"
-/>
+<input class="wider" type="button" onclick="eventHandler()" value="HTML + JS (HTML-attribute)" />
 
 <!-- The handler is always in the DOM property: the HTML-attribute is just one of the ways to initialize it. -->
 
@@ -49,15 +44,10 @@
 
 <!-- DOM property -->
 <!-- We can assign a handler using a DOM property on<event>. -->
-<input
-   id="element"
-   type="button"
-   class="wider"
-   value="HTML + JS (DOM-property)"
-/>
+<input id="element" type="button" class="wider" value="HTML + JS (DOM-property)" />
 
 <script>
-   element.onclick = function() {
+   element.onclick = function () {
       alert(
          'HTML + JS (DOM-property) \n <input id="element" type="button" value="HTML + JS (DOM-property)"> \n <script> element.onclick = function () { alert() } <//script>',
       );
@@ -65,12 +55,7 @@
 </script>
 
 <!-- the same as -->
-<input
-   type="button"
-   value="Only HTML"
-   class="wider"
-   onclick="alert(`Only HTML \n <input type='button' value='Only HTML' onclick='alert()'>`)"
-/>
+<input type="button" value="Only HTML" class="wider" onclick="alert(`Only HTML \n <input type='button' value='Only HTML' onclick='alert()'>`)" />
 
 <!-- DOM-property case matters!
       Assign a handler to elem.onclick, not elem.ONCLICK, because DOM properties are case-sensitive. -->
@@ -81,15 +66,9 @@
 <!--------------------------------------------------------------------------------------------------->
 
 <!-- As there’s only one onclick property, we can’t assign more than one event handler. -->
-<input
-   type="button"
-   id="elem"
-   class="wider"
-   onclick="alert('Only HTML')"
-   value="Click me"
-/>
+<input type="button" id="elem" class="wider" onclick="alert('Only HTML')" value="Click me" />
 <script>
-   elem.onclick = function() {
+   elem.onclick = function () {
       alert('HTML + JS');
    };
 
@@ -153,12 +132,7 @@
 </script>
 
 <!-- Multiple calls to addEventListener allow to add multiple handlers -->
-<input
-   id="eleme"
-   type="button"
-   class="wider"
-   value="Multiple calls to addEventListener"
-/>
+<input id="eleme" type="button" class="wider" value="Multiple calls to addEventListener" />
 <script>
    function handler1() {
       alert('handler 1');
@@ -188,19 +162,14 @@
 </style>
 
 <!-- There exist events that can’t be assigned via a DOM-property. Must use addEventListener. For instance, the event transitionend -->
-<input
-   type="button"
-   id="trans"
-   onclick="this.classList.toggle('wide')"
-   value="Click me"
-/>
+<input type="button" id="trans" onclick="this.classList.toggle('wide')" value="Click me" />
 
 <script>
-   trans.ontransitionend = function() {
+   trans.ontransitionend = function () {
       alert('DOM property'); // doesn't work
    };
 
-   trans.addEventListener('transitionend', function() {
+   trans.addEventListener('transitionend', function () {
       alert('transitionend with addEventListener'); // shows up when the animation finishes
    });
 </script>
@@ -212,17 +181,12 @@
 <!-- Event object -->
 <!-- When an event happens, the browser creates an event object, puts details into it and passes it as an argument to the handler. -->
 
-<input
-   type="button"
-   value="Show event type, element and coordinates of the click"
-   id="eventObject"
-   class="wider"
-/>
+<input type="button" value="Show event type, element and coordinates of the click" id="eventObject" class="wider" />
 
 <!--  event.currentTarget   - Element that handled the event. That’s exactly the same as this, unless you bind this to something else
       event.clientX / event.clientY    - Window-relative coordinates of the cursor, for mouse events.-->
 <script>
-   eventObject.onclick = function(event) {
+   eventObject.onclick = function (event) {
       // show event type, element and coordinates of the click
       alert(event.type + ' at ' + event.currentTarget);
       alert('Coordinates: ' + event.clientX + ':' + event.clientY);
@@ -292,16 +256,19 @@
 
 <!-- TASK 1 - Hide on click -->
 <button id="hider">Click to hide the text</button>
+<br>
+<br>
 <div id="text">
    Text
 </div>
 
 <script>
-   hider.onclick = function() {
+   hider.onclick = function () {
       text.style.display = 'none'
    }
 </script>
 <br>
+
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
 <!-- TASK 2 - Hide self -->
@@ -309,7 +276,6 @@
 
 <!-- or -->
 <!-- <button id="hideSelf" onclick='this.hidden = true'>Click to hide the button</button> -->
-<br>
 <br>
 <br>
 
@@ -320,58 +286,407 @@
       button.removeEventListener("click", () => alert("1"));
       button.onclick = () => alert(2); -->
 
-      <!-- 1 and 2 -->
+<!-- 1 and 2 -->
 
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 4 -->
-  <style>
-    #field {
+<!-- TASK 4 - Move the ball across the field -->
+<style>
+   #field {
       width: 200px;
       height: 150px;
       border: 10px solid black;
       background-color: green;
       overflow: hidden;
       position: relative;
-    }
-    #ball {
-       position: absolute;
-       left: 0;
-       top: 0;
-       transition: 2s all;
-    }
-  </style>
-</head>
+      cursor: pointer;
+   }
+
+   #ball {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transition: 1s all;
+      width: 40px;
+      height: 40px;
+   }
+</style>
 
 <body style="height:2000px">
+   <div id="field">
+      <img src="https://en.js.cx/clipart/ball.svg" id="ball">
+   </div>
 
-  <div id="field">
-    <img src="https://en.js.cx/clipart/ball.svg" id="ball">
-  </div>
+   <script>
+      field.onclick = function (event) {
+
+         let fieldCoords = this.getBoundingClientRect(); // returns the size of an element and its position relative to the viewport.
+
+         // ball coordinates are relative to the field inner left-upper corner
+         let left = event.clientX - fieldCoords.left - field.clientLeft - ball.offsetWidth / 2;
+         let top = event.clientY - fieldCoords.top - field.clientTop - ball.offsetWidth / 2;
+
+         // prevent crossing the top field boundary
+         if (top < 0) top = 0;
+
+         // prevent crossing the left field boundary
+         if (left < 0) left = 0;
+
+         // prevent crossing the right field boundary
+         // element.clientWidth -  it's the inner width of an element in pixels.
+         //                        It includes padding but excludes borders, margins, and vertical scrollbars (if present).
+         if (left + ball.clientWidth > field.clientWidth) {
+            left = field.clientWidth - ball.clientWidth;
+         }
+
+         // prevent crossing the bottom field boundary
+         if (top + ball.clientHeight > field.clientHeight) {
+            top = field.clientHeight - ball.clientHeight;
+         }
+
+         ball.style.left = left + 'px';
+         ball.style.top = top + 'px';
+      }
+
+   </script>
+</body>
+<br>
+<br>
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 5 - Create a sliding menu -->
+<style>
+   #span2 {
+      display: none;
+   }
+
+   #click {
+      cursor: pointer;
+   }
+
+   #cakes {
+      display: none;
+   }
+</style>
+<span id="span1">▶</span>
+<span id="span2">▼</span>
+
+<span id="click">Sweeties (click me)!</span>
+<ul id="cakes">
+   <li>Cake</li>
+   <li>Donut</li>
+   <li>Honey</li>
+</ul>
 
 <script>
-  field.onclick = function (event) {
-    
-   let fieldCoords = this.getBoundingClientRect();
-    let x = event.clientX - fieldCoords.left - field.clientLeft - ball.offsetWidth/2;
-    let y = event.clientY - fieldCoords.top - field.clientTop - ball.offsetWidth/2;
-    
-
-    ball.style.left = x + 'px';
-    ball.style.top = y + 'px';
-
-  }
-  
-  
+   click.onclick = function () {
+      span1.style.display = 'none';
+      span2.style.display = 'inline';
+      cakes.style.display = 'block';
+   }
 </script>
+<br>
+<br>
+
+<!-- or -->
+<style>
+   ul {
+      display: none;
+      margin: 0;
+      list-style-type: none;
+      padding-left: 20px;
+   }
+
+   .title {
+      cursor: pointer;
+   }
+
+   .title::before {
+      content: '▶';
+      font-size: 80%;
+      color: rgb(28, 114, 28);
+      padding-right: 10px;
+   }
+
+   .open .title::before {
+      content: '▼';
+      padding-right: 9px;
+   }
+
+   .open ul {
+      display: block;
+   }
+</style>
+<div id="menu" class="sweeties">
+   <span class="title">Show me menu!</span>
+   <ul>
+      <li>Cake</li>
+      <li>Donut</li>
+      <li>Honey</li>
+   </ul>
+
+</div>
+<script>
+   let menuElem = document.getElementById('menu');
+   let titleElem = menuElem.querySelector('.title')
+
+   titleElem.onclick = function () {
+      menuElem.classList.toggle('open');
+   }
+</script>
+<br>
+<br>
+
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 5 -->
+<!-- TASK 6 - Add a closing button -->
+<style>
+   h3 {
+      margin: 0;
+      padding-bottom: .3em;
+      font-size: 1.1em;
+   }
+
+   p {
+      margin: 0;
+      padding: 0 0 .5em;
+   }
+
+   .panel {
+      background: #f5e1e1;
+      padding: 10px 20px 10px;
+      border-top: solid 2px #df9b9b;
+      position: relative;
+   }
+
+   .remove-button {
+      position: absolute;
+      top: 5px;
+      right: 15px;
+      font-size: 110%;
+      color: darkred;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+   }
+</style>
+<div>
+   <div class="panel">
+      <button class="remove-button">[x]</button>
+      <h3>Horse</h3>
+      <p>The horse is one of two extant subspecies of Equus ferus. It is an odd-toed ungulate mammal belonging to the
+         taxonomic family Equidae. The horse has evolved over the past 45 to 55 million years from a small multi-toed
+         creature, Eohippus, into the large, single-toed animal of today.</p>
+   </div>
+   <div class="panel">
+      <button class="remove-button">[x]</button>
+      <h3>Donkey</h3>
+      <p>The donkey or ass (Equus africanus asinus) is a domesticated member of the horse family, Equidae. The wild
+         ancestor of the donkey is the African wild ass, E. africanus. The donkey has been used as a working animal for
+         at
+         least 5000 years.</p>
+   </div>
+   <div class="panel">
+      <button class="remove-button">[x]</button>
+      <h3>Cat</h3>
+      <p>The domestic cat (Latin: Felis catus) is a small, typically furry, carnivorous mammal. They are often called
+         house cats when kept as indoor pets or simply cats when there is no need to distinguish them from other felids
+         and felines. Cats are often valued by humans for companionship and for their ability to hunt vermin.
+      </p>
+   </div>
+</div>
+<script>
+   for (let exit of document.getElementsByClassName('remove-button')) {
+      let message = exit.parentElement;
+
+      exit.onclick = function () {
+         message.style.display = 'none'
+      }
+   }
+</script>
+<br>
+<br>
+
+<!-- or -->
+<style>
+   .pane {
+      background: #edf5e1;
+      padding: 10px 20px 10px;
+      border-top: solid 2px #c4df9b;
+      position: relative;
+   }
+</style>
+<div>
+   <div class="pane">
+      <h3>Horse</h3>
+      <p>The horse is one of two extant subspecies of Equus ferus. It is an odd-toed ungulate mammal belonging to the
+         taxonomic family Equidae. The horse has evolved over the past 45 to 55 million years from a small multi-toed
+         creature, Eohippus, into the large, single-toed animal of today.</p>
+   </div>
+   <div class="pane">
+      <h3>Donkey</h3>
+      <p>The donkey or ass (Equus africanus asinus) is a domesticated member of the horse family, Equidae. The wild
+         ancestor of the donkey is the African wild ass, E. africanus. The donkey has been used as a working animal for
+         at
+         least 5000 years.</p>
+   </div>
+   <div class="pane">
+      <h3>Cat</h3>
+      <p>The domestic cat (Latin: Felis catus) is a small, typically furry, carnivorous mammal. They are often called
+         house cats when kept as indoor pets or simply cats when there is no need to distinguish them from other felids
+         and felines. Cats are often valued by humans for companionship and for their ability to hunt vermin.
+      </p>
+   </div>
+</div>
+
+
+<script>
+   let panes = document.querySelectorAll('.pane');
+
+   for (let pane of panes) {
+      // element.insertAdjacentHTML(position, text);
+      //  method of the Element interface parses the specified text as HTML or XML and inserts the resulting nodes into the DOM tree at a specified position.
+      /*  position  - A DOMString representing the position relative to the element; must be one of the following strings:
+            'beforebegin': Before the element itself.
+            'afterbegin': Just inside the element, before its first child.
+            'beforeend': Just inside the element, after its last child.
+            'afterend': After the element itself.
+         text  - The string to be parsed as HTML or XML and inserted into the tree. */
+      pane.insertAdjacentHTML("afterbegin", '<button class="remove-button">[x]</button>');
+      // button becomes the first child of pane
+      pane.firstChild.onclick = () => pane.remove();
+   }
+</script>
+<br>
+<br>
 
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 6 -->
+<!-- TASK 7 - Create a carousel -->
+<style>
+   #content-box {
+      background: #EEEEEE;
+      height: 150px;
+      width: 390px;
+      padding: 0px 40px;
+      border: 1px solid black;
+      border-radius: 15px;
+      position: relative;
+   }
 
-<!------------------------------------------------------------------------------------------------------------------------------------------------->
+   .left {
+      left: 7px;
+   }
 
-<!-- TASK 7 -->
+   .right {
+      right: 7px;
+   }
+
+   .arrow {
+      position: absolute;
+      top: 60px;
+      padding: 0px;
+      background: #ddd;
+      border-radius: 15px;
+      border: 1px solid gray;
+      font-size: 24px;
+      line-height: 24px;
+      color: #444;
+      display: block;
+   }
+
+   .arrow:focus {
+      outline: none;
+   }
+
+   .arrow:hover {
+      background: #ccc;
+      cursor: pointer;
+   }
+
+   #carousel li {
+      display: inline-block;
+   }
+
+   #carousel {
+      width: 390px;
+      overflow: hidden;
+      margin: 10px 0px;
+   }
+
+   #images {
+      height: 130px;
+      width: 9999px;
+      margin: 0px;
+      padding: 0px;
+      list-style: none;
+      font-size: 0;
+      display: block;
+   }
+
+   img {
+      width: 130px;
+      height: 130px;
+      display: block;
+   }
+</style>
+<div id="content-box">
+   <button class="arrow left">⇦</button>
+   <div id="carousel">
+      <ul id="images">
+         <li><img src="https://en.js.cx/carousel/1.png"></li>
+         <li><img src="https://en.js.cx/carousel/2.png"></li>
+         <li><img src="https://en.js.cx/carousel/3.png"></li>
+         <li><img src="https://en.js.cx/carousel/4.png"></li>
+         <li><img src="https://en.js.cx/carousel/5.png"></li>
+         <li><img src="https://en.js.cx/carousel/6.png"></li>
+         <li><img src="https://en.js.cx/carousel/7.png"></li>
+         <li><img src="https://en.js.cx/carousel/8.png"></li>
+         <li><img src="https://en.js.cx/carousel/9.png"></li>
+         <li><img src="https://en.js.cx/carousel/10.png"></li>
+      </ul>
+   </div>
+   <button class="arrow right">⇨</button>
+</div>
+
+
+<script>
+   let margin = 0;
+   document.querySelector('.right').onclick = function () {
+      margin -= 390;
+      margin = Math.max(margin, -1170);
+      document.querySelector('#images').style.marginLeft = margin + 'px';
+   }
+   document.querySelector('.left').onclick = function () {
+      margin += 390;
+      margin = Math.min(margin, 0);
+      document.querySelector('#images').style.marginLeft = margin + 'px';
+   }
+
+// or
+
+// let imageWidth = 130;
+// let count = 3; // cisible images count
+
+// let uoList = carousel.querySelector('#images');
+// let uoListElem = carousel.querySelector('li');
+
+// let position = 0; // ribbon scroll position
+
+// document.querySelector('.right').onclick = function () {
+//    position -= imageWidth * count;
+//    can only shift the ribbbon for (total ribbon length - visible count) images
+//    position = Math.max(position, -width * (listElems.length - count));
+//    uoList.style.marginLeft = position + 'px';
+// }
+// document.querySelector('.left').onclick = function () {
+//    position += imageWidth * count;
+//    can't move to the left too much, end of images
+//    position = Math.min(position, 0)
+//    uoList.style.marginLeft = position + 'px';
+// }
+</script>
