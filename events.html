@@ -254,6 +254,111 @@
 
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
 
+<!-- Event delegation -->
+<style>
+   #delegationTable {
+      display: block;
+      border-collapse: collapse;
+   }
+
+   td {
+      width: 70px;
+      height: 70px;
+      vertical-align: middle;
+      text-align: center;
+      border: 1px solid gray;
+      background: beige;
+   }
+
+   .clicked {
+      background: rgba(245, 183, 180, 0.795);
+   }
+</style>
+<table id="delegationTable">
+   <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+   </tr>
+   <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+   </tr>
+   <tr>
+      <td>7</td>
+      <td>8</td>
+      <td>9</td>
+   </tr>
+</table>
+<script>
+   let selectedTd;
+   let table = document.getElementById('delegationTable');
+   // Instead of assign an onclick handler to each <td> (can be many)
+   // we’ll setup the “catch-all” handler on <table> element.
+   // It will use event.target to get the clicked element and highlight it.
+   table.onclick = function (event) {
+      let target = event.target.closest('td'); // where was the click?
+      if (!target) return; // not on td?
+      if (!table.contains(target)) return; // is that actually our table’s <td>?
+      highlight(target);
+   }
+
+   function highlight(td) {
+      if (selectedTd) { // remove the existing highlight if any
+         selectedTd.classList.remove('clicked');
+      }
+      selectedTd = td;
+      selectedTd.classList.add('clicked'); // highlight the new td
+   }
+
+</script>
+<br>
+<br>
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- Actions in markup -->
+<!-- We can add a handler for the whole menu and data-action attributes for buttons that has the method to call -->
+<div id="buttons">
+   <button data-action="save">Save</button>
+   <button data-action="load">Load</button>
+   <button data-action="search">Search</button>
+</div>
+<script>
+   class Buttons {
+      constructor(elem) {
+         this._elem = elem;
+         elem.onclick = this.onClick.bind(this);
+      }
+
+      save() {
+         alert('saving')
+      }
+
+      load() {
+         alert('loading')
+      }
+
+      search() {
+         alert('searching')
+      }
+
+      onClick(event) {
+         let action = event.target.dataset.action;
+         if (action) {
+            this[action]()
+         }
+      }
+   }
+
+   new Buttons(buttons);
+</script>
+<br>
+<br>
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+
 <!-- TASK 1 - Hide on click -->
 <button id="hider">Click to hide the text</button>
 <br>
