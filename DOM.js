@@ -1,9 +1,25 @@
-/* 
+/*
+Browser Object Model (BOM)
+are additional objects provided by the browser (host environment) to work with everything except the document
+For instance:
+   -  The navigator object provides background information about the browser and the operating system.
+      There are many properties, but the two most widely known are:
+         navigator.userAgent – about the current browser, and
+         navigator.platform – about the platform (can help to differ between Windows/Linux/Mac etc).
+   -  The location object allows us to read the current URL and can redirect the browser to a new one.
+         alert(location.href); // shows current URL
+         if (confirm("Go to wikipedia?")) {
+            location.href = "https://wikipedia.org"; // redirect the browser to another URL
+         }
+
 Document Object Model (DOM)
 According to Document Object Model (DOM), every HTML-tag is an object. Nested tags are called “children” of the enclosing one.
 Tags are called element nodes (or just elements). Nested tags become children of the enclosing ones. 
 
-Tables always have <tbody>
+Autocorrection
+If the browser encounters malformed HTML, it automatically corrects it when making DOM.
+(browsers automatically process errors in the document, close tags and so on)
+Tables always have <tbody>!
 
 There are 12 node types. In practice we usually work with 4 of them:
    - document – the “entry point” into DOM.
@@ -91,6 +107,18 @@ if (elem.hasChildNodes() === true) {
       - tr.rowIndex – the number of the <tr> in the table as a whole (including all table rows).
    <td> and <th>:
       - td.cellIndex – the number of the cell inside the enclosing <tr>.
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Summary
+
+/*    Given a DOM node, we can go to its immediate neighbours using navigation properties.
+   There are two main sets of them:
+      -  For all nodes:
+         parentNode, childNodes, firstChild, lastChild, previousSibling, nextSibling.
+      -  For element nodes only:
+         parentElement, children, firstElementChild, lastElementChild, previousElementSibling, nextElementSibling.
 */
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -203,9 +231,11 @@ console.log(articles.length); // 2, found two elements with class "article"
 
 <script>
    for (let elem of document.body.children) {
-      {if (elem.matches('a[href$="zip"]')) {
+      (function () {
+         if (elem.matches('a[href$="zip"]')) {
          console.log("The archive reference: " + elem.href )
-       }}
+       }
+      })()
    }
 </script>
 
@@ -269,6 +299,26 @@ querySelector	         CSS-selector	   ✔	                        -
 querySelectorAll	      CSS-selector	   ✔	                        -
 
 */
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// DOM Nodes
+// Each DOM node belongs to the corresponding built-in class.
+// The root of the hierarchy is EventTarget, that is inherited by Node, and other DOM nodes inherit from it.
+/*    The classes are:
+      -  EventTarget – is the root “abstract” class. Objects of that class are never created. It serves as a base, so that all DOM nodes
+         support so-called “events”
+      -  Node – is also an “abstract” class, serving as a base for DOM nodes. It provides the core tree functionality: parentNode,
+         nextSibling, childNodes and so on (they are getters). Objects of Node class are never created. But there are concrete node classes
+         that inherit from it, namely: Text for text nodes, Element for element nodes and more exotic ones like Comment for comment nodes.
+      -  Element – is a base class for DOM elements. It provides element-level navigation like nextElementSibling, children and searching
+         methods like getElementsByTagName, querySelector. In the browser there may be not only HTML, but also XML and SVG documents.
+         The Element class serves as a base for more specific classes: SVGElement, XMLElement and HTMLElement.
+      -  HTMLElement – is finally the basic class for all HTML elements. It is inherited by various HTML elements:
+            HTMLInputElement – the class for <input> elements,
+            HTMLBodyElement – the class for <body> elements,
+            HTMLAnchorElement – the class for <a> elements
+…and so on, each tag has its own class that may provide specific properties and methods. */
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -351,7 +401,7 @@ querySelectorAll	      CSS-selector	   ✔	                        -
       
    for (let i = 0; i < table.rows.length; i++) {
       td = table.rows[i].cells[i];
-      td.style.backgroundColor = 'red'
+      td.style.backgroundColor = 'red';
    }
 </script>
 
