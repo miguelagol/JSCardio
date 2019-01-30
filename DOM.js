@@ -413,6 +413,11 @@ alert(document.body.firstChild.nodeName); // #comment
 alert(document.tagName); // undefined (not element)
 alert(document.nodeName); // #document
 
+//--------------------REMEMBER--------------------
+// The tag name is always uppercase except XHTML
+// In HTML mode tagName/nodeName is always uppercased: it’s BODY either for <body> or <BoDy>.
+// In XML mode the case is kept “as is”. Nowadays XML mode is rarely used.
+
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // innerHTML: the contents
@@ -431,20 +436,20 @@ alert(document.nodeName); // #document
    </body>
 )
 
-   //--------------------REMEMBER--------------------
-   // If innerHTML inserts a <script> tag into the document – it doesn’t execute.
+//--------------------REMEMBER--------------------
+// If innerHTML inserts a <script> tag into the document – it doesn’t execute.
 
-   /* Beware: “innerHTML+=” does a full overwrite
-         1. The old contents is removed.
-         2. The new innerHTML is written instead (a concatenation of the old and the new one).
-         (As the content is “zeroed-out” and rewritten from the scratch, all images and other resources will be reloaded.) */
+/* Beware: “innerHTML+=” does a full overwrite
+      1. The old contents is removed.
+      2. The new innerHTML is written instead (a concatenation of the old and the new one).
+      (As the content is “zeroed-out” and rewritten from the scratch, all images and other resources will be reloaded.) */
 
-   //-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
-   // outerHTML: full HTML of the element
-   // The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
+// outerHTML: full HTML of the element
+// The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
 
-   (<div id="elem">Hello <b>World</b></div>)
+(<div id="elem">Hello <b>World</b></div>)
 
 alert(elem.outerHTML); // <div id="elem">Hello <b>World</b></div>
 alert(elem.innerHTML); // Hello World
@@ -487,7 +492,6 @@ alert(text.data); // Hello
 let comment = text.nextSibling;
 alert(comment.data); // Comment
 
-
 // For text nodes we can imagine a reason to read or modify them, but why comments? Usually, they are not interesting at all,
 // but sometimes developers embed information into HTML in them, like this:
 (
@@ -497,18 +501,18 @@ alert(comment.data); // Comment
       {/* <!-- /if --> */}
    </body>
 )
-   // …Then JavaScript can read it and process embedded instructions.
+// …Then JavaScript can read it and process embedded instructions.
 
-   //-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
-   // textContent: pure text
-   // The textContent provides access to the text inside the element: only text, minus all <tags>.
-   (
+// textContent: pure text
+// The textContent provides access to the text inside the element: only text, minus all <tags>.
+(
    <div id="news">
       <h1>Headline!</h1>
       <p>Martians attack people!</p>
    </div>
-   )
+)
 
 alert(news.textContent); // Headline! Martians attack people!
 
@@ -554,11 +558,11 @@ setInterval(() => elem.hidden = !elem.hidden, 1000);
    -  …and much more… */
 
 // Most standard HTML attributes have the corresponding DOM property, and we can access it like that.
-(<input type="text" id="elem" value="value"/>)
+(<input type="text" id="elem" value="value" />)
+
 alert(elem.type); // text
 alert(elem.id); // elem
 alert(elem.value); // value
-
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -674,16 +678,106 @@ for (let i = 0; i < table.rows.length; i++) {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 6 -
+// TASK 6 - Count descendants
+/* Write the code that for each <li> shows:
+   -  What’s the text inside it (without the subtree)
+   -  The number of nested <li> – all descendants, including the deeply nested ones. */
+(
+   <ul>
+      <li>Animals
+         <ul>
+            <li>Mammals
+               <ul>
+                  <li>Cows</li>
+                  <li>Donkeys</li>
+                  <li>Dogs</li>
+                  <li>Tigers</li>
+               </ul>
+            </li>
+            <li>Other
+               <ul>
+                  <li>Snakes</li>
+                  <li>Birds</li>
+                  <li>Lizards</li>
+               </ul>
+            </li>
+         </ul>
+      </li>
+      <li>Fishes
+         <ul>
+            <li>Aquarium
+               <ul>
+                  <li>Guppy</li>
+                  <li>Angelfish</li>
+               </ul>
+            </li>
+            <li>Sea
+               <ul>
+                  <li>Sea trout</li>
+               </ul>
+            </li>
+         </ul>
+      </li>
+   </ul>
+)
+
+for (let li of document.querySelectorAll('li')) {
+   let first = li.firstChild.data;
+   let count = li.getElementsByTagName('li').length;
+   alert(first + ': ' + count);
+}
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 7 -
+// TASK 7 - What's in the nodeType?
+(
+   <html>
+
+      <body>
+         <script>
+            alert(document.body.lastChild.nodeType);
+         </script>
+      </body>
+   
+   </html>
+)
+
+// At the time of <script> execution the last DOM node is exactly <script>, because the browser did not process the rest of the page yet.
+// So the result is 1 (element node).
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 8 -
+// TASK 8 - Tag in comment.
+// What does this code show?
+let body = document.body;
+
+body.innerHTML = "<!--" + body.tagName + "-->";
+
+alert( body.firstChild.data ); // what's here?
+
+// BODY
+/* 1. The content of <body> is replaced with the comment. The comment is <!--BODY-->, because body.tagName == "BODY".
+      As we remember, tagName is always uppercase in HTML.
+   2. The comment is now the only child node, so we get it in body.firstChild.
+   3. The data property of the comment is its contents (inside <!--...-->): "BODY". */
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 9 -
+// TASK 9 - Where's the "document" in the hierarchy?
+/*    1. Which class does the document belong to?
+         document is an instance of HTMLDocument class.
+         alert(document); // [object HTMLDocument]
+         alert(document.constructor.name); // HTMLDocument
+
+      2. What’s its place in the DOM hierarchy?
+      3. Does it inherit from Node or Element, or maybe HTMLElement?
+         As we know, methods of a class are in the prototype of the constructor. For instance,
+         HTMLDocument.prototype has methods for documents.
+         Also, there’s a reference to the constructor function inside the prototype:
+         alert(HTMLDocument.prototype.constructor === HTMLDocument); // true
+
+         For built-in classes in all prototypes there’s a constructor reference,
+         and we can get constructor.name to see the name of the class.
+         alert(HTMLDocument.prototype.constructor.name); // HTMLDocument
+         alert(HTMLDocument.prototype.__proto__.constructor.name); // Document
+         alert(HTMLDocument.prototype.__proto__.__proto__.constructor.name); // Node */
