@@ -305,7 +305,6 @@ getElementsByTagName	   tag or '*'	      ✔	                        ✔
 getElementsByClassName	class	            ✔	                        ✔
 querySelector	         CSS-selector	   ✔	                        -
 querySelectorAll	      CSS-selector	   ✔	                        -
-
 */
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -326,7 +325,8 @@ querySelectorAll	      CSS-selector	   ✔	                        -
             HTMLInputElement – the class for <input> elements,
             HTMLBodyElement – the class for <body> elements,
             HTMLAnchorElement – the class for <a> elements
-…and so on, each tag has its own class that may provide specific properties and methods. */
+…and so on, each tag has its own class that may provide specific properties and methods.
+*/
 
 console.log(document.body); // [object HTMLBodyElement]
 
@@ -344,14 +344,17 @@ console.log(document.body instanceof EventTarget); // true
 
    But for DOM elements they are different:
       - console.log(elem) shows the element DOM tree.
-      - console.dir(elem) shows the element as a DOM object, good to explore its properties.  */
+      - console.dir(elem) shows the element as a DOM object, good to explore its properties.
+*/
 
 // IDL in the spec
 /* In the specification, classes are described not using JavaScript, but a special INTERFACE DESCRIPTION LANGUAGE (IDL)
-   In IDL all properties are prepended with their types. For instance, DOMString, boolean and so on. */
+   In IDL all properties are prepended with their types. For instance, DOMString, boolean and so on.
+*/
 
 /* Define HTMLInputElement
-The colon ":" means that HTMLInputElement inherits from HTMLElement */
+The colon ":" means that HTMLInputElement inherits from HTMLElement
+*/
 /* interface HTMLInputElement: HTMLElement {
       // here go properties and methods of <input> elements
       // "DOMString" means that the value of these properties are strings
@@ -365,7 +368,8 @@ The colon ":" means that HTMLInputElement inherits from HTMLElement */
 
       // now the method: "void" means that the method returns no value
       void select();
-   } */
+   }
+*/
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -403,7 +407,8 @@ alert(document.body.tagName); // BODY
       - The tagName property exists only for Element nodes.
       - The nodeName is defined for any Node:
          - for elements it means the same as tagName.
-         - for other node types (text, comment, etc.) it has a string with the node type. */
+         - for other node types (text, comment, etc.) it has a string with the node type.
+*/
 
 // for comment
 alert(document.body.firstChild.tagName); // undefined (no element)
@@ -436,20 +441,21 @@ alert(document.nodeName); // #document
    </body>
 )
 
-//--------------------REMEMBER--------------------
-// If innerHTML inserts a <script> tag into the document – it doesn’t execute.
+   //--------------------REMEMBER--------------------
+   // If innerHTML inserts a <script> tag into the document – it doesn’t execute.
 
-/* Beware: “innerHTML+=” does a full overwrite
-      1. The old contents is removed.
-      2. The new innerHTML is written instead (a concatenation of the old and the new one).
-      (As the content is “zeroed-out” and rewritten from the scratch, all images and other resources will be reloaded.) */
+   /* Beware: “innerHTML+=” does a full overwrite
+         1. The old contents is removed.
+         2. The new innerHTML is written instead (a concatenation of the old and the new one).
+         (As the content is “zeroed-out” and rewritten from the scratch, all images and other resources will be reloaded.)
+   */
 
-//-----------------------------------------------------------------------------------------------------------------------------------------
+   //-----------------------------------------------------------------------------------------------------------------------------------------
 
-// outerHTML: full HTML of the element
-// The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
+   // outerHTML: full HTML of the element
+   // The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
 
-(<div id="elem">Hello <b>World</b></div>)
+   (<div id="elem">Hello <b>World</b></div>)
 
 alert(elem.outerHTML); // <div id="elem">Hello <b>World</b></div>
 alert(elem.innerHTML); // Hello World
@@ -501,18 +507,19 @@ alert(comment.data); // Comment
       {/* <!-- /if --> */}
    </body>
 )
-// …Then JavaScript can read it and process embedded instructions.
+   // …Then JavaScript can read it and process embedded instructions.
 
-//-----------------------------------------------------------------------------------------------------------------------------------------
+   //-----------------------------------------------------------------------------------------------------------------------------------------
 
-// textContent: pure text
-// The textContent provides access to the text inside the element: only text, minus all <tags>.
-(
+   // textContent: pure text
+   // The textContent provides access to the text inside the element: only text, minus all <tags>.
+
+   (
    <div id="news">
       <h1>Headline!</h1>
       <p>Martians attack people!</p>
    </div>
-)
+   )
 
 alert(news.textContent); // Headline! Martians attack people!
 
@@ -520,7 +527,9 @@ alert(news.textContent); // Headline! Martians attack people!
 
 // innerHTML vs textContent
 /*    - With innerHTML we’ll have it inserted “as HTML”, with all HTML tags.
-      - With textContent we’ll have it inserted “as text”, all symbols are treated literally. */
+      - With textContent we’ll have it inserted “as text”, all symbols are treated literally.
+*/
+
 (
    <body>
       <div id="elem1"></div>
@@ -536,6 +545,7 @@ elem2.textContent = name; // <b>Winnie-the-pooh!</b>
 
 // the "hidden" property
 // The “hidden” attribute and the DOM property specifies whether the element is visible or not.
+
 (
    <body>
       <div>Both divs below are hidden</div>
@@ -555,7 +565,8 @@ setInterval(() => elem.hidden = !elem.hidden, 1000);
    -  value – the value for <input>, <select> and <textarea> (HTMLInputElement, HTMLSelectElement…).
    -  href – the “href” for <a href="..."> (HTMLAnchorElement).
    -  id – the value of “id” attribute, for all elements (HTMLElement).
-   -  …and much more… */
+   -  …and much more…
+*/
 
 // Most standard HTML attributes have the corresponding DOM property, and we can access it like that.
 (<input type="text" id="elem" value="value" />)
@@ -563,6 +574,233 @@ setInterval(() => elem.hidden = !elem.hidden, 1000);
 alert(elem.type); // text
 alert(elem.id); // elem
 alert(elem.value); // value
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// DOM Attributes and Properties
+/* When the browser loads the page, it “reads” (another word: “parses”) the HTML and generates DOM objects from it.
+   For element nodes, most standard HTML attributes automatically become properties of DOM objects.
+*/
+
+// DOM properties
+// DOM nodes are regular JavaScript objects. We can alter them.
+//    - They can have any value.
+//    - They are case-sensitive (write elem.nodeType, not elem.NoDeTyPe).
+
+// we can, create new property, add a method
+
+document.body.myData = {
+   name: 'Cesar',
+   title: 'Imperator',
+   sayTagName() {
+      alert(this.tagName);
+   }
+};
+
+alert(document.body.myData.title); // Imperator
+
+// We can also modify built-in prototypes like Element.prototype and add new methods to all elements:
+Element.prototype.sayHi = function () {
+   alert(`Hello, I'm ${this.tagName}`);
+};
+
+document.documentElement.sayHi(); // Hello, I'm HTML
+document.body.sayHi(); // Hello, I'm BODY
+
+//------------------------------------------------------------------------------------------------
+
+// HTML Attributes
+/* When the browser parses the HTML to create DOM objects for tags,
+   it recognizes standard attributes and creates DOM properties from them.
+   So when an element has id or another standard attribute, the corresponding property gets created.
+   But that doesn’t happen if the attribute is non-standard.
+*/
+
+(
+   <body id="test" something="non-standard">
+      <script>
+         alert(document.body.id); // test
+         alert(document.body.something); // undefined
+      </script>
+   </body>
+)
+
+// standard attribute for one element can be unknown for another one.
+// For instance, "type" is standard for <input> (HTMLInputElement), but not for <body> (HTMLBodyElement).
+/* All attributes are accessible by using the following methods:
+      - elem.hasAttribute(name) – checks for existence.
+      - elem.getAttribute(name) – gets the value.
+      - elem.setAttribute(name, value) – sets the value.
+      - elem.removeAttribute(name) – removes the attribute.
+*/
+
+(
+   <body id="body" type="non-standard">
+      <input id="input" type="text" />
+      <script>
+         alert(input.type); // text
+         alert(body.type); // undefined
+         alert(body.getAttribute('type')); // non-standard
+      </script>
+   </body>
+)
+
+// We can read all attributes using elem.attributes:
+// a collection of objects that belong to a built-in Attr class
+
+//--------------------REMEMBER--------------------
+/* HTML attributes have the following features:
+      - Their name is case-insensitive (id is same as ID).
+      - Their values are always strings.
+*/
+
+(
+   <body>
+      <div id="element" about="Elephant"></div>
+      <script>
+         alert(element.getAttribute('About')); // Elephant
+
+         element.setAttribute('Test', 123);
+
+         alert(element.outerHTML); {/* <div id="elem" about="Elephant" test="123"></div> */}
+
+         for (let attribute of element.attributes) {
+            alert(`${attribute.name} = ${attribute.value}`) /* id = element, about = Elephant, test = 123 */
+         }
+      </script>
+   </body>
+)
+
+//------------------------------------------------------------------------------------------------
+
+// Property-attribute synchronization
+// When a standard attribute changes, the corresponding property is auto-updated, and vice versa.
+
+(
+   <body>
+      <input />
+      <script>
+         let input = document.querySelector('input');
+
+      // attribute => property
+         input.setAttribute('id', 'id');
+         alert(input.id); // id
+
+      // property => attribute
+         input.id = 'newId';
+         alert(input.getAttribute('id')); // newId
+
+      // there are exclusions
+      // attribute => property
+         input.setAttribute('value', 'text');
+         alert(input.value); // text
+
+      // NOT property => attribute
+         input.value = 'newValue';
+         alert(input.getAttribute('value')); // text
+      </script>
+   </body>
+)
+
+//------------------------------------------------------------------------------------------------
+
+// DOM Properties are typed
+// DOM properties are not always strings
+
+(
+   <body>
+      <input id="input" type="checkbox" checked/> checkbox
+      <div id="div" style="color: red; font-size: 120%">Hello</div>
+      <a id="a" href="#hello">link</a>
+      <script>
+         // The checked attribute is a string, but the input.checked property (for checkboxes) is a boolean
+         alert(input.getAttribute('checked')); // '' empty string
+         alert(input.checked); // true
+
+         // The style attribute is a string, but the style property is an object
+         alert(div.getAttribute('style')); // color: red; font-size: 120%
+         alert(div.style); // [object CSSStyleDeclaration]
+         alert(div.style.color); // red
+
+         //the href DOM property is always a full URL, even if the attribute contains a relative URL or just a #hash.
+         alert(a.getAttribute('href')); // hello
+         alert(a.href); // http://site.com/page#hello
+      </script>
+   </body>
+)
+
+//------------------------------------------------------------------------------------------------
+
+// Non-standard attributes, dataset
+// Sometimes non-standard attributes are used to pass custom data from HTML to JavaScript,
+// or to “mark” HTML-elements for JavaScript.
+
+(
+   <body>
+      <div show-info="name"></div>
+      <div show-info="age"></div>
+   </body>
+)
+
+let user = {
+   name: 'Jack',
+   age: 32,
+};
+let divs = document.querySelectorAll('[show-info]');
+for (let div of divs) {
+   let info = div.getAttribute('show-info');
+   div.innerHTML = user[info]
+}
+
+// we can use it to style an element
+{/* <style>
+   .order[order-state="new"] {
+      color: red;
+   }
+   .order[order-state="old"] {
+      color: blue
+   }
+</style> */}
+(  
+   <body>
+      <div class="order" order-state="new">
+         New order
+      </div>
+      <div class="order" order-state="old">
+         Old order
+      </div>
+   </body>
+)
+
+// All attributes starting with “data-” are reserved for programmers’ use.
+// They are available in the dataset property.
+(
+   <body data-about="Elephants">
+      <script>
+         alert(document.body.dataset.about); // Elephants
+      </script>
+   </body>
+)
+// Multiword attributes like data-order-state become camel-cased: dataset.orderState.
+
+//------------------------------------------------------------------------------------------------
+
+// Summary
+/*    Attributes – is what’s written in HTML.
+      Properties – is what’s in DOM objects.
+
+      Properties	                                 Attributes
+Type	Any value, standard properties have types    A string
+      described in the spec	
+Name	Name is case-sensitive                       Name is not case-sensitive
+
+Methods to work with attributes are:
+   - elem.hasAttribute(name) – to check for existence.
+   - elem.getAttribute(name) – to get the value.
+   - elem.setAttribute(name, value) – to set the value.
+   - elem.removeAttribute(name) – to remove the attribute.
+   - elem.attributes is a collection of all attributes.
+*/
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -681,7 +919,8 @@ for (let i = 0; i < table.rows.length; i++) {
 // TASK 6 - Count descendants
 /* Write the code that for each <li> shows:
    -  What’s the text inside it (without the subtree)
-   -  The number of nested <li> – all descendants, including the deeply nested ones. */
+   -  The number of nested <li> – all descendants, including the deeply nested ones.
+*/
 (
    <ul>
       <li>Animals
@@ -738,7 +977,7 @@ for (let li of document.querySelectorAll('li')) {
             alert(document.body.lastChild.nodeType);
          </script>
       </body>
-   
+
    </html>
 )
 
@@ -753,31 +992,33 @@ let body = document.body;
 
 body.innerHTML = "<!--" + body.tagName + "-->";
 
-alert( body.firstChild.data ); // what's here?
+alert(body.firstChild.data); // what's here?
 
 // BODY
 /* 1. The content of <body> is replaced with the comment. The comment is <!--BODY-->, because body.tagName == "BODY".
       As we remember, tagName is always uppercase in HTML.
    2. The comment is now the only child node, so we get it in body.firstChild.
-   3. The data property of the comment is its contents (inside <!--...-->): "BODY". */
+   3. The data property of the comment is its contents (inside <!--...-->): "BODY".
+*/
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 9 - Where's the "document" in the hierarchy?
-/*    1. Which class does the document belong to?
-         document is an instance of HTMLDocument class.
-         alert(document); // [object HTMLDocument]
-         alert(document.constructor.name); // HTMLDocument
+/* 1. Which class does the document belong to?
+      document is an instance of HTMLDocument class.
+      alert(document); // [object HTMLDocument]
+      alert(document.constructor.name); // HTMLDocument
 
-      2. What’s its place in the DOM hierarchy?
-      3. Does it inherit from Node or Element, or maybe HTMLElement?
-         As we know, methods of a class are in the prototype of the constructor. For instance,
-         HTMLDocument.prototype has methods for documents.
-         Also, there’s a reference to the constructor function inside the prototype:
-         alert(HTMLDocument.prototype.constructor === HTMLDocument); // true
+   2. What’s its place in the DOM hierarchy?
+   3. Does it inherit from Node or Element, or maybe HTMLElement?
+      As we know, methods of a class are in the prototype of the constructor. For instance,
+      HTMLDocument.prototype has methods for documents.
+      Also, there’s a reference to the constructor function inside the prototype:
+      alert(HTMLDocument.prototype.constructor === HTMLDocument); // true
 
-         For built-in classes in all prototypes there’s a constructor reference,
-         and we can get constructor.name to see the name of the class.
-         alert(HTMLDocument.prototype.constructor.name); // HTMLDocument
-         alert(HTMLDocument.prototype.__proto__.constructor.name); // Document
-         alert(HTMLDocument.prototype.__proto__.__proto__.constructor.name); // Node */
+      For built-in classes in all prototypes there’s a constructor reference,
+      and we can get constructor.name to see the name of the class.
+      alert(HTMLDocument.prototype.constructor.name); // HTMLDocument
+      alert(HTMLDocument.prototype.__proto__.constructor.name); // Document
+      alert(HTMLDocument.prototype.__proto__.__proto__.constructor.name); // Node
+*/
