@@ -1022,3 +1022,51 @@ alert(body.firstChild.data); // what's here?
       alert(HTMLDocument.prototype.__proto__.constructor.name); // Document
       alert(HTMLDocument.prototype.__proto__.__proto__.constructor.name); // Node
 */
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 10 - Get the attribute
+// Write the code to select the element with data-widget-name attribute from the document and to read its value.
+(
+   <body>
+      <div data-widget-name="menu">Choose the genre</div>
+      <script>
+         let div = document.querySelector('[data-widget-name]');
+         alert(div.getAttribute('data-widget-name'))
+         // or
+         alert(div.dataset.widgetName);
+      </script>
+   </body>
+)
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 11 - Make external links orange
+/* A link is external if:
+      - Its href has :// in it
+      - But doesn’t start with http://internal.com.
+*/
+{/* <style>
+      .external {
+         color: orange
+      }
+   </style> */}
+(
+   <body>
+      <a name="list">the list</a>
+      <ul>
+         <li><a href="http://google.com">http://google.com</a></li>
+         <li><a href="/tutorial">/tutorial.html</a></li>
+         <li><a href="local/path">local/path</a></li>
+         <li><a href="ftp://ftp.com/my.zip">ftp://ftp.com/my.zip</a></li>
+         <li><a href="http://nodejs.org">http://nodejs.org</a></li>
+         <li><a href="http://internal.com/test">http://internal.com/test</a></li>
+      </ul>
+      <script>
+         let anchors = document.querySelectorAll("[href*='://']:not([href^='http://internal.com'])");
+         for (let anchor of anchors) {
+            anchor.setAttribute('class', 'external')
+         }
+      </script>
+   </body>
+)
