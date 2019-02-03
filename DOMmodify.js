@@ -247,22 +247,154 @@ setTimeout(() => messageDiv.remove(), 2000);
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - createTextNode vs innerHTML vs textContent
+/* We have an empty DOM element elem and a string text.
+
+   Which of these 3 commands do exactly the same?
+   - elem.append(document.createTextNode(text))
+   - elem.innerHTML = text
+   - elem.textContent = text
+*/
+
+/* 1 and 3
+   Both commands result in adding the text "as text" into the elem
+*/
+
+(
+   <body>
+      <div id="elem1"></div>
+      <div id="elem2"></div>
+      <div id="elem3"></div>
+   </body>
+)
+let text = '<b>text</b>';
+
+elem1.append(document.createTextNode(text)); // <b>text</b>
+elem2.textContent = text; // <b>text</b>
+elem3.innerHTML = text; // text
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - Clear the element
+(
+   <ol id="elem">
+      <li>Hello</li>
+      <li>World</li>
+   </ol>
+)
+
+function clear(elem) {
+   let lis = elem.querySelectorAll('li');
+   for (let li of lis) {
+      li.remove()
+   }
+}
+  
+clear(elem);
+
+// or
+function clear2(elem) {
+   while (elem.firstChild) {
+      elem.firstChild.remove()
+   }
+}
+
+// or
+function clear3(elem) {
+   elem.innerHTML = '';
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Why does 'aaa' remain?
+(
+   <table id="table">
+      aaa
+      <tr>
+         <td>Test</td>
+      </tr>
+   </table>
+)
+
+alert(table); // [object HTMLTableElement]
+table.remove();
+// why there's still aaa in the document?
+
+/* Because of autocorrection.
+   The HTML in the task is incorrect.
+   According to the spec only table-specific tags are allowed inside the <table>.
+   There may be no text inside.
+   The browser adds "aaa" before the <table>
+*/
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 4 - Create a list
+/* Write an interface to create a list from user input.
+   For every list item:
+      - Ask a user about its content using prompt.
+      - Create the <li> with it and add it to <ul>.
+      - Continue until the user cancels the input (by pressing Esc or CANCEL in prompt).
+*/
+(
+      <p>Your list</p>
+)
+let ul = document.createElement('ul');
+document.body.append(ul);
+
+while(true) {
+   let liContent = prompt('Enter the li content', '');
+   if(!liContent) break;
+   let li = document.createElement('li');
+   li.textContent = liContent;
+   ul.append(li);
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 5 - Create a tree from the object
+// Write a function createTree that creates a nested ul/li list from the nested object.
+(<div id="container"></div>)
+let data = {
+   "Fish": {
+      "trout": {},
+      "salmon": {}
+   },
+   "Tree": {
+      "Huge": {
+         "sequoia": {},
+         "oak": {}
+      },
+      "Flowering": {
+         "redbud": {},
+         "magnolia": {}
+      }
+   }
+};
+
+function isEmpty(object) {
+   for(let key in object) {
+      return false
+   }
+   return true
+}
+
+function createTree(where, what) {
+   if(!isEmpty(what)) {
+      let ul = document.createElement('ul');
+      where.append(ul);
+      
+      for (let key in what) {
+         let li = document.createElement('li');
+         li.innerText = key;
+       
+         ul.append(li);
+         createTree(li, what[key]);
+      }
+   }
+}
+
+let container = document.getElementById('container');
+createTree(container, data);
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
