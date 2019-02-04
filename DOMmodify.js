@@ -13,12 +13,11 @@ let textNode = document.createTextNode('Here I am');
 
 // parentElem.appendChild(node)
 // Appends node as the last child of parentElem
-(
-   <ol id="list">
-      <li>0</li>
-      <li>1</li>
-   </ol>
-)
+<ol id="list">
+   <li>0</li>
+   <li>1</li>
+</ol>
+
 let newLi = document.createElement('li');
 newLi.innerHTML = 'Hello';
 list.appendChild(newLi);
@@ -29,12 +28,11 @@ list.appendChild(newLi);
 
 // parentElem.insertBefore(node, nextSibling)
 // Inserts node before nextSibling into parentElem
-(
-   <ol id="list2">
-      <li>0</li>
-      <li>1</li>
-   </ol>
-)
+<ol id="list2">
+   <li>0</li>
+   <li>1</li>
+</ol>
+
 let newLi2 = document.createElement('li');
 newLi2.innerHTML = 'Hello';
 list2.insertBefore(newLi2, list2.children[0]);
@@ -45,14 +43,13 @@ list2.insertBefore(newLi2, list2.children[0]);
 
 // parentElem.replaceChild(node, oldChild)
 // Replaces oldChild with node among children of parentElem
-(
-   <ol id="list3">
-      <li>0</li>
-      <li>1</li>
-      <li>2</li>
-   </ol>
-)
-let newLi3= document.createElement('li');
+<ol id="list3">
+   <li>0</li>
+   <li>1</li>
+   <li>2</li>
+</ol>
+
+let newLi3 = document.createElement('li');
 newLi3.innerHTML = 'Hello';
 list3.replaceChild(newLi3, list3.children[1]);
 /* 1. 0
@@ -69,13 +66,12 @@ list3.replaceChild(newLi3, list3.children[1]);
    - node.after(...nodes or strings) –- insert nodes or strings after the node,
    - node.replaceWith(...nodes or strings) –- replaces node with the given nodes or strings.
 */
-(
-   <ol id="ol">
-      <li>0</li>
-      <li>1</li>
-      <li>2</li>
-   </ol>
-)
+<ol id="ol">
+   <li>0</li>
+   <li>1</li>
+   <li>2</li>
+</ol>
+
 ol.before('before');
 ol.after('after');
 
@@ -97,7 +93,8 @@ ol.append(appendLi);
 */
 
 // We can insert multiple lists of nodes and text pieces in a single call.
-(<div id="div"></div>)
+<div id="div"></div>
+
 div.before('<p>Hello</p>', document.createElement('hr'));
 // strings are inserted in a safe way, like element.textContent does it.
 /*    &lt;p&gt;Hello&lt;/p&gt;
@@ -116,7 +113,8 @@ div.before('<p>Hello</p>', document.createElement('hr'));
       - "beforeend" – insert html into elem, at the end,
       - "afterend" – insert html after elem.
 */
-(<div id="div"></div>)
+<div id="div"></div>
+
 div.insertAdjacentHTML("beforebegin", "<p>Hello</p>");
 div.insertAdjacentHTML("afterend", "<p>Bye</p>");
 /*    <p>Hello</p>
@@ -136,11 +134,10 @@ div.insertAdjacentHTML("afterend", "<p>Bye</p>");
       with all atributes and subelements
    If we call element.cloneNode(false), then the clone is made without child elements
 */
-( 
-   <div class="alert" id="div">
-      <strong>Hi there!</strong> You've read an important message.
-   </div>
-)
+<div class="alert" id="div">
+   <strong>Hi there!</strong> You've read an important message.
+</div>
+
 let div2 = div.cloneNode(true);
 div2.querySelector('strong').innerHTML = 'Bye there';
 
@@ -163,39 +160,34 @@ div.after(div2);
 // All insertion methods automatically remove the node from the old place.
 
 // if we want to move an element to another place - there's no need to remove it from the old one
-(
-   <body>
-      <div id="first">First</div>
-      <div id="second">Second</div>
-   </body>
-) 
+<body>
+   <div id="first">First</div>
+   <div id="second">Second</div>
+</body>
+
 second.after(first);
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // document.write(HTML) (ancient method)
 // The call to document.write(html) writes the html into page "right here and now"
-(
-   <body>
-      <p>Somewhere in the page...</p>
-      <script>
-         document.write('<b>Hello from JS</b>');
-      </script>
-      <p>The end</p>
-   </body>
-)
+<body>
+   <p>Somewhere in the page...</p>
+   <script>
+      document.write('<b>Hello from JS</b>');
+   </script>
+   <p>The end</p>
+</body>;
 
 //--------------------REMEMBER-------------------
 // The call to document.write only works while the page is loading
 // If we call it afterwards, the existing document content is erased
-(
-   <body>
-      <p>After one second the content of this page will be replaced...</p>
-      <script>
-         setTimeout(() => document.write('<b>... by this.</b>'), 1000);
-      </script>
-   </body>
-)
+<body>
+   <p>After one second the content of this page will be replaced...</p>
+   <script>
+      setTimeout(() => document.write('<b>... by this.</b>'), 1000);
+   </script>
+</body>;
 
 // Let make an alert
 let messageDiv = document.createElement('div');
@@ -258,14 +250,12 @@ setTimeout(() => messageDiv.remove(), 2000);
 /* 1 and 3
    Both commands result in adding the text "as text" into the elem
 */
+<body>
+   <div id="elem1"></div>
+   <div id="elem2"></div>
+   <div id="elem3"></div>
+</body>
 
-(
-   <body>
-      <div id="elem1"></div>
-      <div id="elem2"></div>
-      <div id="elem3"></div>
-   </body>
-)
 let text = '<b>text</b>';
 
 elem1.append(document.createTextNode(text)); // <b>text</b>
@@ -275,12 +265,10 @@ elem3.innerHTML = text; // text
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - Clear the element
-(
-   <ol id="elem">
-      <li>Hello</li>
-      <li>World</li>
-   </ol>
-)
+<ol id="elem">
+   <li>Hello</li>
+   <li>World</li>
+</ol>
 
 function clear(elem) {
    let lis = elem.querySelectorAll('li');
@@ -288,7 +276,7 @@ function clear(elem) {
       li.remove()
    }
 }
-  
+
 clear(elem);
 
 // or
@@ -306,14 +294,12 @@ function clear3(elem) {
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Why does 'aaa' remain?
-(
-   <table id="table">
-      aaa
-      <tr>
-         <td>Test</td>
-      </tr>
-   </table>
-)
+<table id="table">
+   aaa
+   <tr>
+      <td>Test</td>
+   </tr>
+</table>
 
 alert(table); // [object HTMLTableElement]
 table.remove();
@@ -335,15 +321,14 @@ table.remove();
       - Create the <li> with it and add it to <ul>.
       - Continue until the user cancels the input (by pressing Esc or CANCEL in prompt).
 */
-(
-      <p>Your list</p>
-)
+<p>Your list</p>
+
 let ul = document.createElement('ul');
 document.body.append(ul);
 
-while(true) {
+while (true) {
    let liContent = prompt('Enter the li content', '');
-   if(!liContent) break;
+   if (!liContent) break;
    let li = document.createElement('li');
    li.textContent = liContent;
    ul.append(li);
@@ -353,7 +338,9 @@ while(true) {
 
 // TASK 5 - Create a tree from the object
 // Write a function createTree that creates a nested ul/li list from the nested object.
-(<div id="container"></div>)
+// Solution 1 - Create tree nodes and append with DOM methods
+<div id="container"></div>
+
 let data = {
    "Fish": {
       "trout": {},
@@ -372,33 +359,140 @@ let data = {
 };
 
 function isEmpty(object) {
-   for(let key in object) {
+   for (let key in object) {
       return false
    }
    return true
 }
 
 function createTree(where, what) {
-   if(!isEmpty(what)) {
+   if (!isEmpty(what)) {
       let ul = document.createElement('ul');
       where.append(ul);
-      
+
       for (let key in what) {
          let li = document.createElement('li');
          li.innerText = key;
-       
+
          ul.append(li);
          createTree(li, what[key]);
       }
    }
 }
 
+// or
+function createTree2(container, obj) {
+   container.append(createTreeDom(obj));
+}
+
+function createTreeDom(obj) {
+   // if there's no children, then the call returns undefined
+   // and the <ul> won't be created
+   if (!Object.keys(obj).length) return;
+
+   let ul = document.createElement('ul');
+
+   for (let key in obj) {
+      let li = document.createElement('li');
+      li.innerHTML = key;
+
+      let childrenUl = createTreeDom(obj[key]);
+      if (childrenUl) {
+         li.append(childrenUl);
+      }
+
+      ul.append(li);
+   }
+
+   return ul;
+}
+
 let container = document.getElementById('container');
 createTree(container, data);
+
+// Solution 2 - Create the HTML for the tree and then assign to container.innerHTML
+function createTree2(container, data) {
+   container.innerHTML = createText(data);
+}
+
+function createText(data) {
+   let text;
+   let li = '';
+   if (!li) {
+      for (let key in data) {
+         li += '<li>' + key;
+         li += createText(data[key]);
+         li += '</li>';
+      }
+      text = '<ul>' + li + '</ul>';
+      return text;
+   }
+}
+
+// or
+function createText2(obj) { // standalone recursive function
+   let li = '';
+   let ul;
+   for (let key in obj) {
+      li += '<li>' + key + createTreeText(obj[key]) + '</li>';
+   }
+   if (li) {
+      ul = '<ul>' + li + '</ul>'
+   }
+   return ul || '';
+}
+
+let container = document.getElementById('container');
+createTree2(container, data);
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 6 - Show descendants in a tree
+<ul>
+   <li>Animals
+      <ul>
+         <li>Mammals
+          <ul>
+               <li>Cows</li>
+               <li>Donkeys</li>
+               <li>Dogs</li>
+               <li>Tigers</li>
+            </ul>
+         </li>
+         <li>Other
+          <ul>
+               <li>Snakes</li>
+               <li>Birds</li>
+               <li>Lizards</li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+   <li>Fishes
+      <ul>
+         <li>Aquarium
+          <ul>
+               <li>Guppy</li>
+               <li>Angelfish</li>
+            </ul>
+         </li>
+         <li>Sea
+          <ul>
+               <li>Sea trout</li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+</ul>
+
+let lis = document.querySelectorAll('li');
+for (let li of lis) {
+   let count = li.getElementsByTagName('li').length;
+   let ul = li.querySelector('ul');
+   if (ul) {
+      ul.before('[' + count + ']');
+   }
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
