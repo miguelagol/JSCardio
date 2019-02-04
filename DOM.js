@@ -49,7 +49,6 @@ In particular, if a script is inside <head>, then document.body is unavailable, 
 /*    Child nodes (or children) – elements that are direct children. In other words, they are nested exactly in the given one.
       Descendants – all elements that are nested in the given one, including children, their children and so on.
 */
-
 if (elem.hasChildNodes() === true) {
    elem.childNodes[0] === elem.firstChild; // true
    elem.childNodes[elem.childNodes.length - 1] === elem.lastChild; // true
@@ -125,18 +124,16 @@ if (elem.hasChildNodes() === true) {
 // Searching: getElement and querySelector
 // If an element has the id attribute, then there’s a global variable by the name from that id.
 // We can access the element like this
+<div id='elem'>
+   <div id='elem-content'>Element</div>
+</div>
 
-(
-   <div id='elem'>
-      <div id='elem-content'>Element</div>
-   </div>
-)
-console.log(elem);
-console.log(window.elem);
-console.log(window['elem-content']);
+console.log(elem); // <div id='elem'><div id='elem-content'>Element</div></div>
+console.log(window.elem); // <div id='elem'><div id='elem-content'>Element</div></div>
+console.log(window['elem-content']); // <div id='elem-content'>Element</div>
 
 // but if we declare the same-named variable...
-(<div id="elem"></div>)
+<div id="elem"></div>
 
 let elem = 5;
 
@@ -162,36 +159,30 @@ console.log(document.getElementsByTagName('div'));
 //--------------------REMEMBER--------------------
 // This method is callable in the context of any DOM element.
 // It returns a collection, not an element
+<table id="table">
+   <tr>
+      <td>Your age:</td>
+      <td>
+         <label>
+            <input type="radio" name="age" value="young" checked /> less than 18
+         </label>
+      </td>
+   </tr>
+</table>
 
-(
-   <table id="table">
-      <tr>
-         <td>Your age:</td>
-         <td>
-            <label>
-               <input type="radio" name="age" value="young" checked /> less than 18
-            </label>
-         </td>
-      </tr>
-   </table>
-)
-
-console.log(table.getElementsByTagName('label'));
-console.log(table.getElementsByTagName('label').value); // doesn't work, it's a collection!
-console.log(table.getElementsByTagName('input')[0].value); // that's work
+console.log(table.getElementsByTagName('label')); // HTMLCollection [label] 0: labellength: 1__proto__: HTMLCollection
+console.log(table.getElementsByTagName('label').value); // undefined, doesn't work, it's a collection!
+console.log(table.getElementsByTagName('input')[0].value); //young, that's work
 
 //-------------------------------------------------------------------------------
 
 // rarely used
 // element.getElementsByClassName(className)
 // document.getElementsByName(name)
-
-(
-   <form name="my-form">
-      <div class="article">Article</div>
-      <div class="long article">Long article</div>
-   </form>
-)
+<form name="my-form">
+   <div class="article">Article</div>
+   <div class="long article">Long article</div>
+</form>
 
 let form = document.getElementsByName('my-form')[0];
 
@@ -202,19 +193,16 @@ console.log(articles.length); // 2, found two elements with class "article"
 
 // element.querySelectorAll
 // The call to elem.querySelectorAll(css) returns all elements inside elem matching the given CSS selector.
-
-(
-   <body>
-      <ul>
-         <li>The</li>
-         <li>test</li>
-      </ul>
-      <ul>
-         <li>has</li>
-         <li>passed</li>
-      </ul>
-   </body>
-)
+<body>
+   <ul>
+      <li>The</li>
+      <li>test</li>
+   </ul>
+   <ul>
+      <li>has</li>
+      <li>passed</li>
+   </ul>
+</body>
 
 let elements = document.querySelectorAll('ul > li:last-child');
 
@@ -232,18 +220,15 @@ for (let elem of elements) {
 // Matches
 // element.matches(css)
 // The element.matches(css) does not look for anything, it merely checks if elem matches the given CSS-selector. It returns true or false.
-
-(
-   <body>
-      <a href="http://example.com/file.zip">...</a>
-      <a href="http://ya.ru">...</a>
-   </body>
-)
+<body>
+   <a href="http://example.com/file.zip">...</a>
+   <a href="http://ya.ru">...</a>
+</body>
 
 for (let elem of document.body.children) {
    (function () {
       if (elem.matches('a[href$="zip"]')) {
-         console.log("The archive reference: " + elem.href)
+         console.log("The archive reference: " + elem.href); // The archive reference: http://example.com/file.zip
       }
    })()
 }
@@ -254,21 +239,17 @@ for (let elem of document.body.children) {
 // element.closest(css)
 // The method element.closest(css) looks the nearest ancestor that matches the CSS-selector.
 // The elem itself is also included in the search.
+<body>
+   <h1>Contents</h1>
+   <div class="contents">
+      <ul class="book">
+         <li class="chapter">Chapter 1</li>
+         <li class="chapter">Chapter 1</li>
+      </ul>
+   </div>
+</body>
 
-(
-   <body>
-      <h1>Contents</h1>
-
-      <div class="contents">
-         <ul class="book">
-            <li class="chapter">Chapter 1</li>
-            <li class="chapter">Chapter 1</li>
-         </ul>
-      </div>
-   </body>
-)
-
-let chapter = document.querySelector('.chapter'); // LI
+let chapter = document.querySelector('.chapter');
 
 console.log(chapter.closest('.book')); // UL
 console.log(chapter.closest('.contents')); // DIV
@@ -280,15 +261,14 @@ console.log(chapter.closest('h1')); // null, because h1 is not an ancestor
 // All methods "getElementsBy*" return a live collection.
 // Such collections always reflect the current state of the document and “auto-update” when it changes.
 // In contrast, querySelectorAll returns a static collection. It’s like a fixed array of elements.
-
-(<div>First div</div>)
+<div>First div</div>
 
 let divsBy = document.getElementsByTagName('div');
 let divsAll = document.querySelectorAll('div');
 console.log(divsBy.length); // 1
 console.log(divsAll.length); // 1
 
-(<div>Second div</div>)
+<div>Second div</div>
 
 console.log(divsBy.length); // 2
 console.log(divsAll.length); // 1
@@ -327,7 +307,6 @@ querySelectorAll	      CSS-selector	   ✔	                        -
             HTMLAnchorElement – the class for <a> elements
 …and so on, each tag has its own class that may provide specific properties and methods.
 */
-
 console.log(document.body); // [object HTMLBodyElement]
 
 // We can use instanceof to check the inheritance:
@@ -381,7 +360,6 @@ The colon ":" means that HTMLInputElement inherits from HTMLElement
       - elem.nodeType == 9 for the document object,
       - there are few other values in the specification.
 */
-
 let elem = document.body;
 
 // let's examine what it is?
@@ -399,7 +377,6 @@ alert(document.nodeType); // 9 => document
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Tag: nodeName and tagName
-
 alert(document.body.nodeName); // BODY
 alert(document.body.tagName); // BODY
 
@@ -427,35 +404,28 @@ alert(document.nodeName); // #document
 
 // innerHTML: the contents
 //The innerHTML property allows to get the HTML inside the element as a string. We can also modify it
+<body>
+   <p>A paragraph</p>
+   <div>A div</div>
+</body>;
 
-(
-   <body>
-      <p>A paragraph</p>
-      <div>A div</div>
+alert(document.body.innerHTML); // read the current contents
+document.body.innerHTML = 'The new BODY!'; // replace it
 
-      <script>
-         alert( document.body.innerHTML ); // read the current contents
-         document.body.innerHTML = 'The new BODY!'; // replace it
-      </script>
+//--------------------REMEMBER--------------------
+// If innerHTML inserts a <script> tag into the document – it doesn’t execute.
 
-   </body>
-)
+/* Beware: “innerHTML+=” does a full overwrite
+      1. The old contents is removed.
+      2. The new innerHTML is written instead (a concatenation of the old and the new one).
+      (As the content is “zeroed-out” and rewritten from the scratch, all images and other resources will be reloaded.)
+*/
 
-   //--------------------REMEMBER--------------------
-   // If innerHTML inserts a <script> tag into the document – it doesn’t execute.
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
-   /* Beware: “innerHTML+=” does a full overwrite
-         1. The old contents is removed.
-         2. The new innerHTML is written instead (a concatenation of the old and the new one).
-         (As the content is “zeroed-out” and rewritten from the scratch, all images and other resources will be reloaded.)
-   */
-
-   //-----------------------------------------------------------------------------------------------------------------------------------------
-
-   // outerHTML: full HTML of the element
-   // The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
-
-   (<div id="elem">Hello <b>World</b></div>)
+// outerHTML: full HTML of the element
+// The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
+<div id="elem">Hello <b>World</b></div>
 
 alert(elem.outerHTML); // <div id="elem">Hello <b>World</b></div>
 alert(elem.innerHTML); // Hello World
@@ -463,7 +433,7 @@ alert(elem.innerHTML); // Hello World
 //--------------------REMEMBER--------------------
 /* Beware: unlike innerHTML, writing to outerHTML does not change the element. Instead, it replaces it as a whole in the outer context. */
 
-(<div>Hello, world!</div>)
+<div>Hello, world!</div>
 
 let div = document.querySelector('div');
 
@@ -484,13 +454,10 @@ alert(div.outerHTML); // <div>Hello, world!</div>
 // The innerHTML property is only valid for element nodes.
 // Other node types have their counterpart: nodeValue and data properties.
 // These two are almost the same for practical use, there are only minor specification differences.
-
-(
-   <body>
-      Hello
-      {/* <!-- Comment --> */}
-   </body>
-)
+<body>
+   Hello
+   {/* <!-- Comment --> */}
+</body>
 
 let text = document.body.firstChild;
 alert(text.data); // Hello
@@ -500,26 +467,21 @@ alert(comment.data); // Comment
 
 // For text nodes we can imagine a reason to read or modify them, but why comments? Usually, they are not interesting at all,
 // but sometimes developers embed information into HTML in them, like this:
-(
-   <body>
-      {/* <!-- if isAdmin --> */}
-      <div>Welcome, Admin!</div>
-      {/* <!-- /if --> */}
-   </body>
-)
-   // …Then JavaScript can read it and process embedded instructions.
+<body>
+   {/* <!-- if isAdmin --> */}
+   <div>Welcome, Admin!</div>
+   {/* <!-- /if --> */}
+</body>;
+// …Then JavaScript can read it and process embedded instructions.
 
-   //-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
-   // textContent: pure text
-   // The textContent provides access to the text inside the element: only text, minus all <tags>.
-
-   (
-   <div id="news">
-      <h1>Headline!</h1>
-      <p>Martians attack people!</p>
-   </div>
-   )
+// textContent: pure text
+// The textContent provides access to the text inside the element: only text, minus all <tags>.
+<div id="news">
+   <h1>Headline!</h1>
+   <p>Martians attack people!</p>
+</div>
 
 alert(news.textContent); // Headline! Martians attack people!
 
@@ -529,13 +491,11 @@ alert(news.textContent); // Headline! Martians attack people!
 /*    - With innerHTML we’ll have it inserted “as HTML”, with all HTML tags.
       - With textContent we’ll have it inserted “as text”, all symbols are treated literally.
 */
+<body>
+   <div id="elem1"></div>
+   <div id="elem2"></div>
+</body>
 
-(
-   <body>
-      <div id="elem1"></div>
-      <div id="elem2"></div>
-   </body>
-)
 let name = prompt("What's your name?", "<b>Winnie-the-pooh!</b>");
 
 elem1.innerHTML = name; // Winnie-the-pooh!
@@ -545,17 +505,16 @@ elem2.textContent = name; // <b>Winnie-the-pooh!</b>
 
 // the "hidden" property
 // The “hidden” attribute and the DOM property specifies whether the element is visible or not.
+<body>
+   <div>Both divs below are hidden</div>
+   <div hidden>With the attribute "hidden"</div>
+   <div id="elem">JavaScript assigned the property "hidden"</div>
+</body>
 
-(
-   <body>
-      <div>Both divs below are hidden</div>
-      <div hidden>With the attribute "hidden"</div>
-      <div id="elem">JavaScript assigned the property "hidden"</div>
-   </body>
-)
 elem.hidden = true;
 
-(<div id="elem">A blinking element</div>)
+<div id="elem">A blinking element</div>
+
 setInterval(() => elem.hidden = !elem.hidden, 1000);
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -569,7 +528,7 @@ setInterval(() => elem.hidden = !elem.hidden, 1000);
 */
 
 // Most standard HTML attributes have the corresponding DOM property, and we can access it like that.
-(<input type="text" id="elem" value="value" />)
+<input type="text" id="elem" value="value" />
 
 alert(elem.type); // text
 alert(elem.id); // elem
@@ -588,7 +547,6 @@ alert(elem.value); // value
 //    - They are case-sensitive (write elem.nodeType, not elem.NoDeTyPe).
 
 // we can, create new property, add a method
-
 document.body.myData = {
    name: 'Cesar',
    title: 'Imperator',
@@ -615,15 +573,12 @@ document.body.sayHi(); // Hello, I'm BODY
    So when an element has id or another standard attribute, the corresponding property gets created.
    But that doesn’t happen if the attribute is non-standard.
 */
-
-(
-   <body id="test" something="non-standard">
-      <script>
-         alert(document.body.id); // test
-         alert(document.body.something); // undefined
-      </script>
-   </body>
-)
+<body id="test" something="non-standard">
+   <script>
+      alert(document.body.id); // test
+      alert(document.body.something); // undefined
+   </script>
+</body>;
 
 // standard attribute for one element can be unknown for another one.
 // For instance, "type" is standard for <input> (HTMLInputElement), but not for <body> (HTMLBodyElement).
@@ -633,17 +588,14 @@ document.body.sayHi(); // Hello, I'm BODY
       - elem.setAttribute(name, value) – sets the value.
       - elem.removeAttribute(name) – removes the attribute.
 */
-
-(
-   <body id="body" type="non-standard">
-      <input id="input" type="text" />
-      <script>
-         alert(input.type); // text
-         alert(body.type); // undefined
-         alert(body.getAttribute('type')); // non-standard
-      </script>
-   </body>
-)
+<body id="body" type="non-standard">
+   <input id="input" type="text" />
+   <script>
+      alert(input.type); // text
+      alert(body.type); // undefined
+      alert(body.getAttribute('type')); // non-standard
+   </script>
+</body>;
 
 // We can read all attributes using elem.attributes:
 // a collection of objects that belong to a built-in Attr class
@@ -653,99 +605,88 @@ document.body.sayHi(); // Hello, I'm BODY
       - Their name is case-insensitive (id is same as ID).
       - Their values are always strings.
 */
+<body>
+   <div id="element" about="Elephant"></div>
+   <script>
+      alert(element.getAttribute('About')); // Elephant
 
-(
-   <body>
-      <div id="element" about="Elephant"></div>
-      <script>
-         alert(element.getAttribute('About')); // Elephant
-
-         element.setAttribute('Test', 123);
+      element.setAttribute('Test', 123);
 
          alert(element.outerHTML); {/* <div id="elem" about="Elephant" test="123"></div> */}
 
-         for (let attribute of element.attributes) {
-            alert(`${attribute.name} = ${attribute.value}`) /* id = element, about = Elephant, test = 123 */
-         }
-      </script>
-   </body>
-)
+      for (let attribute of element.attributes) {
+         alert(`${attribute.name} = ${attribute.value}`) /* id = element, about = Elephant, test = 123 */
+      }
+   </script>
+</body>;
 
 //------------------------------------------------------------------------------------------------
 
 // Property-attribute synchronization
 // When a standard attribute changes, the corresponding property is auto-updated, and vice versa.
+<body>
+   <input />
+   <script>
+      let input = document.querySelector('input');
 
-(
-   <body>
-      <input />
-      <script>
-         let input = document.querySelector('input');
+   // attribute => property
+      input.setAttribute('id', 'id');
+      alert(input.id); // id
 
-      // attribute => property
-         input.setAttribute('id', 'id');
-         alert(input.id); // id
+   // property => attribute
+      input.id = 'newId';
+      alert(input.getAttribute('id')); // newId
 
-      // property => attribute
-         input.id = 'newId';
-         alert(input.getAttribute('id')); // newId
+   // there are exclusions
+   // attribute => property
+      input.setAttribute('value', 'text');
+      alert(input.value); // text
 
-      // there are exclusions
-      // attribute => property
-         input.setAttribute('value', 'text');
-         alert(input.value); // text
-
-      // NOT property => attribute
-         input.value = 'newValue';
-         alert(input.getAttribute('value')); // text
-      </script>
-   </body>
-)
+   // NOT property => attribute
+      input.value = 'newValue';
+      alert(input.getAttribute('value')); // text
+   </script>
+</body>;
 
 //------------------------------------------------------------------------------------------------
 
 // DOM Properties are typed
 // DOM properties are not always strings
-
-(
-   <body>
-      <input id="input" type="checkbox" checked/> checkbox
+<body>
+   <input id="input" type="checkbox" checked /> checkbox
       <div id="div" style="color: red; font-size: 120%">Hello</div>
-      <a id="a" href="#hello">link</a>
-      <script>
-         // The checked attribute is a string, but the input.checked property (for checkboxes) is a boolean
-         alert(input.getAttribute('checked')); // '' empty string
-         alert(input.checked); // true
+   <a id="a" href="#hello">link</a>
+   <script>
+      // The checked attribute is a string, but the input.checked property (for checkboxes) is a boolean
+      alert(input.getAttribute('checked')); // '' empty string
+      alert(input.checked); // true
 
-         // The style attribute is a string, but the style property is an object
-         alert(div.getAttribute('style')); // color: red; font-size: 120%
-         alert(div.style); // [object CSSStyleDeclaration]
-         alert(div.style.color); // red
+      // The style attribute is a string, but the style property is an object
+      alert(div.getAttribute('style')); // color: red; font-size: 120%
+      alert(div.style); // [object CSSStyleDeclaration]
+      alert(div.style.color); // red
 
-         //the href DOM property is always a full URL, even if the attribute contains a relative URL or just a #hash.
-         alert(a.getAttribute('href')); // hello
-         alert(a.href); // http://site.com/page#hello
-      </script>
-   </body>
-)
+      //the href DOM property is always a full URL, even if the attribute contains a relative URL or just a #hash.
+      alert(a.getAttribute('href')); // hello
+      alert(a.href); // http://site.com/page#hello
+   </script>
+</body>;
 
 //------------------------------------------------------------------------------------------------
 
 // Non-standard attributes, dataset
 // Sometimes non-standard attributes are used to pass custom data from HTML to JavaScript,
 // or to “mark” HTML-elements for JavaScript.
-
-(
-   <body>
-      <div show-info="name"></div>
-      <div show-info="age"></div>
-   </body>
-)
+<body>
+   <div show-info="name"></div>
+   <div show-info="age"></div>
+</body>
 
 let user = {
    name: 'Jack',
    age: 32,
 };
+
 let divs = document.querySelectorAll('[show-info]');
 for (let div of divs) {
    let info = div.getAttribute('show-info');
@@ -761,26 +702,22 @@ for (let div of divs) {
       color: blue
    }
 </style> */}
-(  
-   <body>
-      <div class="order" order-state="new">
-         New order
+<body>
+   <div class="order" order-state="new">
+      New order
       </div>
-      <div class="order" order-state="old">
-         Old order
+   <div class="order" order-state="old">
+      Old order
       </div>
-   </body>
-)
+</body>;
 
 // All attributes starting with “data-” are reserved for programmers’ use.
 // They are available in the dataset property.
-(
-   <body data-about="Elephants">
-      <script>
-         alert(document.body.dataset.about); // Elephants
-      </script>
-   </body>
-)
+<body data-about="Elephants">
+   <script>
+      alert(document.body.dataset.about); // Elephants
+   </script>
+</body>;
 // Multiword attributes like data-order-state become camel-cased: dataset.orderState.
 
 //------------------------------------------------------------------------------------------------
@@ -788,12 +725,12 @@ for (let div of divs) {
 // Summary
 /*    Attributes – is what’s written in HTML.
       Properties – is what’s in DOM objects.
-
+ 
       Properties	                                 Attributes
 Type	Any value, standard properties have types    A string
       described in the spec	
 Name	Name is case-sensitive                       Name is not case-sensitive
-
+ 
 Methods to work with attributes are:
    - elem.hasAttribute(name) – to check for existence.
    - elem.getAttribute(name) – to get the value.
@@ -805,17 +742,16 @@ Methods to work with attributes are:
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - How to access?
-(
-   <html>
-      <body>
-         <div>Users:</div>
-         <ul>
-            <li>John</li>
-            <li>Pete</li>
-         </ul>
-      </body>
-   </html>
-)
+<html>
+   <body>
+      <div>Users:</div>
+      <ul>
+         <li>John</li>
+         <li>Pete</li>
+      </ul>
+   </body>
+</html>;
+
 /* 1. The <div> DOM node?
       document.body.firstElementChild
       document.body.children[0]
@@ -841,45 +777,43 @@ Methods to work with attributes are:
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Select all diagonal cells
-(
-   <table>
-      <tr>
-         <td>1:1</td>
-         <td>2:1</td>
-         <td>3:1</td>
-         <td>4:1</td>
-         <td>5:1</td>
-      </tr>
-      <tr>
-         <td>1:2</td>
-         <td>2:2</td>
-         <td>3:2</td>
-         <td>4:2</td>
-         <td>5:2</td>
-      </tr>
-      <tr>
-         <td>1:3</td>
-         <td>2:3</td>
-         <td>3:3</td>
-         <td>4:3</td>
-         <td>5:3</td>
-      </tr>
-      <tr>
-         <td>1:4</td>
-         <td>2:4</td>
-         <td>3:4</td>
-         <td>4:4</td>
-         <td>5:4</td>
-      </tr>
-      <tr>
-         <td>1:5</td>
-         <td>2:5</td>
-         <td>3:5</td>
-         <td>4:5</td>
-         <td>5:5</td>
-      </tr>
-   </table>
-)
+<table>
+   <tr>
+      <td>1:1</td>
+      <td>2:1</td>
+      <td>3:1</td>
+      <td>4:1</td>
+      <td>5:1</td>
+   </tr>
+   <tr>
+      <td>1:2</td>
+      <td>2:2</td>
+      <td>3:2</td>
+      <td>4:2</td>
+      <td>5:2</td>
+   </tr>
+   <tr>
+      <td>1:3</td>
+      <td>2:3</td>
+      <td>3:3</td>
+      <td>4:3</td>
+      <td>5:3</td>
+   </tr>
+   <tr>
+      <td>1:4</td>
+      <td>2:4</td>
+      <td>3:4</td>
+      <td>4:4</td>
+      <td>5:4</td>
+   </tr>
+   <tr>
+      <td>1:5</td>
+      <td>2:5</td>
+      <td>3:5</td>
+      <td>4:5</td>
+      <td>5:5</td>
+   </tr>
+</table>
 
 let table = document.body.firstElementChild;
 
@@ -921,44 +855,42 @@ for (let i = 0; i < table.rows.length; i++) {
    -  What’s the text inside it (without the subtree)
    -  The number of nested <li> – all descendants, including the deeply nested ones.
 */
-(
-   <ul>
-      <li>Animals
+<ul>
+   <li>Animals
          <ul>
-            <li>Mammals
+         <li>Mammals
                <ul>
-                  <li>Cows</li>
-                  <li>Donkeys</li>
-                  <li>Dogs</li>
-                  <li>Tigers</li>
-               </ul>
-            </li>
-            <li>Other
+               <li>Cows</li>
+               <li>Donkeys</li>
+               <li>Dogs</li>
+               <li>Tigers</li>
+            </ul>
+         </li>
+         <li>Other
                <ul>
-                  <li>Snakes</li>
-                  <li>Birds</li>
-                  <li>Lizards</li>
-               </ul>
-            </li>
-         </ul>
-      </li>
-      <li>Fishes
+               <li>Snakes</li>
+               <li>Birds</li>
+               <li>Lizards</li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+   <li>Fishes
          <ul>
-            <li>Aquarium
+         <li>Aquarium
                <ul>
-                  <li>Guppy</li>
-                  <li>Angelfish</li>
-               </ul>
-            </li>
-            <li>Sea
+               <li>Guppy</li>
+               <li>Angelfish</li>
+            </ul>
+         </li>
+         <li>Sea
                <ul>
-                  <li>Sea trout</li>
-               </ul>
-            </li>
-         </ul>
-      </li>
-   </ul>
-)
+               <li>Sea trout</li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+</ul>
 
 for (let li of document.querySelectorAll('li')) {
    let first = li.firstChild.data;
@@ -969,17 +901,13 @@ for (let li of document.querySelectorAll('li')) {
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - What's in the nodeType?
-(
-   <html>
-
-      <body>
-         <script>
-            alert(document.body.lastChild.nodeType);
-         </script>
-      </body>
-
-   </html>
-)
+<html>
+   <body>
+      <script>
+         alert(document.body.lastChild.nodeType);
+      </script>
+   </body>
+</html>
 
 // At the time of <script> execution the last DOM node is exactly <script>, because the browser did not process the rest of the page yet.
 // So the result is 1 (element node).
@@ -1027,17 +955,12 @@ alert(body.firstChild.data); // what's here?
 
 // TASK 10 - Get the attribute
 // Write the code to select the element with data-widget-name attribute from the document and to read its value.
-(
-   <body>
-      <div data-widget-name="menu">Choose the genre</div>
-      <script>
-         let div = document.querySelector('[data-widget-name]');
-         alert(div.getAttribute('data-widget-name'))
-         // or
-         alert(div.dataset.widgetName);
-      </script>
-   </body>
-)
+<div data-widget-name="menu">Choose the genre</div>
+
+let div = document.querySelector('[data-widget-name]');
+alert(div.getAttribute('data-widget-name'))
+// or
+alert(div.dataset.widgetName);
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1051,22 +974,19 @@ alert(body.firstChild.data); // what's here?
          color: orange
       }
    </style> */}
-(
-   <body>
-      <a name="list">the list</a>
-      <ul>
-         <li><a href="http://google.com">http://google.com</a></li>
-         <li><a href="/tutorial">/tutorial.html</a></li>
-         <li><a href="local/path">local/path</a></li>
-         <li><a href="ftp://ftp.com/my.zip">ftp://ftp.com/my.zip</a></li>
-         <li><a href="http://nodejs.org">http://nodejs.org</a></li>
-         <li><a href="http://internal.com/test">http://internal.com/test</a></li>
-      </ul>
-      <script>
-         let anchors = document.querySelectorAll("[href*='://']:not([href^='http://internal.com'])");
-         for (let anchor of anchors) {
-            anchor.setAttribute('class', 'external')
-         }
-      </script>
-   </body>
-)
+<body>
+   <a name="list">the list</a>
+   <ul>
+      <li><a href="http://google.com">http://google.com</a></li>
+      <li><a href="/tutorial">/tutorial.html</a></li>
+      <li><a href="local/path">local/path</a></li>
+      <li><a href="ftp://ftp.com/my.zip">ftp://ftp.com/my.zip</a></li>
+      <li><a href="http://nodejs.org">http://nodejs.org</a></li>
+      <li><a href="http://internal.com/test">http://internal.com/test</a></li>
+   </ul>
+</body>
+
+let anchors = document.querySelectorAll("[href*='://']:not([href^='http://internal.com'])");
+for (let anchor of anchors) {
+   anchor.setAttribute('class', 'external')
+}
