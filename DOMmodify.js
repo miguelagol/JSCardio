@@ -395,15 +395,12 @@ function createTreeDom(obj) {
    for (let key in obj) {
       let li = document.createElement('li');
       li.innerHTML = key;
-
       let childrenUl = createTreeDom(obj[key]);
       if (childrenUl) {
          li.append(childrenUl);
       }
-
       ul.append(li);
    }
-
    return ul;
 }
 
@@ -494,9 +491,189 @@ for (let li of lis) {
    }
 }
 
+// or
+let lis = document.getElementsByTagName('li');
+for (let li of lis) {
+   let descendantsCount = li.getElementsByTagName('li').length;
+   if (!descendantsCount) continue;
+   li.firstChild.data += ' [' + descendantsCount + ']';
+}
+
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - Create a calendar
+{/*
+   <style>
+      table {
+         border-collapse: collapse;
+      }
+
+      td, th {
+         border: 1px solid black;
+         padding: 3px;
+         text-align: center;
+      }
+
+      th {
+         font-weight: bold;
+         background-color: #E6E6E6;
+      }
+   </style>
+*/}
+
+<body>
+   <div id="calendar"></div>
+</body>
+
+function createCalendar(elem, year, month) {
+   elem.innerHTML = createTable(year, month);
+}
+
+function createTable(year, month) {
+   let text = '<table>';
+   let date = new Date(year, month - 1, 1);
+
+   let firstDay = getFirstDay(date);
+   let countDay = getLastDayOfMonth(year, month);
+
+   //let tableTr = createTableTr(firstDay, countDay, table);
+   text += createTableTh();
+   text += createTableTr(firstDay, countDay);
+
+   text += '</table>';
+   return text;
+}
+
+function createCell(i, start, end) {
+   let cell = ''
+   let td = i - start + 1;
+   if (i < start) {
+      cell += '<td></td>';
+   }
+   else if (i % 7 == 0 && i != (end + 7 - end % 7)) {
+      cell += '<td>' + td + '</td>';
+      cell += '</tr><tr>';
+   } else if (td <= end) {
+      cell += '<td>' + td + '</td>';
+   }
+   else {
+      cell += '<td></td>';
+   }
+   return cell
+}
+
+function createTableTr(start, end) {
+   let tr = '<tr>';
+
+   if (end % 7 == 0 && start == 1) {
+      for (let i = 1; i <= end; i++) {
+         tr += createCell(i, start, end);
+      }
+   } else if (end % 7 == 0 && start != 1) {
+      for (let i = 1; i <= end + 7; i++) {
+         tr += createCell(i, start, end);
+      }
+   } else if ((start == 7 && end == 30) || (start >= 6 && end == 31)) {
+      for (let i = 1; i <= end + 14 - end % 7; i++) {
+         let cell = ''
+         let td = i - start + 1;
+         if (i < start) {
+            cell += '<td></td>';
+         }
+         else if (i % 7 == 0 && i != (end + 14 - end % 7)) {
+            cell += '<td>' + td + '</td>';
+            cell += '</tr><tr>';
+         } else if (td <= end) {
+            cell += '<td>' + td + '</td>';
+         }
+         else {
+            cell += '<td></td>';
+         }
+         tr += cell
+      }
+   }
+   else {
+      for (let i = 1; i <= end + 7 - end % 7; i++) {
+         tr += createCell(i, start, end);
+      }
+   }
+   tr += '</tr>';
+   return tr;
+}
+
+function createTableTh() {
+   let weekDay = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+   let week = '<tr>';
+   for (let i = 0; i < weekDay.length; i++) {
+      week += '<th>' + weekDay[i] + '</th>';
+   }
+   week += '</tr>';
+   return week;
+}
+
+function getLastDayOfMonth(year, month) {
+   let date = new Date(year, month);
+   date.setDate(date.getDate() - 1);
+   return date.getDate();
+}
+
+function getFirstDay(date) {
+   let firstDay = date.getDay();
+   if (firstDay == 0) {
+      firstDay = 7;
+   }
+   return firstDay;
+}
+
+let element = document.getElementById('calendar');
+createCalendar(element, 2002, 2);
+
+// or
+function createCalendar2(elem, year, month) {
+   let month = month - 1; // months in JS are 0..11, not 1..12
+   let date = new Date(year, mon);
+
+   let table = '<table><tr><th>MO</th><th>TU</th><th>WE</th><th>TH</th><th>FR</th><th>SA</th><th>SU</th></tr><tr>';
+
+   // spaces for the first row
+   // from Monday till the first day of the month
+   // * * * 1  2  3  4
+   for (let i = 0; i < getDay(date); i++) {
+      table += '<td></td>';
+   }
+
+   // <td> with actual dates
+   while (date.getMonth() == month) {
+      table += '<td>' + date.getDate() + '</td>';
+
+      if (getDay(date) % 7 == 6) { // sunday, last day of week - newline
+         table += '</tr><tr>';
+      }
+
+      date.setDate(date.getDate() + 1);
+   }
+
+   // add spaces after last days of month for the last row
+   // 29 30 31 * * * *
+   if (getDay(date) != 0) {
+      for (let i = getDay(date); i < 7; i++) {
+         table += '<td></td>';
+      }
+   }
+
+   // close the table
+   table += '</tr></table>';
+
+   elem.innerHTML = table;
+}
+
+function getDay(date) { // get day number from 0 (monday) to 6 (sunday)
+   let day = date.getDay();
+   if (day == 0) day = 7; // make Sunday (0) the last day
+   return day - 1;
+}
+
+createCalendar2(calendar, 2012, 9);
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -505,6 +682,25 @@ for (let li of lis) {
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 9 - Insert the HTML in the list
+<ul id="ul">
+  <li id="one">1</li>
+  <li id="two">4</li>
+</ul>
+
+let li1 = document.getElementById('one');
+let li4 = document.getElementById('two');
+
+let li2 = document.createElement('li');
+let li3 = document.createElement('li');
+
+li2.textContent = 2;
+li3.textContent = 3;
+
+li1.after(li2);
+li4.before(li3);
+
+// or
+one.insertAdjacentHTML('afterend', '<li>2</li><li>3</li>');
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
