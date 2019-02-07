@@ -238,6 +238,156 @@ setTimeout(() => messageDiv.remove(), 2000);
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
+// Styles and classes
+
+/* There are generally two ways to style an element:
+      - Create a class in CSS and add it:       <div class="...">
+      - Write properties directly into style:   <div style="...">.
+
+CSS is always the preferred way. We should only manipulate the style property if classes “can’t handle it”.
+
+For instance, style is acceptable if we calculate coordinates of an element dynamically and want to set them from JavaScript.
+*/
+
+//--------------------------------------------------------------------------------------------------
+
+// className and classList
+
+// the elem.className corresponds to the "class" attribute
+<body class="main page"></body>
+console.log(document.body.className); // main page
+
+// If we assign something to element.className, it replaces the whole strings of classes.
+document.body.className = 'something';
+console.log(document.body.className); // something
+
+// If we want to add/remove a single class we use element.classList
+// The elem.classList is a special object with methods to add/remove/toggle classes.
+document.body.classList.add('article');
+console.log(document.body.className); // something article
+
+/* -  elem.classList.add/remove("class") – adds/removes the class.
+   -  elem.classList.toggle("class") – if the class exists, then removes it, otherwise adds it.
+   -  elem.classList.contains("class") – returns true/false, checks for the given class.
+*/
+
+// classList is iterable, so we can list all classes
+for (let name of document.body.classList) {
+   console.log(name); // something, article
+}
+
+//--------------------------------------------------------------------------------------------------
+
+// element.style
+// The property elem.style is an object that corresponds to what’s written in the "style" attribute. 
+// For multi-word property the camelCase is used
+element.style.backgroundColor = prompt('background color?', 'green');
+element.style.borderLeftWidth = prompt('norder left width', '20px');
+
+// Browser-prefixed properties like -moz-border-radius, -webkit-border-radius also follow the same rule
+button.style.MozBorderRadius = '5px';
+
+//--------------------------------------------------------------------------------------------------
+
+// Resetting the style property
+// If we want to assign a style property, and later remove it we should assign an empty line to it.
+document.bosy.style.display = 'none'; // hide
+setTimeout(() => document.body.style.display = "", 1000); // back to normal
+
+// style.cssText
+// style.* is to assign individual style property, to set the full style as a string,
+// there's a spectial property
+<div id="div">Button</div>
+div.style.cssText = `color: red !important;
+   background-color: yellow;
+   width: 100px;
+   text-align: center;
+   `;
+alert(div.style.cssText); // background-color: yellow; width: 100px; text-align: center; color: red !important;
+// such assignment removes all existing styles: it does not add, but replaces them
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------REMEMBER-------------------
+// Mind the units
+
+// this doesn't work
+document.body.style.margin = 20;
+alert(document.body.style.margin); // '' (empty string, the assignment is ignored)
+
+// it works
+document.body.style.margin = '20px';
+alert(document.body.style.margin); // 20px
+alert(document.body.style.marginTop); // 20px
+
+//--------------------------------------------------------------------------------------------------
+
+// Computed styles
+// getComputedStyle(element[, pseudo])
+//    element  - element to read the value for
+//    pseudo   - a pseudo-element if required
+// the result is an object with style properties
+
+//--------------------REMEMBER-------------------
+// The style property operates only on the value of the "style" attribute, without any CSS cascade.
+// So we can’t read anything that comes from CSS classes using elem.style.
+{/* <style> body { color: red; margin: 5px } </style> */ }
+
+alert(document.body.style.color); // ''
+alert(document.body.style.margin); // ''
+
+let computesStyle = getComputedStyle(document.body);
+
+alert(computesStyle.color); // rgb(255, 0, 0)
+alert(computesStyle.marginTop); // 5px
+
+//--------------------------------------------------------------------------------------------------
+
+// Computed and resolved values
+/* There are two concepts in CSS:
+   - A computed style value   is the value after all CSS rules and CSS inheritance is applied,
+                              as the result of the CSS cascade.
+                              It can look like height:1em or font-size:125%.
+   - A resolved style value   is the one finally applied to the element.
+                              Values like 1em or 125% are relative.
+                              The browser takes the computed value and makes all units fixed and absolute,
+                              for instance: height:20px or font-size:16px.
+                              For geometry properties resolved values may have a floating point, like width:50.5px.
+
+   Nowadays getComputedStyle actually returns the resolved value of the property
+*/
+
+//--------------------REMEMBER-------------------
+// getComputedStyle requires the full property name
+// We should always ask for the exact property that we want, like paddingLeft or marginTop or borderTopWidth.
+// Otherwise the correct result is not guaranteed.
+
+//--------------------REMEMBER-------------------
+// “Visited” links styles are hidden!
+// Visited links may be colored using :visited CSS pseudoclass.
+// But getComputedStyle does not give access to that color, because otherwise an arbitrary page
+// could find out whether the user visited a link by creating it on the page and checking the styles.
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Summary
+
+/* To manage classes, there are two DOM properties:
+      -  className – the string value, good to manage the whole set of classes.
+      -  classList – the object with methods add/remove/toggle/contains, good for individual classes.
+   
+   To change the styles:
+      -  The style property is an object with camelCased styles. Reading and writing to it has the same meaning
+         as modifying individual properties in the "style" attribute. To see how to apply important and other rare stuff,
+         there’s a list of methods at MDN.
+      -  The style.cssText property corresponds to the whole "style" attribute, the full string of styles.
+
+   To read the resolved styles (with respect to all classes, after all CSS is applied and final values are calculated):
+      -  The getComputedStyle(elem[, pseudo]) returns the style-like object with them. Read-only.
+*/
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - createTextNode vs innerHTML vs textContent
 /* We have an empty DOM element elem and a string text.
 
@@ -678,13 +828,50 @@ createCalendar2(calendar, 2012, 9);
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 8 - Colored clock with setInterval
+// click on this button calls clockStart()
+<div id="clock">
+   <span class="hour"></span>:<span class="min"></span>:<span class="sec"></span>
+</div>;
+
+<input type="button" onclick="clockStart()" value="Start" />;
+<input type="button" onclick="clockStop()" value="Stop" />;
+
+let timer;
+
+function updateTime() {
+   let clock = document.getElementById('clock');
+   let time = new Date();
+
+   let hours = time.getHours();
+   if (hours < 10) hours = '0' + hours;
+   clock.children[0].innerHTML = hours;
+
+   let minutes = time.getMinutes();
+   if (minutes < 10) minutes = '0' + minutes;
+   clock.children[1].innerHTML = minutes;
+
+   let seconds = time.getSeconds();
+   if (seconds < 10) seconds = '0' + seconds;
+   clock.children[2].innerHTML = seconds;
+}
+
+function clockStart() {
+   timer = setInterval(updateTime, 1000);
+   updateTime();
+}
+
+function clockStop() {
+   clearInterval(timer);
+}
+
+clockStart();
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 9 - Insert the HTML in the list
 <ul id="ul">
-  <li id="one">1</li>
-  <li id="two">4</li>
+   <li id="one">1</li>
+   <li id="two">4</li>
 </ul>
 
 let li1 = document.getElementById('one');
@@ -705,3 +892,83 @@ one.insertAdjacentHTML('afterend', '<li>2</li><li>3</li>');
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 10 - Sort a table
+<table id="table">
+   <tr>
+      <th>Name</th>
+      <th>Surname</th>
+      <th>Age</th>
+   </tr>
+   <tr>
+      <td>John</td>
+      <td>Smith</td>
+      <td>10</td>
+   </tr>
+   <tr>
+      <td>Pete</td>
+      <td>Brown</td>
+      <td>15</td>
+   </tr>
+   <tr>
+      <td>Ann</td>
+      <td>Lee</td>
+      <td>5</td>
+   </tr>
+</table>
+
+let sortedRows = Array.from(table.rows)
+   .slice(1)
+   .sort((rowA, rowB) => rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1);
+
+table.tBodies[0].append(...sortedRows);
+
+/* The HTMLTableElement.tBodies
+      read-only property returns a live HTMLCollection of the bodies in a <table>.
+      Although the property is read-only, the returned object is live and allows the modification of its content.
+      The collection returned includes implicit <tbody> elements
+*/
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 11 - Create a notification
+{/* <style>
+   .notification {
+      position: fixed;
+      z-index: 1000;
+      padding: 5px;
+      border: 1px solid black;
+      font-size: 20px;
+      background: white;
+      text-align: center;
+   }
+ 
+   .welcome {
+      background: #b80000;
+      color: yellow;
+   }
+</style> */}
+
+function showNotification(options) {
+   let div = document.createElement('div');
+   div.className = 'notification';
+   if (className) {
+      notification.classList.add(className);
+   }
+   div.innerHTML = html;
+   div.style.top = top + 'px';
+   div.style.right = right + 'px';
+
+   document.body.append(div);
+
+   setTimeout(() => div.remove(), 1500);
+}
+
+// shows an element with the text "Hello" near the right-top of the window
+let i = 1;
+setInterval(() => {
+   showNotification({
+      top: 10, // 10px from the top of the window (by default 0px)
+      right: 10, // 10px from the right edge of the window (by default 0px)
+      html: 'Hello ' + i++, // the HTML of notification
+      className: "welcome" // an additional class for the div (optional)
+   });
+}, 2000);
