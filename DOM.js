@@ -573,12 +573,10 @@ document.body.sayHi(); // Hello, I'm BODY
    So when an element has id or another standard attribute, the corresponding property gets created.
    But that doesn’t happen if the attribute is non-standard.
 */
-<body id="test" something="non-standard">
-   <script>
-      alert(document.body.id); // test
-      alert(document.body.something); // undefined
-   </script>
-</body>;
+<body id="test" something="non-standard"></body>
+
+alert(document.body.id); // test
+alert(document.body.something); // undefined
 
 // standard attribute for one element can be unknown for another one.
 // For instance, "type" is standard for <input> (HTMLInputElement), but not for <body> (HTMLBodyElement).
@@ -590,13 +588,11 @@ document.body.sayHi(); // Hello, I'm BODY
 */
 <body id="body" type="non-standard">
    <input id="input" type="text" />
-   <script>
-      alert(input.type); // text
-      alert(body.type); // undefined
-      alert(body.getAttribute('type')); // non-standard
-   </script>
 </body>;
 
+alert(input.type); // text
+alert(body.type); // undefined
+alert(body.getAttribute('type')); // non-standard
 // We can read all attributes using elem.attributes:
 // a collection of objects that belong to a built-in Attr class
 
@@ -605,48 +601,41 @@ document.body.sayHi(); // Hello, I'm BODY
       - Their name is case-insensitive (id is same as ID).
       - Their values are always strings.
 */
-<body>
-   <div id="element" about="Elephant"></div>
-   <script>
-      alert(element.getAttribute('About')); // Elephant
+<div id="element" about="Elephant"></div>
 
-      element.setAttribute('Test', 123);
+alert(element.getAttribute('About')); // Elephant
 
-         alert(element.outerHTML); {/* <div id="elem" about="Elephant" test="123"></div> */}
+element.setAttribute('Test', 123);
 
-      for (let attribute of element.attributes) {
-         alert(`${attribute.name} = ${attribute.value}`) /* id = element, about = Elephant, test = 123 */
-      }
-   </script>
-</body>;
+alert(element.outerHTML); {/* <div id="elem" about="Elephant" test="123"></div> */ }
+
+for (let attribute of element.attributes) {
+   alert(`${attribute.name} = ${attribute.value}`) /* id = element, about = Elephant, test = 123 */
+}
 
 //------------------------------------------------------------------------------------------------
 
 // Property-attribute synchronization
 // When a standard attribute changes, the corresponding property is auto-updated, and vice versa.
-<body>
-   <input />
-   <script>
-      let input = document.querySelector('input');
+<input />
+let input = document.querySelector('input');
 
-   // attribute => property
-      input.setAttribute('id', 'id');
-      alert(input.id); // id
+// attribute => property
+input.setAttribute('id', 'id');
+alert(input.id); // id
 
-   // property => attribute
-      input.id = 'newId';
-      alert(input.getAttribute('id')); // newId
+// property => attribute
+input.id = 'newId';
+alert(input.getAttribute('id')); // newId
 
-   // there are exclusions
-   // attribute => property
-      input.setAttribute('value', 'text');
-      alert(input.value); // text
+// there are exclusions
+// attribute => property
+input.setAttribute('value', 'text');
+alert(input.value); // text
 
-   // NOT property => attribute
-      input.value = 'newValue';
-      alert(input.getAttribute('value')); // text
-   </script>
-</body>;
+// NOT property => attribute
+input.value = 'newValue';
+alert(input.getAttribute('value')); // text
 
 //------------------------------------------------------------------------------------------------
 
@@ -656,21 +645,20 @@ document.body.sayHi(); // Hello, I'm BODY
    <input id="input" type="checkbox" checked /> checkbox
       <div id="div" style="color: red; font-size: 120%">Hello</div>
    <a id="a" href="#hello">link</a>
-   <script>
-      // The checked attribute is a string, but the input.checked property (for checkboxes) is a boolean
-      alert(input.getAttribute('checked')); // '' empty string
-      alert(input.checked); // true
-
-      // The style attribute is a string, but the style property is an object
-      alert(div.getAttribute('style')); // color: red; font-size: 120%
-      alert(div.style); // [object CSSStyleDeclaration]
-      alert(div.style.color); // red
-
-      //the href DOM property is always a full URL, even if the attribute contains a relative URL or just a #hash.
-      alert(a.getAttribute('href')); // hello
-      alert(a.href); // http://site.com/page#hello
-   </script>
 </body>;
+
+// The checked attribute is a string, but the input.checked property (for checkboxes) is a boolean
+alert(input.getAttribute('checked')); // '' empty string
+alert(input.checked); // true
+
+// The style attribute is a string, but the style property is an object
+alert(div.getAttribute('style')); // color: red; font-size: 120%
+alert(div.style); // [object CSSStyleDeclaration]
+alert(div.style.color); // red
+
+//the href DOM property is always a full URL, even if the attribute contains a relative URL or just a #hash.
+alert(a.getAttribute('href')); // hello
+alert(a.href); // http://site.com/page#hello
 
 //------------------------------------------------------------------------------------------------
 
@@ -713,11 +701,10 @@ for (let div of divs) {
 
 // All attributes starting with “data-” are reserved for programmers’ use.
 // They are available in the dataset property.
-<body data-about="Elephants">
-   <script>
-      alert(document.body.dataset.about); // Elephants
-   </script>
-</body>;
+<body data-about="Elephants"></body>
+
+alert(document.body.dataset.about); // Elephants
+
 // Multiword attributes like data-order-state become camel-cased: dataset.orderState.
 
 //------------------------------------------------------------------------------------------------
@@ -857,9 +844,9 @@ for (let i = 0; i < table.rows.length; i++) {
 */
 <ul>
    <li>Animals
-         <ul>
+      <ul>
          <li>Mammals
-               <ul>
+            <ul>
                <li>Cows</li>
                <li>Donkeys</li>
                <li>Dogs</li>
@@ -867,7 +854,7 @@ for (let i = 0; i < table.rows.length; i++) {
             </ul>
          </li>
          <li>Other
-               <ul>
+            <ul>
                <li>Snakes</li>
                <li>Birds</li>
                <li>Lizards</li>
@@ -876,15 +863,15 @@ for (let i = 0; i < table.rows.length; i++) {
       </ul>
    </li>
    <li>Fishes
-         <ul>
+      <ul>
          <li>Aquarium
-               <ul>
+            <ul>
                <li>Guppy</li>
                <li>Angelfish</li>
             </ul>
          </li>
          <li>Sea
-               <ul>
+            <ul>
                <li>Sea trout</li>
             </ul>
          </li>
@@ -959,6 +946,7 @@ alert(body.firstChild.data); // what's here?
 
 let div = document.querySelector('[data-widget-name]');
 alert(div.getAttribute('data-widget-name'))
+
 // or
 alert(div.dataset.widgetName);
 
