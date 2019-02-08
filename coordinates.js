@@ -191,7 +191,7 @@ window.scrollBy(0, 10);
 // window.scrollTo(pageX, oageY) -  scrolls the page relative to the document’s top-left corner.
 // It’s like setting scrollLeft/scrollTop.
 // To scroll to the very beginning, we can use
-window.scrollTo(0,0);
+window.scrollTo(0, 0);
 
 //--------------------------------------------------------------------------------------------------
 
@@ -224,12 +224,102 @@ document.body.style.overflow = '';
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
+// Coordinates
 
+/* Most JavaScript methods deal with one of two coordinate systems:
+      - Relative to the window(or another viewport) top/left.
+      - Relative to the document top/left.
+*/
 
+// Window coordinates: getBoundingClientRect
+// Window coordinates start at the upper-left corner of the window
+/* The method element.getBoundingClientRect() returns window coordinates for element as an object with properties:
+      - top - Y-coordinate for the top element edge,
+      - left – X-coordinate for the left element edge,
+      - right – X-coordinate for the right element edge,
+      - bottom – Y-coordinate for the bottom element edge.
+*/
+button.getBoundingClientRect(); // e.g {top:379.75, left:10, right:302.703125, bottom:397.75}
 
+/* - Window coordinates do not take the scrolled out part of the document into account, they are calculated from the window’s upper-left corner.
+   - Coordinates may be decimal fractions.
+   - Coordinates may be negative.
+   - Some browsers (like Chrome) provide additional properties, width and height of the element that invoked the method
+     to getBoundingClientRect as the result. We can also get them by subtraction: height=bottom-top, width=right-left.
+     
+   - Coordinates right/bottom are different from CSS properties
+     If we compare window coordinates versus CSS positioning, then there are obvious similarities to position:fixed.
+     The positioning of an element is also relative to the viewport.
+*/
 
+//----------------------------------------------------------------------------------------------------------------------------------------
 
+// elementFromPoint(x,y)
+// The call to document.elementFromPoint(x, y) returns the most nested element at window coordinates (x, y).
 
+// if we want highlights and outputs the tag of the element that is now in the middle of the window
+let centerX = document.documentElement.clientWidth / 2;
+let centerY = document.documentElement.clientHeight / 2;
+let element = document.elementFromPoint(centerX, centerY);
+
+element.style.background = 'red';
+alert(element.tagName);
+
+//--------------------REMEMBER-------------------
+// For out-of-window coordinates the elementFromPoint returns null
+// (it works only if (x,y) are inside the visible area)
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Using for position: fixed
+// We can use getBoundingClientRect to get coordinates of an element with position: fixed, and then to show something near it.
+<button id='coords-show-mark'>Show message under</button>
+
+let element = document.getElementById('coords-show-mark');
+
+function createMessageUnder(element, text) {
+   let message = document.createElement('div');
+
+   message.style.cssText = 'position: fixed; color: red';
+
+   let coords = element.getBoundingClientRect();
+
+   message.style.left = coords.left + 'px';
+   message.style.top = coords.bottom + 'px';
+
+   message.innerHTML = text;
+
+   return message;
+}
+
+let message = createMessageUnder(element, 'Hello world');
+
+document.body.append(message);
+setTimeout(() => message.remove(), 5000);
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Document coordinates
+// Document-relative coordinates start from the upper-left corner of the document, not the window.
+// In CSS, window coordinates correspond to position:fixed, while document coordinates are similar to position:absolute on top.
+// For clarity we’ll call window coordinates (clientX,clientY) and document coordinates (pageX,pageY).
+
+// When the page is not scrolled, then window coordinate and document coordinates are actually the same.
+// And if we scroll it, then (clientX,clientY) change, because they are relative to the window, but (pageX,pageY) remain the same.
+
+// Getting document coordinates
+// pageY = clientY + height of the scrolled-out vertical part of the document.
+// pageX = clientX + width of the scrolled-out horizontal part of the document.
+
+// The function getCoords(elem) will take window coordinates from elem.getBoundingClientRect() and add the current scroll to them:
+function getCoords(element) {
+   let box = element.getBoundingClientRect();
+
+   return {
+      top: box.top + pageYOffset,
+      left: box.left + pageXOffset,
+   };
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -324,3 +414,241 @@ ball.style.left = x;
       (cause it’s not available for content any more), and some do not. The clientWidth property is always the same:
       scrollbar size is substracted if reserved.
 */
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Find window coordinates of the field
+{/* <style>body {
+      padding: 20px 0 0 20px;
+      cursor: pointer;
+   }
+
+      #field {
+      overflow: hidden;
+      width: 200px;
+      height: 150px;
+      border-top: 10px solid black;
+      border-right: 10px solid gray;
+      border-bottom: 10px solid gray;
+      border-left: 10px solid black;
+      background-color: #00FF00;
+      font: 10px/1.2 monospace;
+   }
+</style> */}
+<div id="coords">(click coordinates show up here)</div>;
+<div id="field">
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+</div>;
+
+let field = document.getElementById('field');
+let coordsField = field.getBoundingClientRect();
+
+alert('Top left out x: ' + coordsField.left + ' y: ' + coordsField.top);
+alert('Bottom right out x: ' + coordsField.right + ' y: ' + coordsField.bottom);
+
+let innerLeft = coordsField.left + field.clientLeft;
+let innerTop = coordsField.top + field.clientTop;
+
+alert('Top left in x: ' + innerLeft + ' y: ' + innerTop);
+
+let innerRight = field.offsetLeft + field.clientLeft + field.clientWidth;
+let innerBottom = field.offsetTop + field.clientTop + field.clientHeight;
+
+// or
+// let innerRight = coordsField.right - parseInt(getComputedStyle(field).borderRightWidth);
+// let innerBottom = coordsField.bottom - parseInt(getComputedStyle(field).borderBottomWidth);
+
+alert('Bottom right in x: ' + innerRight + ' y: ' + innerBottom);
+
+document.onclick = function (e) { // shows click coordinates
+   coords.innerHTML = e.clientX + ':' + e.clientY;
+};
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Show a note near the element
+{/* <style>
+   .note {
+      position: fixed;
+      z-index: 1000;
+      padding: 5px;
+      border: 1px solid black;
+      background: white;
+      text-align: center;
+      font: italic 14px serif;
+   }
+   
+   blockquote {
+      background: #f9f9f9;
+      border-left: 10px solid #ccc;
+      margin: 0 0 0 100px;
+      padding: .5em 10px;
+      quotes: "\201C""\201D""\2018""\2019";
+      display: inline-block;
+      white-space: pre;
+   }
+   
+   blockquote:before {
+      color: #ccc;
+      content: open-quote;
+      font-size: 4em;
+      line-height: .1em;
+      margin-right: .25em;
+      vertical-align: -.4em;
+   }
+ </style> */}
+
+<p>
+   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat
+   animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae
+   esse sequi officia sapiente.
+</p>;
+<blockquote>
+   Teacher: Why are you late?
+   Student: There was a man who lost a hundred dollar bill.
+   Teacher: That's nice. Were you helping him look for it?
+   Student: No. I was standing on it.
+</blockquote>;
+<p>
+   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat
+   animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae
+   esse sequi officia sapiente.
+</p>;
+
+function showNote(anchor, position, html) {
+   let message = document.createElement('div');
+
+   message.className = 'note';
+   message.innerHTML = html;
+
+   document.body.append(message);
+
+   positionAt(anchor, position, message);
+}
+
+function positionAt(anchor, position, message) {
+   let coords = anchor.getBoundingClientRect();
+
+   switch (position) {
+      case 'top':
+         message.style.left = coords.left + "px";
+         message.style.top = coords.top - message.offsetHeight + 'px';
+         break;
+      case 'bottom':
+         message.style.top = coords.bottom + 'px';
+         message.style.left = coords.left + 'px';
+         break;
+      case 'right':
+         message.style.left = coords.right + 'px';
+         message.style.top = coords.top + 'px';
+         break;
+   }
+}
+
+let blockquote = document.querySelector('blockquote');
+
+showNote(blockquote, "top", "note above");
+showNote(blockquote, "right", "note at the right");
+showNote(blockquote, "bottom", "note below");
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Show a note near the element (absolute)
+/* <style>
+   .note {
+      position: absolute;
+   </style>
+*/
+function showNote(anchor, position, html) {
+   let message = document.createElement('div');
+
+   message.className = 'note';
+   message.innerHTML = html;
+
+   document.body.append(message);
+
+   positionAt(anchor, position, message);
+}
+
+function positionAt(anchor, position, element) {
+   let coords = getCoords(anchor);
+
+   switch (position) {
+      case "top":
+         element.style.left = coords.left + "px";
+         element.style.top = coords.top - element.offsetHeight + "px";
+         break;
+
+      case "right":
+         element.style.left = coords.left + anchor.offsetWidth + "px";
+         element.style.top = coords.top + "px";
+         break;
+
+      case "bottom":
+         element.style.left = coords.left + "px";
+         element.style.top = coords.top + anchor.offsetHeight + "px";
+         break;
+   }
+}
+
+function getCoords(element) {
+   let box = element.getBoundingClientRect();
+
+   return {
+      top: box.top + pageYOffset,
+      left: box.left + pageXOffset,
+   };
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 8 - Position the note inside (absolute)
+
+function positionAt(anchor, position, element) {
+   let coords = getCoords(anchor);
+
+   switch (position) {
+      case "top-out":
+         element.style.left = coords.left + "px";
+         element.style.top = coords.top - element.offsetHeight + "px";
+         break;
+
+      case "top-in":
+         element.style.left = coords.left + "px";
+         element.style.top = coords.top + "px";
+         break;
+
+      case "right-out":
+         element.style.left = coords.left + anchor.offsetWidth + "px";
+         element.style.top = coords.top + "px";
+         break;
+
+      case "right-in":
+         element.style.left = coords.left - element.offsetWidth + anchor.offsetWidth + "px";
+         element.style.top = coords.top + "px";
+         break;
+
+      case "bottom-out":
+         element.style.left = coords.left + "px";
+         element.style.top = coords.top + anchor.offsetHeight + "px";
+         break;
+
+      case "bottom-in":
+         element.style.left = coords.left + "px";
+         element.style.top = coords.top - element.offsetHeight + anchor.offsetHeight + "px";
+         break;
+   }
+}
+
+let blockquote = document.querySelector('blockquote');
+
+showNote(blockquote, "top-out", "note above out");
+showNote(blockquote, "right-out", "note at the right out");
+showNote(blockquote, "bottom-out", "note below-out");
+
+showNote(blockquote, "top-in", "note above-in");
+showNote(blockquote, "right-in", "note at the right-in");
+showNote(blockquote, "bottom-in", "note below-in");
