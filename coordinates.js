@@ -123,7 +123,113 @@ alert(getComputedStyle(elem).width); // auto
                                     Also includes paddings, but not the scrollbar.
       -  scrollLeft/scrollTop – width/height of the scrolled out part of the element, starting from its upper-left corner.
       -  All properties are read-only except scrollLeft/scrollTop. They make the browser scroll the element if changed.
- */
+*/
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Window sizes and scrolling
+
+// Width/height of the window
+// From the DOM point of view, the root document element is document.documentElement.
+// That element corresponds to <html>
+console.log(document.documentElement.clientHeight); // height of the window
+conosle.log(document.documentElement.clientWidth); // width of the window
+
+// window.innerWidth/innerHeight
+// If there’s a scrollbar occupying some space, clientWidth/clientHeight provide the width/height inside it.
+// In other words, they return width/height of the visible part of the document, available for the content.
+// And window.innerWidth/innerHeight ignore the scrollbar.
+conosle.log(window.innerWidth); // full window width
+conosle.log(document.documentElement.clientWidth); // window width minus the scrollbar
+
+// Width/height of the document
+/* documentElement.clientWidth/clientHeight and documentElement.scrollWidth/scrollHeight properties work well for regular elements.
+   But for the whole page these properties do not work as intended. In Chrome/Safari/Opera if there’s no scroll,
+   then documentElement.scrollHeight may be even less than documentElement.clientHeight! For regular elements that’s a nonsense.
+*/
+// To have a reliable result on the full document height, we should take the maximum of these properties
+let scrollHeight = Math.max(
+   document.body.scrollHeight, document.documentElement.scrollHeight,
+   document.body.offsetHeight, document.documentElement.offsetHeight,
+   document.body.clientHeight, document.documentElement.clientHeight
+);
+
+alert('Full document height, with scrolled out part: ' + scrollHeight);
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Get the current scroll
+// Regular elements have their current scroll state in elem.scrollLeft/scrollTop.
+// Most browsers provide documentElement.scrollLeft/Top for the document scroll,
+// but Chrome/Safari/Opera have bugs and we should use document.body instead of document.documentElement there.
+
+// We should use window.pageXOfset/pageYOffset
+console.log('Current scroll from the top: ' + window.pageYOffset);
+console.log('Current scroll from the left: ' + window.pageXOffset);
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Scrolling
+
+//--------------------REMEMBER-------------------
+// To scroll the page from JavaScript, its DOM must be fully built.
+// For instance, if we try to scroll the page from the script in <head>, it won’t work.
+
+/* Regular elements can be scrolled by changing scrollTop/scrollLeft.
+   We can do the same for the page:
+      - For all browsers except Chrome/Safari/Opera: modify document.documentElement.scrollTop/Left.
+      - In Chrome/Safari/Opera: use document.body.scrollTop/Left instead.
+*/
+
+// We should use window.scrollBy(x,y) and window.scrollTo(pageX,pageY).
+// window.scrollBy(x,y) -  scrolls the page relative to its current position.
+// For instance, scrollBy(0,10) scrolls the page 10px down.
+window.scrollBy(0, 10);
+
+//--------------------------------------------------------------------------------------------------
+
+// window.scrollTo(pageX, oageY) -  scrolls the page relative to the document’s top-left corner.
+// It’s like setting scrollLeft/scrollTop.
+// To scroll to the very beginning, we can use
+window.scrollTo(0,0);
+
+//--------------------------------------------------------------------------------------------------
+
+// element.scrollIntoView(top).
+/* The call to elem.scrollIntoView(top) scrolls the page to make elem visible. It has one argument:
+      -  if top=true (that’s the default), then the page will be scrolled to make elem appear on the top of the window.
+         The upper edge of the element is aligned with the window top.
+      -  if top=false, then the page scrolls to make elem appear at the bottom.
+         The bottom edge of the element is aligned with the window bottom.
+*/
+
+// Scrolls the page to make itself show at the window top: 
+this.scrollIntoView();
+
+// scrolls the page to show it at the bottom:
+this.scrollIntoView(false);
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// Forbid the scrolling
+// If we need to make the document “unscrollable” it’s enough to set document.body.style.overflow = "hidden".
+// The page will freeze on its current scroll.
+document.body.style.overflow = 'hidden';
+
+// to resume the scroll
+document.body.style.overflow = '';
+
+// The drawback of the method is that the scrollbar disappears. If it occupied some space, then that space is now free,
+// and the content “jumps” to fill it.
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -198,8 +304,8 @@ alert(scrollWidth);
 
 let ball = document.getElementById('ball');
 let field = document.getElementById('field')
-let x = 1/2*field.clientWidth - 1/2*ball.width + 'px';
-let y = 1/2*field.clientHeight - 1/2*ball.height + 'px';
+let x = field.clientWidth / 2 - ball.width / 2 + 'px';
+let y = field.clientHeight / 2 - ball.height / 2 + 'px';
 
 ball.style.top = y;
 ball.style.left = x;
