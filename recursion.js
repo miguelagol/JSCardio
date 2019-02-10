@@ -33,9 +33,25 @@ function pow3(x, n) {
 console.log(pow3(2, 5)); // 32
 
 // The maximal number of nested calls (including the first one) is called recursion depth.
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // The execution stack
 // The information about a function run is stored in its executions context.
-// Recursion depth equals the maximal number of context in the stack. In our case, it will be exactly n.
+/* The execution context is an internal data structure that contains details about the execution of a function:
+      - where the control flow is now,
+      - the current variables,
+      - the value of this
+      - and few other internal details.
+
+When a function makes a nested call, the following happens:
+   -  The current function is paused.
+   -  The execution context associated with it is remembered in a special data structure called execution context stack.
+   -  The nested call executes.
+   -  After it ends, the old execution context is retrieved from the stack, and the outer function is resumed from where it stopped.
+
+Recursion depth equals the maximal number of context in the stack. In our case, it will be exactly n.
+*/
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -138,6 +154,11 @@ function sumTo3(n) {
 }
 
 console.log(sumTo3(100)); // 5050
+
+/* Naturally, the formula is the fastest solution. It uses only 3 operations for any number n.
+   The loop variant is the second in terms of speed. In both the recursive and the loop variant we sum the same numbers.
+   But the recursion involves nested calls and execution stack management. That also takes resources, so it’s slower.
+*/
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
