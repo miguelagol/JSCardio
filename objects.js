@@ -9,7 +9,7 @@ let user = new Object();
 // Object literal
 let user = {};
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Literals and properties
 let user = {
@@ -42,7 +42,7 @@ user[key] = true;
 
 console.log(user); // { name: 'John', age: 30, 'likes birds': false, 'likes dogs': true }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Computed properties
 let fruit = prompt('Which fruit to buy?', 'apple');
@@ -57,7 +57,7 @@ alert(bag.apple); // 5 if fruit = "apple"
 // Basically, any property name is allowed (language-reserved words also).
 // But there’s a special one: "__proto__" that gets special treatment for historical reasons.
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Property value shorthand
 // properties have the same names as variables.
@@ -68,7 +68,7 @@ function makeUser(name, age) {
    };
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Existance check
 
@@ -89,7 +89,7 @@ console.log('blabla' in user2); // false (user.blabla doesn't exist)
 let key = 'name';
 console.log(key in user2); // true (takes the name from key and checks for such property)
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // The “for…in” loop
 /*  for(key in object) {
@@ -114,7 +114,7 @@ for (let property in user) {
     false
 */
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Ordered like an object
 // Integer properties are sorted, others appear in creation order
@@ -152,7 +152,7 @@ for (let code in codes2) {
    console.log(+code); // 49, 41, 44, 1
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Copying by reference
 // One of the fundamental differences of objects vs primitives is that they are stored and copied “by reference”.
@@ -168,7 +168,7 @@ admin.name = 'John';
 
 console.log(user.name); // John
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Comparison by reference
 
@@ -186,7 +186,7 @@ let d = {}; // two independent objects
 
 console.log(c == d); // false
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Const objects
 const user = {
@@ -209,7 +209,7 @@ userJohn = {
    name: 'Pete',
 };
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Cloning and merging, Object.assign
 let user = {
@@ -279,7 +279,7 @@ console.log(clone.sizes.width); // 51, see the result from the other one
 
 // To fix that we need deep cloning... soon
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Constructor functions
 // The main purpose of constructors – to implement reusable object creation code!
@@ -330,7 +330,7 @@ function User(name) {
 let John = User('John'); // redirects call to new User
 console.log(John.name); // John
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
 
 // Return from constructors
 /*  If in a constructor function is a return statement, then the rule is simple:
@@ -351,12 +351,12 @@ function SmallUser() {
 
 console.log(new SmallUser().name); // User
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
 
 // Methods in constructor
 function User(name) {
    this.name = name;
-   this.sayHi = function() {
+   this.sayHi = function () {
       console.log('My name is:' + this.name);
    };
 }
@@ -365,9 +365,96 @@ let john = new User(' John');
 
 john.sayHi(); // My name is: John
 
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Global Object
+// In a browser it is named “window”, for Node.JS it is “global”, for other environments it may have another name.
+
+// It does two things:
+//    1. Provides access to built-in functions and values, defined by the specification and the environment.
+// For instance, we can call alert directly or as a method of window:
+alert("Hello");
+
+// the same as
+window.alert("Hello");
+
+//    2. Provides access to global Function Declarations and var variables. We can read and write them using its properties:
+var phrase = "Hello";
+
+function sayHi() {
+   alert(phrase);
+}
+
+// can read from window
+alert(window.phrase); // Hello (global var)
+alert(window.sayHi); // function (global function declaration)
+
+// can write to window (creates a new global variable)
+window.test = 5;
+
+alert(test); // 5
+
+// …But the global object does not have variables declared with let /const!
+
+let user = "John";
+alert(user); // John
+
+alert(window.user); // undefined, don't have let
+alert("user" in window); // false
+
+//------------------------------------------------------------------------------------------
+
+// Uses of 'window'
+// Usually, it’s not a good idea to use window, but here are some examples we can meet.
+
+// 1. To access exaclty the global variable if the function has local one with the same name
+var user = 'global';
+
+function sayHi() {
+   var user = 'local';
+
+   alert(window.user);
+}
+
+sayHi();
+
+// 2. To check if a certain global variable or a builtin exist
+if (window.XMLHttpRequest) {
+   alert('XMLHttpRequest exists!')
+}
+
+// 3. To take the variable from the right window (because a browser may open multiple windows and tabs)
+<iframe src='/' id='frame'></iframe>
+
+alert(innerWidth); // get innerWidth property of the current window (browser only)
+alert(Array); // get Array of the current window (javascript core builtin)
+
+// when the iframe loads...
+iframe.onload = function () {
+   // get width of the iframe window
+   alert(iframe.contentWindow.innerWidth);
+   // get the builtin Array from the iframe window
+   alert(iframe.contentWindow.Array);
+};
+
+//------------------------------------------------------------------------------------------
+
+// 'this' and global object
+// 1. In the browser, the value of this in the global area is window
+// outside of functions
+alert(this === window);
+
+// 2. When a function with this is called in non-strict mode, it gets the global object as this
+// not in strict mode !!!
+function f() {
+   alert(this);
+}
+
+f(); // [object Window]
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK1 - Hello, object
+// TASK 1 - Hello, object
 let user = {};
 user.name = 'John';
 user.surname = 'Smith';
@@ -376,7 +463,7 @@ delete user.name;
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK2 - Check for emptiness
+// TASK 2 - Check for emptiness
 function isEmpty(obj) {
    for (let key in obj) {
       return false;
@@ -394,7 +481,7 @@ console.log(isEmpty(schedule)); // false
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK3 - Sum object properties
+// TASK 3 - Sum object properties
 let salaries = {
    John: 100,
    Ann: 160,
@@ -411,7 +498,7 @@ console.log(sum); // 390
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK4 - Multiply numeric properties by 2
+// TASK 4 - Multiply numeric properties by 2
 function multiplyNumeric(obj) {
    for (let prop in obj) {
       if (typeof obj[prop] == 'number') {
@@ -439,11 +526,11 @@ for (let key2 in menu) {
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK NEW 1 - Two functions - one object
+// TASK 5 - Two functions - one object
 // Is it possible to create functions A and B such as new A() = new B()?
 // This is false
-function A() {}
-function B() {}
+function A() { }
+function B() { }
 
 let a = new A();
 let b = new B();
@@ -464,18 +551,18 @@ console.log(new A() == new B()); // true
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK NEW 2 - Create new calculator
+// TASK 6 - Create new calculator
 function Calculator() {
-   this.read = function(a, b) {
+   this.read = function (a, b) {
       this.a = a;
       this.b = b;
    };
 
-   this.mul = function() {
+   this.mul = function () {
       return this.a * this.b;
    };
 
-   this.sum = function() {
+   this.sum = function () {
       return this.a + this.b;
    };
 }
@@ -488,10 +575,10 @@ console.log('Mul = ' + calculator.mul()); // Mul = 18
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK NEW 3 - Create new accumulator
+// TASK 7 - Create new accumulator
 function Accumulator(startingValue) {
    this.value = startingValue;
-   this.read = function(addValue) {
+   this.read = function (addValue) {
       this.value += addValue;
    };
 }
