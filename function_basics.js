@@ -620,3 +620,56 @@ let ask = confirm('Do you agree?')
    : () => alert('You canceled the execution.');
 
 ask();
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Set and decrease for counter
+function makeCounter(...handlers) {
+   function counter() {
+      return counter.count++;
+   }
+   counter.count = 0;
+
+   return counter;
+}
+
+let countIt = makeCounter();
+
+countIt.set = function (value) {
+   return countIt.count = value;
+};
+
+countIt.decrease = function () {
+   return countIt.count -= 1;
+};
+
+console.log(countIt()); // 0
+console.log(countIt()); // 1
+
+console.log(countIt.set(23)); // 23
+console.log(countIt.decrease()); // 22
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Sum with an arbitrary amount of brackets
+
+function sum(value) {
+   var result = value;
+
+   function func(value2) {
+      result += value2;
+      return func;
+   }
+
+   func.toString = function() {
+      return result;
+   };
+
+   return func;
+}
+
+console.log(sum(1)(2)); // 1 + 2
+console.log(sum(1)(2)(3)); // 1 + 2 + 3
+console.log(sum(5)(-1)(2));
+console.log(sum(6)(-1)(-2)(-3));
+console.log(sum(0)(1)(2)(3)(4)(5));
