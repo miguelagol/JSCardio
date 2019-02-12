@@ -34,7 +34,7 @@ console.log(func2); // Hello everyone!      undefined
 
 func2(); // Error: func2 is not a function
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Local variables
 function showMessage1() {
@@ -46,7 +46,7 @@ showMessage1(); // Hello, I'm JavaScript!
 
 console.log(message); // Error: message is not defined
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Outer variables - Global
 // Global variables are visible from any function (unless shadowed by locals).
@@ -86,7 +86,7 @@ showMessage3(); // Hello, Bob (the function will create and use its own userName
 
 console.log(userName); // John (unchanged, the function did not access the outer variable)
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Parameters - function arguments
 function showMessage4(from, text) {
@@ -108,7 +108,7 @@ showMessage5(from, 'Hello'); // *Ann*: Hello
 
 console.log(from); // Ann (the value of "from" is the same, the function modified a local copy of parameters)
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Default values
 // If a parameter is not provided, then its value becomes undefined.
@@ -124,7 +124,7 @@ function showMessage7(from, text = 'no text given') {
 
 showMessage7('Ann'); // Ann: no text given
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Returning a value
 // A function can return a value back into the calling code as the result.
@@ -163,7 +163,7 @@ function showMovie(age) {
    // ...
 }
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Naming a function
 // Functions are actions. So their name is usually a verb.
@@ -239,7 +239,7 @@ let arr = [function () { }];
 
 console.log(arr[0].name); // '' (empty string)
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // 'length' property
 // built-in property “length” returns the number of function parameters
@@ -270,9 +270,10 @@ function ask(question, ...handlers) {
 //    - A function with arguments, which is called in either case and returns an answer.
 ask("Question?", () => alert('You said yes'), result => alert(result));
 
-// This is a particular case of so-called polymorphism – treating arguments differently depending on their type or, in our case depending on the length. 
+// This is a particular case of so-called polymorphism – treating arguments differently depending on their type or,
+// in our case depending on the length. 
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Custom properties
 // We can add properties of our own
@@ -346,7 +347,7 @@ counter.count = 15;
 
 console.log(counter()); // 15...
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Callback functions
 function ask(question, yes, no) {
@@ -381,7 +382,7 @@ ask2(
    },
 );
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 //--------------------REMEMBER-------------------
 /*  A Function Expression is created when the execution reaches it and is usable from then on.
@@ -440,7 +441,7 @@ if (age < 18) {
 
 welcome(); // Hello! / Greetings!
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Named Function Expression (NFE)
 // Function Expressions that have a name
@@ -490,7 +491,7 @@ sayHello = null;
 
 welcome(); // Error: sayHello is not a function
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Arrow functions
 // let func = (arg1, arg2, ...argN) => expression
@@ -533,7 +534,7 @@ let welcome = age < 18 ? () => alert('Hello') : () => alert('Greetings!');
 
 welcome(); // ok now
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Multiline arrow functions
 let sum = (a, b) => {
@@ -544,7 +545,60 @@ let sum = (a, b) => {
 
 console.log(sum(1, 2)); // 3
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// The 'new Function'
+// let func = new Function ([arg1[, arg2[, ...argN]],] function body)
+// names for function parameters go first and the body is last
+// All arguments are strings
+let sum = new Function('a', 'b', 'return a+b');
+
+console.log(sum(1, 2)); // 3
+
+// if there are no arguments, then there's only single argument, the body function
+let sayHi = new Function('console.log("Hello")');
+
+sayHi(); // Hello
+
+// The major difference from other ways we’ve seen is that the function is created literally from a string, that is passed at run time
+// new Function allows to turn any string into a function. For example, we can receive a new function from a server and then execute it
+let str = '... receive the code from a server dynamically ...';
+
+let func = new Function(str);
+func();
+
+//------------------------------------------------------------------------------------------
+
+// Closure
+/* Usually, a function remembers where it was born in the special property [[Environment]].
+   It references the Lexical Environment from where it’s created.
+
+But when a function is created using new Function, its [[Environment]] references not the current Lexical Environment,
+but instead the global one.
+*/
+function getFunc() {
+   let value = 'test';
+
+   let func = new Function('console.log(value)');
+
+   return func;
+}
+
+getFunc()(); // Error: value is not defined
+
+function getNewFunc() {
+   let value = 'test';
+
+   let func = function() {
+      console.log(value);
+   };
+
+   return func;
+}
+
+getNewFunc()(); // test
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 2 - Rewrite the function using '?' or '||'
 /*  function checkAge(age) {
@@ -568,7 +622,7 @@ function checkAge2(age) {
    );
 }
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Function min(a, b)
 function min(a, b) {
@@ -581,7 +635,7 @@ console.log(min(11, 19));
 console.log(min(11, 7));
 console.log(min(1, -3));
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 4 - Function pow(x,n)
 function pow(x, n) {
@@ -603,7 +657,7 @@ if (n < 0) {
    alert(pow(x, n));
 }
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 5 - Rewrite with arrow functions
 /*  function ask(question, yes, no) {
@@ -621,7 +675,7 @@ let ask = confirm('Do you agree?')
 
 ask();
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 6 - Set and decrease for counter
 function makeCounter(...handlers) {
@@ -649,7 +703,7 @@ console.log(countIt()); // 1
 console.log(countIt.set(23)); // 23
 console.log(countIt.decrease()); // 22
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - Sum with an arbitrary amount of brackets
 
@@ -661,7 +715,7 @@ function sum(value) {
       return func;
    }
 
-   func.toString = function() {
+   func.toString = function () {
       return result;
    };
 
