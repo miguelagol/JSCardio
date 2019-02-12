@@ -1,4 +1,5 @@
 // Functions
+// In JavaScript, functions are objects.
 /*  function name(parameters, delimited, by, comma) {
         // The body of the functions
     }
@@ -14,11 +15,12 @@ showMessage(); // Hello everyone!
 // Function Expression
 // a function, created inside an expression or inside another syntax construct. Here, the function is created
 // at the right side of the “assignment expression” =:
-let sayHi = function() {
+let sayHi = function () {
    console.log('Hello everyone!');
 }; // it must be ; here, because is variable
 
 sayHi(); // Hello everyone!
+
 console.log(sayHi); // [Function: sayHi]
 
 let func = sayHi; // without paretheses!
@@ -29,6 +31,7 @@ func(); // Hello everyone!
 let func2 = sayHi();
 
 console.log(func2); // Hello everyone!      undefined
+
 func2(); // Error: func2 is not a function
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ function showMessage1() {
    console.log(message);
 }
 
-showMessage1();
+showMessage1(); // Hello, I'm JavaScript!
 
 console.log(message); // Error: message is not defined
 
@@ -52,7 +55,7 @@ function showMessage2() {
    console.log(`Hello, ${name}`);
 }
 
-showMessage2();
+showMessage2(); // Hello, John
 
 function changeName() {
    name = 'Bob'; // changed the outer variable
@@ -130,6 +133,7 @@ function sum(a, b) {
 }
 
 let result = sum(1, 2);
+
 console.log(result); // 3
 
 // There may be many occurrences of return in a single function.
@@ -191,7 +195,156 @@ function isPrime(n) {
    }
    return true;
 }
-showPrimes(22);
+
+showPrimes(5); // 2, 3
+
+//------------------------------------------------------------------------------------------
+
+// 'name' property
+// a function’s name is accessible as the “name” property
+function sayHi() {
+   alert('Hi');
+}
+
+console.log(sayHi.name); // sayHi
+
+// It also assigns the correct name to functions that are used in assignments
+let sayHi2 = function () {
+   alert("Hi");
+}
+
+console.log(sayHi2.name); // sayHi2
+
+// It also works if the assignment is done via a default value
+function f(sayHi3 = function () { }) {
+   console.log(sayHi3.name);
+}
+
+f(); // sayHi3
+
+// In the specification, this feature is called a “contextual name”.
+// If the function does not provide one, then in an assignment it is figured out from the context.
+
+// Object methods have names too
+let user = {
+   sayHi() { },
+   sayBye: function () { }
+};
+
+console.log(user.sayHi.name); // sayHi
+console.log(user.sayBye.name); // sayBye
+
+// There are cases when there’s no way to figure out the right name
+let arr = [function () { }];
+
+console.log(arr[0].name); // '' (empty string)
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// 'length' property
+// built-in property “length” returns the number of function parameters
+function f1(a) { }
+function f2(a, b) { }
+function many(a, b, ...more) { }
+
+console.log(f1.length); // 1
+console.log(f2.length); // 2
+console.log(many.length); // 2 (est parameters are not counted)
+
+function ask(question, ...handlers) {
+   let isYes = confirm(question);
+
+   // for positive answer, both handlers are called
+   // for negative answer, only the second one
+   for (let handler of handlers) {
+      if (handler.length == 0) {
+         if (isYes) handler();
+      } else {
+         handler(isYes);
+      }
+   }
+}
+
+// Once a user provides their answer, the function calls the handlers. We can pass two kinds of handlers:
+//    - A zero-argument function, which is only called when the user gives a positive answer.
+//    - A function with arguments, which is called in either case and returns an answer.
+ask("Question?", () => alert('You said yes'), result => alert(result));
+
+// This is a particular case of so-called polymorphism – treating arguments differently depending on their type or, in our case depending on the length. 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Custom properties
+// We can add properties of our own
+function sayHi() {
+   console.log('Hi');
+
+   sayHi.counter++
+}
+
+sayHi.counter = 0; // initial value
+
+sayHi();
+sayHi();
+
+console.log(`Called ${sayHi.counter} times`); // Called 2 times
+
+//--------------------REMEMBER-------------------
+// A property is not a variable
+// A property assigned to a function like sayHi.counter = 0 does not define a local variable counter inside it.
+// In other words, a property counter and a variable let counter are two unrelated things.
+
+// Function properties can replace closures sometimes.
+function makeCounter() {
+   // instead of:
+   // let count = 0
+
+   function counter() {
+      return counter.count++;
+   }
+
+   counter.count = 0;
+
+   return counter;
+}
+
+let counter = makeCounter();
+
+console.log(counter()); // 0
+console.log(counter()); // 1
+
+// Be careful
+// The count is now stored in the function directly, not in its outer Lexical Environment.
+
+// If you use a closure...
+// the value of count lives in an outer variable, then external code is unable to access it.
+// Only nested functions may modify it.
+function makeCounter() {
+   let count = 0;
+
+   return function () {
+      return count++;
+   };
+}
+
+let counter = makeCounter();
+
+// But if you don't use closure... 
+// And if it’s bound to a function, then such a thing is possible:
+function makeCounter() {
+   function counter() {
+      return counter.count++;
+   }
+
+   counter.count = 0;
+
+   return counter;
+}
+
+let counter = makeCounter();
+counter.count = 15;
+
+console.log(counter()); // 15...
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -220,13 +373,14 @@ function ask2(question, yes, no) {
 
 ask2(
    'Do you agree?',
-   function() {
+   function () {
       alert('You agreed.');
    },
-   function() {
+   function () {
       alert('You canceled the execution.');
    },
 );
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //--------------------REMEMBER-------------------
@@ -244,9 +398,9 @@ function sayHi(name) {
 }
 
 // vs
-sayHi('John'); // Error: sayHi is not defined
+sayHi2('John'); // Error: sayHi2 is not defined
 
-let sayHi = function(name) {
+let sayHi2 = function (name) {
    // (*) no magic any more
    console.log(`Hello, ${name}`);
 };
@@ -274,17 +428,67 @@ welcome(); // Error: welcome is not defined
 let age = prompt('What is your age?', 18);
 let welcome;
 if (age < 18) {
-   welcome = function() {
+   welcome = function () {
       alert('Hello!');
    };
    welcome(); // Hello!
 } else {
-   welcome = function() {
+   welcome = function () {
       alert('Greetings!');
    };
 }
 
 welcome(); // Hello! / Greetings!
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Named Function Expression (NFE)
+// Function Expressions that have a name
+
+// ordinary Function Expression
+let sayHello = function (who) {
+   console.log(`Hello, ${who}`);
+};
+
+// NFE
+let sayHello = function func(who) {
+   console.log(`Hello, ${who}`);
+};
+
+sayHello('Jack'); // Hello, Jack
+
+/* There are two special things about the name func:
+      - It allows the function to reference itself internally.
+      - It is not visible outside of the function.
+*/
+let sayHello = function func(who) {
+   if (who) {
+      console.log(`Hello, ${who}`);
+   } else {
+      func('Guest'); // use func to re-call itself
+   }
+};
+
+sayHello('Ann'); // Hello, Ann
+sayHello(); // Hello, Guest
+
+// but
+func(); // Error: func is not defined
+
+// Why do we use func? 
+// Because he value of sayHello may change
+let sayHello = function (who) {
+   if (who) {
+      console.log(`Hello, ${who}`);
+   } else {
+      sayHello("Guest");
+   }
+};
+
+let welcome = sayHello;
+sayHello = null;
+
+welcome(); // Error: sayHello is not a function
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
