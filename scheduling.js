@@ -106,7 +106,7 @@ function count() {
    console.log("Done in " + (Date.now() - start) + 'ms');
 }
 
-count();
+count(); // Done in 2708ms
 
 // Let’s split the job using the nested setTimeout
 let i = 0;
@@ -116,12 +116,57 @@ function count() {
    // do a piece of the heavy job
    do {
       i++;
-   } while (i % 1e9 != 0);
+   } while (i % 1e6 != 0);
 
    if (i == 1e9) {
       console.log("Done in " + (Date.now() - start) + 'ms');
    } else {
-      setTimeout(count, 0)
+      setTimeout(count, 0); // schedule the new call
+   }
+}
+
+count(); // Done in 4441ms
+
+// if we’ll move the scheduling in the beginning of the count(), it’s easy to notice that it takes significantly less time
+let i = 0;
+let start = Date.now();
+
+function count() {
+   if (i < 1e9 - 1e6) {
+      setTimeout(count, 0);
+   }
+
+   do {
+      i++;
+   } while (i % 1e6 != 0);
+
+   if (i == 1e9) {
+      console.log("Done in " + (Date.now() - start) + 'ms');
+   }
+}
+
+count(); // Done in 4410ms
+
+//--------------------REMEMBER--------------------
+// In the browser, there’s a limitation of how often nested timers can run. The HTML5 standard says: “after five nested timers,
+// the interval is forced to be at least four milliseconds.”.
+
+// Another benefit for in-browser scripts is that they can show a progress bar or something to the user.
+// That’s because the browser usually does all “repainting” after the script is complete
+// We can paint the progress bar
+<div id="progress"></div>
+
+let i = 0;
+
+function count() {
+   // do a piece of the heavy job (*)
+   do {
+      i++;
+      progress.innerHTML = i;
+   } while (i % 5 != 0);
+
+   if (i < 20) {
+      setTimeout(count, 0);
    }
 }
 
