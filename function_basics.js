@@ -600,6 +600,107 @@ getNewFunc()(); // test
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Currying
+// translating a function from callable as f(a, b, c) into callable as f(a)(b)(c)
+function curry(func) {
+   return function(a) {
+      return function(b) {
+         return func(a, b);
+      };
+   };
+}
+
+function sum(a, b) {
+   return a + b;
+}
+
+carriedSum = curry(sum);
+
+console.log(carriedSum(2)(6)); // 8
+
+// or with lodash library
+var _ = require('lodash');
+
+function sum(a, b) {
+   return a + b;
+}
+
+carriedSum = _.curry(sum);
+
+console.log(carriedSum(7)(9)); // 16
+
+function log(date, importance, message) {
+   console.log(
+      `[${date.getHours()}:${date.getMinutes()}] [${importance}] ${message}`,
+   );
+}
+
+log = _.curry(log);
+
+log(new Date(), 'DEBUG', 'some debug 1'); // [18:29] [DEBUG] some debug 1
+log(new Date())('DEBUG')('some debug 2'); // [18:29] [DEBUG] some debug 2
+
+let todayLog = log(new Date());
+
+todayLog('INFO', 'message'); // [18:32] [INFO] message
+
+let todayDebug = todayLog('DEBUG');
+
+todayDebug('message'); // [18:32] [DEBUG] message
+
+//------------------------------------------------------------------------------------------
+
+// Advanced curry implementation
+function curry(func) {
+   return function curried(...args) {
+      if (args.length >= func.length) {
+         return func.apply(this, args);
+      } else {
+         return function(...args2) {
+            return curried.apply(this, args.concat(args2));
+         };
+      }
+   };
+}
+
+function sum(a, b, c) {
+   return a + b + c;
+}
+
+let curriedSum = curry(sum);
+
+// still callable normally
+console.log(curriedSum(1, 2, 3, 5)); // 6
+
+// get the partial with curried(1) and call it with 2 other arguments
+console.log(curriedSum(1)(2, 3)); // 6
+
+// full curried form
+console.log(curriedSum(1)(2)(3)); // 6
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - Is "else" required?
+function checkAge(age) {
+   if (age > 18) {
+      return true;
+   } else {
+      // ...
+      return confirm('Did parents allow you?');
+   }
+}
+
+// No, there is no difference
+function checkAge(age) {
+   if (age > 18) {
+      return true;
+   }
+   // ...
+   return confirm('Did parents allow you?');
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 2 - Rewrite the function using '?' or '||'
 /*  function checkAge(age) {
         if (age > 18) {
@@ -727,3 +828,25 @@ console.log(sum(1)(2)(3)); // 1 + 2 + 3
 console.log(sum(5)(-1)(2));
 console.log(sum(6)(-1)(-2)(-3));
 console.log(sum(0)(1)(2)(3)(4)(5));
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 8 - Partial application for login
+function askPassword(ok, fail) {
+   let password = prompt('Password?', '');
+   if (password == 'rockstar') ok();
+   else fail();
+}
+
+let user = {
+   name: 'John',
+
+   login(result) {
+      alert(this.name + (result ? ' logged in' : ' failed to log in'));
+   },
+};
+
+askPassword(() => user.login(true), () => user.login(false));
+
+// or
+askPassword(user.login.bind(user, true), user.login.bind(user, false));
