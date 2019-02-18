@@ -7,12 +7,14 @@ function slow(x) {
 }
 
 // cachingDecorator is a decorator: a special function that takes another function and alters its behavior.
-// The idea is that we can call cachingDecorator for any function, and it will return the caching wrapper. 
+// The idea is that we can call cachingDecorator for any function, and it will return the caching wrapper.
 function cachingDecorator(func) {
    let cache = new Map();
 
-   return function (x) { // function wrapper
-      if (cache.has(x)) { // if the result is in the map
+   return function(x) {
+      // function wrapper
+      if (cache.has(x)) {
+         // if the result is in the map
          return cache.get(x); // return it
       }
 
@@ -27,12 +29,12 @@ slow = cachingDecorator(slow);
 // slow(1) is cached
 console.log(slow(1)); // Function slow called with 1,    1
 // the same (the result is already in the map)
-console.log("Again " + slow(1)); // Again 1
+console.log('Again ' + slow(1)); // Again 1
 
 // slow(2) is cached
 console.log(slow(2)); // Function slow called with 2,    2
 // the same (the result is already in the map)
-console.log("Again " + slow(2)); // Again 2
+console.log('Again ' + slow(2)); // Again 2
 
 /* There are several benefits of using a separate cachingDecorator instead of altering the code of slow itself:
       - The cachingDecorator is reusable. We can apply it to another function.   
@@ -59,7 +61,7 @@ let worker = {
 function cachingDecorator(func) {
    let cache = new Map();
 
-   return function (x) {
+   return function(x) {
       if (cache.has(x)) {
          return cache.get(x);
       }
@@ -78,7 +80,7 @@ console.log(worker.slow(2)); // Function slow called with 2    2
 // without func.call() there will be error
 // if
 function cachingDecorator(func) {
-   // ... 
+   // ...
    let result = func(x);
 }
 // then
@@ -94,7 +96,7 @@ console.log(worker.slow(2)); // Function slow called with 2    Error: this.someM
 let args = [1, 2, 3];
 
 func.call(context, ...args); // pass an array as list with spread operator
-func.apply(context, args);   // is same as using apply
+func.apply(context, args); // is same as using apply
 
 /* If we look more closely, there’s a minor difference between such uses of call and apply.
       - The spread operator ... allows to pass iterable args as the list to call.
@@ -103,10 +105,9 @@ func.apply(context, args);   // is same as using apply
 
 // call forwarding
 // The wrapper passes everything it gets: the context this and arguments to anotherFunction and returns back its result.
-let wrapper = function () {
+let wrapper = function() {
    return anotherFunction.apply(this, arguments);
 };
-
 
 let worker = {
    slow(min, max) {
@@ -118,7 +119,7 @@ let worker = {
 function cachingDecorator(func, hash) {
    let cache = new Map();
 
-   return function () {
+   return function() {
       let key = hash(arguments);
 
       if (cache.has(key)) {
@@ -139,7 +140,7 @@ function hash(args) {
 worker.slow = cachingDecorator(worker.slow, hash);
 
 console.log(worker.slow(2, 10)); // Function slow called with 2, 10     12
-console.log("Again: " + worker.slow(2, 10)); // Again: 12
+console.log('Again: ' + worker.slow(2, 10)); // Again: 12
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -184,9 +185,9 @@ for (let arg of work.calls) {
 
 // TASK 2 - delaying decorator
 function delay(f, ms) {
-   return function () {
-      setTimeout(() => f.apply(this, arguments), ms)
-   }
+   return function() {
+      setTimeout(() => f.apply(this, arguments), ms);
+   };
 }
 
 function f(x) {
@@ -199,11 +200,11 @@ let f1500 = delay(f, 1500);
 f1000('test1');
 f1500('test2');
 
-// or 
+// or
 function delay(f, ms) {
-   return function (...args) {
+   return function(...args) {
       let savedThis = this;
-      setTimeout(function () {
+      setTimeout(function() {
          f.apply(savedThis, args);
       }, ms);
    };
@@ -215,15 +216,15 @@ function delay(f, ms) {
 function debounce(f, ms) {
    let coolDown = false;
 
-   return function () {
+   return function() {
       if (coolDown) return;
 
       f.apply(this, arguments);
 
       coolDown = true;
 
-      setTimeout(() => coolDown = false, ms);
-   }
+      setTimeout(() => (coolDown = false), ms);
+   };
 }
 
 let f = debounce(console.log, 1000);
@@ -239,7 +240,6 @@ setTimeout(() => f(7), 2900); // 7
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 4 - Throttle decorator
-
 function throttle(f, ms) {
    let isThrottled = false;
    let savedArg, savedThis;
@@ -255,14 +255,14 @@ function throttle(f, ms) {
 
       isThrottled = true;
 
-      setTimeout(function () {
+      setTimeout(function() {
          isThrottled = false;
          if (savedArg) {
             wrapper.apply(savedThis, savedArg);
             savedArg = null;
             savedThis = null;
          }
-      }, ms)
+      }, ms);
    }
 
    return wrapper;

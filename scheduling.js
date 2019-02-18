@@ -103,7 +103,7 @@ function count() {
       i++;
    }
 
-   console.log("Done in " + (Date.now() - start) + 'ms');
+   console.log('Done in ' + (Date.now() - start) + 'ms');
 }
 
 count(); // Done in 2708ms
@@ -119,7 +119,7 @@ function count() {
    } while (i % 1e6 != 0);
 
    if (i == 1e9) {
-      console.log("Done in " + (Date.now() - start) + 'ms');
+      console.log('Done in ' + (Date.now() - start) + 'ms');
    } else {
       setTimeout(count, 0); // schedule the new call
    }
@@ -141,7 +141,7 @@ function count() {
    } while (i % 1e6 != 0);
 
    if (i == 1e9) {
-      console.log("Done in " + (Date.now() - start) + 'ms');
+      console.log('Done in ' + (Date.now() - start) + 'ms');
    }
 }
 
@@ -154,7 +154,7 @@ count(); // Done in 4410ms
 // Another benefit for in-browser scripts is that they can show a progress bar or something to the user.
 // That’s because the browser usually does all “repainting” after the script is complete
 // We can paint the progress bar
-<div id="progress"></div>
+<div id="progress" />;
 
 let i = 0;
 
@@ -195,7 +195,7 @@ function printNumbers(from, to) {
    let count = setTimeout(function print() {
       console.log(i);
       i++;
-      count = setTimeout(print, 1000)
+      count = setTimeout(print, 1000);
       if (i > to) clearTimeout(count);
    }, 1000);
 }
@@ -211,7 +211,7 @@ let start = Date.now();
 
 function count() {
    if (i == 1000000000) {
-      console.log("Done in " + (Date.now() - start) + 'ms');
+      console.log('Done in ' + (Date.now() - start) + 'ms');
    } else {
       setTimeout(count, 0);
    }
@@ -234,7 +234,7 @@ function count() {
       i++;
    }
    if (i == 1000000000) {
-      console.log("Done in " + (Date.now() - start) + 'ms');
+      console.log('Done in ' + (Date.now() - start) + 'ms');
       clearInterval(timer);
    }
 }

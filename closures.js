@@ -404,7 +404,7 @@ console.log(users.sort(byField2('surname')));
 function makeArmy() {
    let shooters = [];
 
-   for (let i =0; i < 10; i++){
+   for (let i = 0; i < 10; i++) {
       let shooter = function() {
          console.log(i); // should show its number
       };

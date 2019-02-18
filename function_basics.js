@@ -15,7 +15,7 @@ showMessage(); // Hello everyone!
 // Function Expression
 // a function, created inside an expression or inside another syntax construct. Here, the function is created
 // at the right side of the “assignment expression” =:
-let sayHi = function () {
+let sayHi = function() {
    console.log('Hello everyone!');
 }; // it must be ; here, because is variable
 
@@ -209,14 +209,14 @@ function sayHi() {
 console.log(sayHi.name); // sayHi
 
 // It also assigns the correct name to functions that are used in assignments
-let sayHi2 = function () {
-   alert("Hi");
-}
+let sayHi2 = function() {
+   alert('Hi');
+};
 
 console.log(sayHi2.name); // sayHi2
 
 // It also works if the assignment is done via a default value
-function f(sayHi3 = function () { }) {
+function f(sayHi3 = function() {}) {
    console.log(sayHi3.name);
 }
 
@@ -227,15 +227,15 @@ f(); // sayHi3
 
 // Object methods have names too
 let user = {
-   sayHi() { },
-   sayBye: function () { }
+   sayHi() {},
+   sayBye: function() {},
 };
 
 console.log(user.sayHi.name); // sayHi
 console.log(user.sayBye.name); // sayBye
 
 // There are cases when there’s no way to figure out the right name
-let arr = [function () { }];
+let arr = [function() {}];
 
 console.log(arr[0].name); // '' (empty string)
 
@@ -243,9 +243,9 @@ console.log(arr[0].name); // '' (empty string)
 
 // 'length' property
 // built-in property “length” returns the number of function parameters
-function f1(a) { }
-function f2(a, b) { }
-function many(a, b, ...more) { }
+function f1(a) {}
+function f2(a, b) {}
+function many(a, b, ...more) {}
 
 console.log(f1.length); // 1
 console.log(f2.length); // 2
@@ -268,10 +268,10 @@ function ask(question, ...handlers) {
 // Once a user provides their answer, the function calls the handlers. We can pass two kinds of handlers:
 //    - A zero-argument function, which is only called when the user gives a positive answer.
 //    - A function with arguments, which is called in either case and returns an answer.
-ask("Question?", () => alert('You said yes'), result => alert(result));
+ask('Question?', () => alert('You said yes'), result => alert(result));
 
 // This is a particular case of so-called polymorphism – treating arguments differently depending on their type or,
-// in our case depending on the length. 
+// in our case depending on the length.
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -280,7 +280,7 @@ ask("Question?", () => alert('You said yes'), result => alert(result));
 function sayHi() {
    console.log('Hi');
 
-   sayHi.counter++
+   sayHi.counter++;
 }
 
 sayHi.counter = 0; // initial value
@@ -323,14 +323,14 @@ console.log(counter()); // 1
 function makeCounter() {
    let count = 0;
 
-   return function () {
+   return function() {
       return count++;
    };
 }
 
 let counter = makeCounter();
 
-// But if you don't use closure... 
+// But if you don't use closure...
 // And if it’s bound to a function, then such a thing is possible:
 function makeCounter() {
    function counter() {
@@ -374,10 +374,10 @@ function ask2(question, yes, no) {
 
 ask2(
    'Do you agree?',
-   function () {
+   function() {
       alert('You agreed.');
    },
-   function () {
+   function() {
       alert('You canceled the execution.');
    },
 );
@@ -401,7 +401,7 @@ function sayHi(name) {
 // vs
 sayHi2('John'); // Error: sayHi2 is not defined
 
-let sayHi2 = function (name) {
+let sayHi2 = function(name) {
    // (*) no magic any more
    console.log(`Hello, ${name}`);
 };
@@ -429,12 +429,12 @@ welcome(); // Error: welcome is not defined
 let age = prompt('What is your age?', 18);
 let welcome;
 if (age < 18) {
-   welcome = function () {
+   welcome = function() {
       alert('Hello!');
    };
    welcome(); // Hello!
 } else {
-   welcome = function () {
+   welcome = function() {
       alert('Greetings!');
    };
 }
@@ -447,7 +447,7 @@ welcome(); // Hello! / Greetings!
 // Function Expressions that have a name
 
 // ordinary Function Expression
-let sayHello = function (who) {
+let sayHello = function(who) {
    console.log(`Hello, ${who}`);
 };
 
@@ -476,13 +476,13 @@ sayHello(); // Hello, Guest
 // but
 func(); // Error: func is not defined
 
-// Why do we use func? 
+// Why do we use func?
 // Because he value of sayHello may change
-let sayHello = function (who) {
+let sayHello = function(who) {
    if (who) {
       console.log(`Hello, ${who}`);
    } else {
-      sayHello("Guest");
+      sayHello('Guest');
    }
 };
 
@@ -689,12 +689,12 @@ function makeCounter(...handlers) {
 
 let countIt = makeCounter();
 
-countIt.set = function (value) {
-   return countIt.count = value;
+countIt.set = function(value) {
+   return (countIt.count = value);
 };
 
-countIt.decrease = function () {
-   return countIt.count -= 1;
+countIt.decrease = function() {
+   return (countIt.count -= 1);
 };
 
 console.log(countIt()); // 0
@@ -715,7 +715,7 @@ function sum(value) {
       return func;
    }
 
-   func.toString = function () {
+   func.toString = function() {
       return result;
    };
 
