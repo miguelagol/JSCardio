@@ -444,16 +444,68 @@ say('Bye'); // Bye, Jack!
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 1 -
+// TASK 1 - Bound function as a method
+// What will be the output?
+function f() {
+   console.log(this); // ?
+}
+
+let user = {
+   g: f.bind(null),
+};
+
+user.g(); // global object
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 2 -
+// TASK 2 - Second bind
+// What will be the output?
+function f() {
+   console.log(this.name);
+}
+
+f = f.bind({ name: 'John' }).bind({ name: 'Ann' });
+
+f(); // John
+
+// The exotic bound function object returned by f.bind(...) remembers the context (and arguments if provided) only at creation time.
+// A function cannot be re-bound.
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 3 -
+// TASK 3 - Function property after bind
+function sayHi() {
+   console.log(this.name);
+}
+sayHi.test = 5;
+
+let bound = sayHi.bind({
+   name: 'John',
+});
+
+console.log(bound.test); // undefined
+
+// The result of bind is another object. It does not have the test property.
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// TASK 4 -
+// TASK 4 - Ask losing this
+function askPassword(ok, fail) {
+   let password = prompt('Password?', '');
+   if (password == 'rockstar') ok();
+   else fail();
+}
+
+let user = {
+   name: 'John',
+
+   loginOk() {
+      alert(`${this.name} logged in`);
+   },
+
+   loginFail() {
+      alert(`${this.name} failed to log in`);
+   },
+};
+
+askPassword(user.loginOk.bind(user), user.loginFail.bind(user));
