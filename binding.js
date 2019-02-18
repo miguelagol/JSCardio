@@ -366,3 +366,94 @@ foo.apply(null, [2, 3]); // a:2 b:3
 
 let bar = foo.bind(null, 1);
 bar(5); // a:1 b:5
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Losing 'this'
+let user = {
+   firstName: 'John',
+   sayHi() {
+      console.log(`Hello, ${this.firstName}!`);
+   },
+};
+
+setTimeout(user.sayHi, 1000); // Hello, undefined!
+
+// the same as
+let func = user.sayHi;
+setTimeout(func, 1000); // Hello, undefined!
+
+// The method setTimeout in-browser is a little special: it sets this=window for the function call (for Node.JS, this becomes the timer object)
+
+//--------------------------------------------------------------------------------------
+
+// Solution 1: a wrapper
+let user = {
+   firstName: 'John',
+   sayHi() {
+      console.log(`Hello, ${this.firstName}!`);
+   },
+};
+
+setTimeout(() => user.sayHi(), 1000); // Hello, John!
+
+// It's ok but there is a slight vulnerability
+// What if before setTimeout triggers (there’s one second delay!) user changes value
+let user = {
+   firstName: 'John',
+   sayHi() {
+      console.log(`Hello, ${this.firstName}!`);
+   },
+};
+
+// it will call the wrong object!
+setTimeout(() => user.sayHi(), 1000); // Another user in setTimeout
+
+user = {
+   sayHi() {
+      console.log('Another user in setTimeout');
+   },
+};
+
+//--------------------------------------------------------------------------------------
+
+// Solution 2: bind
+let user = {
+   firstName: 'Jack',
+};
+
+function func(phrase) {
+   console.log(phrase + ' ' + this.firstName);
+}
+
+let funcUser = func.bind(user);
+funcUser('Hello, '); // Hello, Jack
+
+// work with object methods
+let user = {
+   firstName: 'Jack',
+   say(phrase) {
+      console.log(`${phrase}, ${this.firstName}!`);
+   },
+};
+
+let say = user.say.bind(user);
+
+say('Hello'); // Hello, Jack!
+say('Bye'); // Bye, Jack!
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 -
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 2 -
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 -
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 -
