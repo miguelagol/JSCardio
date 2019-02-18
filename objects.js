@@ -356,7 +356,7 @@ console.log(new SmallUser().name); // User
 // Methods in constructor
 function User(name) {
    this.name = name;
-   this.sayHi = function () {
+   this.sayHi = function() {
       console.log('My name is:' + this.name);
    };
 }
@@ -373,13 +373,13 @@ john.sayHi(); // My name is: John
 // It does two things:
 //    1. Provides access to built-in functions and values, defined by the specification and the environment.
 // For instance, we can call alert directly or as a method of window:
-alert("Hello");
+alert('Hello');
 
 // the same as
-window.alert("Hello");
+window.alert('Hello');
 
 //    2. Provides access to global Function Declarations and var variables. We can read and write them using its properties:
-var phrase = "Hello";
+var phrase = 'Hello';
 
 function sayHi() {
    alert(phrase);
@@ -396,11 +396,11 @@ alert(test); // 5
 
 // …But the global object does not have variables declared with let /const!
 
-let user = "John";
+let user = 'John';
 alert(user); // John
 
 alert(window.user); // undefined, don't have let
-alert("user" in window); // false
+alert('user' in window); // false
 
 //------------------------------------------------------------------------------------------
 
@@ -420,17 +420,17 @@ sayHi();
 
 // 2. To check if a certain global variable or a builtin exist
 if (window.XMLHttpRequest) {
-   alert('XMLHttpRequest exists!')
+   alert('XMLHttpRequest exists!');
 }
 
 // 3. To take the variable from the right window (because a browser may open multiple windows and tabs)
-<iframe src='/' id='frame'></iframe>
+<iframe src="/" id="frame" />;
 
 alert(innerWidth); // get innerWidth property of the current window (browser only)
 alert(Array); // get Array of the current window (javascript core builtin)
 
 // when the iframe loads...
-iframe.onload = function () {
+iframe.onload = function() {
    // get width of the iframe window
    alert(iframe.contentWindow.innerWidth);
    // get the builtin Array from the iframe window
@@ -529,8 +529,8 @@ for (let key2 in menu) {
 // TASK 5 - Two functions - one object
 // Is it possible to create functions A and B such as new A() = new B()?
 // This is false
-function A() { }
-function B() { }
+function A() {}
+function B() {}
 
 let a = new A();
 let b = new B();
@@ -553,16 +553,16 @@ console.log(new A() == new B()); // true
 
 // TASK 6 - Create new calculator
 function Calculator() {
-   this.read = function (a, b) {
+   this.read = function(a, b) {
       this.a = a;
       this.b = b;
    };
 
-   this.mul = function () {
+   this.mul = function() {
       return this.a * this.b;
    };
 
-   this.sum = function () {
+   this.sum = function() {
       return this.a + this.b;
    };
 }
@@ -578,7 +578,7 @@ console.log('Mul = ' + calculator.mul()); // Mul = 18
 // TASK 7 - Create new accumulator
 function Accumulator(startingValue) {
    this.value = startingValue;
-   this.read = function (addValue) {
+   this.read = function(addValue) {
       this.value += addValue;
    };
 }

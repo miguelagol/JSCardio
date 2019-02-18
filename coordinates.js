@@ -19,9 +19,11 @@
 // And offsetLeft/offsetTop provide x/y coordinates relative to it’s upper-left corner.
 <main style="position: relative" id="main">
    <article>
-      <div id="example" style="position: absolute; left: 180px; top: 180px">...</div>
+      <div id="example" style="position: absolute; left: 180px; top: 180px">
+         ...
+      </div>
    </article>
-</main>
+</main>;
 
 alert(example.offsetParent.id); // main
 alert(example.offsetLeft); // 180 (note: a number!!!, not a string "180px")
@@ -47,7 +49,8 @@ then all geometry properties are zero or null depending on what it is.
 */
 
 // We can use this to check if an element is hidden, like this:
-function isHidden(elem) { // isHidden returns true for elements that are on-screen, but have zero sizes (like an empty <div>)
+function isHidden(elem) {
+   // isHidden returns true for elements that are on-screen, but have zero sizes (like an empty <div>)
    return !elem.offsetWidth && !elem.offsetHeight;
 }
 
@@ -103,7 +106,7 @@ element.style.height = `${element.scrollHeight}px`;
       -  Second, CSS width/height may be auto, for instance for an inline element:
 */
 
-<span id="elem">Hello!</span>
+<span id="elem">Hello!</span>;
 
 alert(getComputedStyle(elem).width); // auto
 
@@ -149,9 +152,12 @@ conosle.log(document.documentElement.clientWidth); // window width minus the scr
 */
 // To have a reliable result on the full document height, we should take the maximum of these properties
 let scrollHeight = Math.max(
-   document.body.scrollHeight, document.documentElement.scrollHeight,
-   document.body.offsetHeight, document.documentElement.offsetHeight,
-   document.body.clientHeight, document.documentElement.clientHeight
+   document.body.scrollHeight,
+   document.documentElement.scrollHeight,
+   document.body.offsetHeight,
+   document.documentElement.offsetHeight,
+   document.body.clientHeight,
+   document.documentElement.clientHeight,
 );
 
 alert('Full document height, with scrolled out part: ' + scrollHeight);
@@ -203,7 +209,7 @@ window.scrollTo(0, 0);
          The bottom edge of the element is aligned with the window bottom.
 */
 
-// Scrolls the page to make itself show at the window top: 
+// Scrolls the page to make itself show at the window top:
 this.scrollIntoView();
 
 // scrolls the page to show it at the bottom:
@@ -273,7 +279,7 @@ alert(element.tagName);
 
 // Using for position: fixed
 // We can use getBoundingClientRect to get coordinates of an element with position: fixed, and then to show something near it.
-<button id='coords-show-mark'>Show message under</button>
+<button id="coords-show-mark">Show message under</button>;
 
 let element = document.getElementById('coords-show-mark');
 
@@ -328,26 +334,32 @@ function getCoords(element) {
 <div id="example">
    <h3>Introduction</h3>
    <p>
-      This Ecma Standard is based on several originating technologies, the most well known being JavaScript (Netscape) and JScript
-      (Microsoft). The language was invented by Brendan Eich at Netscape and first appeared in that company's Navigator 2.0 browser.
-      It has appeared in all subsequent browsers from Netscape and in all browsers from Microsoft starting with Internet Explorer 3.0.
-      The development of this Standard started in November 1996. The first edition of this Ecma Standard was adopted by the
+      This Ecma Standard is based on several originating technologies, the most
+      well known being JavaScript (Netscape) and JScript (Microsoft). The
+      language was invented by Brendan Eich at Netscape and first appeared in
+      that company's Navigator 2.0 browser. It has appeared in all subsequent
+      browsers from Netscape and in all browsers from Microsoft starting with
+      Internet Explorer 3.0. The development of this Standard started in
+      November 1996. The first edition of this Ecma Standard was adopted by the
       Ecma General Assembly of June 1997.
    </p>
 
    <p>
-      That Ecma Standard was submitted to ISO/IEC JTC 1 for adoption under the fast-track procedure, and approved as international standard
-      ISO/IEC 16262, in April 1998. The Ecma General Assembly of June 1998 approved the second edition of ECMA-262 to keep
-      it fully aligned with ISO/IEC 16262. Changes between the first and the second edition are editorial in nature.
+      That Ecma Standard was submitted to ISO/IEC JTC 1 for adoption under the
+      fast-track procedure, and approved as international standard ISO/IEC
+      16262, in April 1998. The Ecma General Assembly of June 1998 approved the
+      second edition of ECMA-262 to keep it fully aligned with ISO/IEC 16262.
+      Changes between the first and the second edition are editorial in nature.
    </p>
-</div>
+</div>;
 
 let scrollBottom;
 let element = document.getElementById('example');
 
 function showScrollBottom() {
-   scrollBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
-   console.log(scrollBottom)
+   scrollBottom =
+      element.scrollHeight - element.scrollTop - element.clientHeight;
+   console.log(scrollBottom);
 }
 
 let interval = setInterval(showScrollBottom, 2000);
@@ -372,7 +384,8 @@ alert(scrollWidth);
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Place the ball in the field center
-{/* <style>
+{
+   /* <style>
    #field {
       width: 200px;
       border: 10px groove black;
@@ -383,17 +396,20 @@ alert(scrollWidth);
    #ball {
       position: absolute;
    }
-</style> */}
+</style> */
+}
 
 <div id="field">
-   <img src="https://en.js.cx/clipart/ball.svg" id="ball" /> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   . . . . . . . . . . . . . . . . . . . . . . . . . . .
-</div>
+   <img src="https://en.js.cx/clipart/ball.svg" id="ball" /> . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . .
+</div>;
 
 let ball = document.getElementById('ball');
-let field = document.getElementById('field')
+let field = document.getElementById('field');
 let x = field.clientWidth / 2 - ball.width / 2 + 'px';
 let y = field.clientHeight / 2 - ball.height / 2 + 'px';
 
@@ -418,7 +434,8 @@ ball.style.left = x;
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 5 - Find window coordinates of the field
-{/* <style>body {
+{
+   /* <style>body {
       padding: 20px 0 0 20px;
       cursor: pointer;
    }
@@ -434,13 +451,16 @@ ball.style.left = x;
       background-color: #00FF00;
       font: 10px/1.2 monospace;
    }
-</style> */}
+</style> */
+}
 <div id="coords">(click coordinates show up here)</div>;
 <div id="field">
-   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 </div>;
 
 let field = document.getElementById('field');
@@ -463,14 +483,16 @@ let innerBottom = field.offsetTop + field.clientTop + field.clientHeight;
 
 alert('Bottom right in x: ' + innerRight + ' y: ' + innerBottom);
 
-document.onclick = function (e) { // shows click coordinates
+document.onclick = function(e) {
+   // shows click coordinates
    coords.innerHTML = e.clientX + ':' + e.clientY;
 };
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 6 - Show a note near the element
-{/* <style>
+{
+   /* <style>
    .note {
       position: fixed;
       z-index: 1000;
@@ -499,23 +521,25 @@ document.onclick = function (e) { // shows click coordinates
       margin-right: .25em;
       vertical-align: -.4em;
    }
- </style> */}
+ </style> */
+}
 
 <p>
-   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat
-   animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae
-   esse sequi officia sapiente.
+   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint
+   atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio
+   temporibus nulla id unde quaerat dignissimos enim nisi rem provident
+   molestias sit tempore omnis recusandae esse sequi officia sapiente.
 </p>;
 <blockquote>
-   Teacher: Why are you late?
-   Student: There was a man who lost a hundred dollar bill.
-   Teacher: That's nice. Were you helping him look for it?
-   Student: No. I was standing on it.
+   Teacher: Why are you late? Student: There was a man who lost a hundred dollar
+   bill. Teacher: That's nice. Were you helping him look for it? Student: No. I
+   was standing on it.
 </blockquote>;
 <p>
-   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat
-   animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae
-   esse sequi officia sapiente.
+   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint
+   atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio
+   temporibus nulla id unde quaerat dignissimos enim nisi rem provident
+   molestias sit tempore omnis recusandae esse sequi officia sapiente.
 </p>;
 
 function showNote(anchor, position, html) {
@@ -534,7 +558,7 @@ function positionAt(anchor, position, message) {
 
    switch (position) {
       case 'top':
-         message.style.left = coords.left + "px";
+         message.style.left = coords.left + 'px';
          message.style.top = coords.top - message.offsetHeight + 'px';
          break;
       case 'bottom':
@@ -550,9 +574,9 @@ function positionAt(anchor, position, message) {
 
 let blockquote = document.querySelector('blockquote');
 
-showNote(blockquote, "top", "note above");
-showNote(blockquote, "right", "note at the right");
-showNote(blockquote, "bottom", "note below");
+showNote(blockquote, 'top', 'note above');
+showNote(blockquote, 'right', 'note at the right');
+showNote(blockquote, 'bottom', 'note below');
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -577,19 +601,19 @@ function positionAt(anchor, position, element) {
    let coords = getCoords(anchor);
 
    switch (position) {
-      case "top":
-         element.style.left = coords.left + "px";
-         element.style.top = coords.top - element.offsetHeight + "px";
+      case 'top':
+         element.style.left = coords.left + 'px';
+         element.style.top = coords.top - element.offsetHeight + 'px';
          break;
 
-      case "right":
-         element.style.left = coords.left + anchor.offsetWidth + "px";
-         element.style.top = coords.top + "px";
+      case 'right':
+         element.style.left = coords.left + anchor.offsetWidth + 'px';
+         element.style.top = coords.top + 'px';
          break;
 
-      case "bottom":
-         element.style.left = coords.left + "px";
-         element.style.top = coords.top + anchor.offsetHeight + "px";
+      case 'bottom':
+         element.style.left = coords.left + 'px';
+         element.style.top = coords.top + anchor.offsetHeight + 'px';
          break;
    }
 }
@@ -611,44 +635,46 @@ function positionAt(anchor, position, element) {
    let coords = getCoords(anchor);
 
    switch (position) {
-      case "top-out":
-         element.style.left = coords.left + "px";
-         element.style.top = coords.top - element.offsetHeight + "px";
+      case 'top-out':
+         element.style.left = coords.left + 'px';
+         element.style.top = coords.top - element.offsetHeight + 'px';
          break;
 
-      case "top-in":
-         element.style.left = coords.left + "px";
-         element.style.top = coords.top + "px";
+      case 'top-in':
+         element.style.left = coords.left + 'px';
+         element.style.top = coords.top + 'px';
          break;
 
-      case "right-out":
-         element.style.left = coords.left + anchor.offsetWidth + "px";
-         element.style.top = coords.top + "px";
+      case 'right-out':
+         element.style.left = coords.left + anchor.offsetWidth + 'px';
+         element.style.top = coords.top + 'px';
          break;
 
-      case "right-in":
-         element.style.left = coords.left - element.offsetWidth + anchor.offsetWidth + "px";
-         element.style.top = coords.top + "px";
+      case 'right-in':
+         element.style.left =
+            coords.left - element.offsetWidth + anchor.offsetWidth + 'px';
+         element.style.top = coords.top + 'px';
          break;
 
-      case "bottom-out":
-         element.style.left = coords.left + "px";
-         element.style.top = coords.top + anchor.offsetHeight + "px";
+      case 'bottom-out':
+         element.style.left = coords.left + 'px';
+         element.style.top = coords.top + anchor.offsetHeight + 'px';
          break;
 
-      case "bottom-in":
-         element.style.left = coords.left + "px";
-         element.style.top = coords.top - element.offsetHeight + anchor.offsetHeight + "px";
+      case 'bottom-in':
+         element.style.left = coords.left + 'px';
+         element.style.top =
+            coords.top - element.offsetHeight + anchor.offsetHeight + 'px';
          break;
    }
 }
 
 let blockquote = document.querySelector('blockquote');
 
-showNote(blockquote, "top-out", "note above out");
-showNote(blockquote, "right-out", "note at the right out");
-showNote(blockquote, "bottom-out", "note below-out");
+showNote(blockquote, 'top-out', 'note above out');
+showNote(blockquote, 'right-out', 'note at the right out');
+showNote(blockquote, 'bottom-out', 'note below-out');
 
-showNote(blockquote, "top-in", "note above-in");
-showNote(blockquote, "right-in", "note at the right-in");
-showNote(blockquote, "bottom-in", "note below-in");
+showNote(blockquote, 'top-in', 'note above-in');
+showNote(blockquote, 'right-in', 'note at the right-in');
+showNote(blockquote, 'bottom-in', 'note below-in');
