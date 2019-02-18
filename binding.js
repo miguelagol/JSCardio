@@ -444,6 +444,68 @@ say('Bye'); // Bye, Jack!
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Partial function application – we create a new function by fixing some parameters of the existing one
+// It allows to bind context as this and starting arguments of the function
+function multiply(a, b) {
+   return a * b;
+}
+
+let double = multiply.bind(null, 2);
+
+console.log(double(4)); // 8
+console.log(double(5)); // 10
+console.log(double(7)); // 14
+
+let triple = multiply.bind(null, 3);
+
+console.log(triple(4)); // 12
+console.log(triple(5)); // 15
+console.log(triple(7)); // 21
+
+function partial(func, ...argsBound) {
+   return function(...args) {
+      return func.call(this, ...argsBound, ...args);
+   };
+}
+
+let user = {
+   firstName: 'Ann',
+   say(time, phrase) {
+      console.log(`[${time}] ${this.firstName}: ${phrase}!`);
+   },
+};
+
+user.sayNow = partial(
+   user.say,
+   new Date().getHours() + ':' + new Date().getMinutes(),
+);
+
+user.sayNow('Hello'); // [17:52] Ann: Hello!
+
+/* The result of partial(func[, arg1, arg2...]) call is a wrapper that calls func with:
+      - Same this as it gets (for user.sayNow call it’s user)
+      - Then gives it ...argsBound – arguments from the partial call ("17:52")
+      - Then gives it ...args – arguments given to the wrapper ("Hello")
+*/
+
+var _ = require('lodash');
+
+let user = {
+   firstName: 'Ann',
+   say(time, phrase) {
+      console.log(`[${time}] ${this.firstName}: ${phrase}!`);
+   },
+};
+
+user.sayNow = _.partial(
+   user.say,
+   new Date().getHours() + ':' + new Date().getMinutes(),
+);
+
+user.sayNow('Hi'); // [18:25] Ann: Hi!
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Bound function as a method
 // What will be the output?
 function f() {
@@ -509,4 +571,3 @@ let user = {
 };
 
 askPassword(user.loginOk.bind(user), user.loginFail.bind(user));
-
