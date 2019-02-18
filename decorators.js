@@ -150,3 +150,130 @@ function hash() {
 
 hash(1, 2); // 1,2
 
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - Spy decorator
+function spy(func) {
+   function wrapper(...args) {
+      wrapper.calls.push(args);
+      return func.apply(this, arguments);
+   }
+
+   wrapper.calls = [];
+
+   return wrapper;
+}
+
+function work(a, b) {
+   console.log(a + b);
+}
+
+work = spy(work);
+
+work(1, 2); // 3
+work(4, 5); // 9
+
+for (let arg of work.calls) {
+   console.log('call: ' + arg.join());
+}
+/* call: 1,2
+   call: 4,5
+*/
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 2 - delaying decorator
+function delay(f, ms) {
+   return function () {
+      setTimeout(() => f.apply(this, arguments), ms)
+   }
+}
+
+function f(x) {
+   console.log(x);
+}
+
+let f1000 = delay(f, 1000);
+let f1500 = delay(f, 1500);
+
+f1000('test1');
+f1500('test2');
+
+// or 
+function delay(f, ms) {
+   return function (...args) {
+      let savedThis = this;
+      setTimeout(function () {
+         f.apply(savedThis, args);
+      }, ms);
+   };
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 - debounce decorator
+function debounce(f, ms) {
+   let coolDown = false;
+
+   return function () {
+      if (coolDown) return;
+
+      f.apply(this, arguments);
+
+      coolDown = true;
+
+      setTimeout(() => coolDown = false, ms);
+   }
+}
+
+let f = debounce(console.log, 1000);
+
+f(1); // 1
+f(2);
+
+setTimeout(() => f(3), 200);
+setTimeout(() => f(5), 1500); // 5
+setTimeout(() => f(6), 1900);
+setTimeout(() => f(7), 2900); // 7
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - Throttle decorator
+
+function throttle(f, ms) {
+   let isThrottled = false;
+   let savedArg, savedThis;
+
+   function wrapper() {
+      if (isThrottled) {
+         savedArg = arguments;
+         savedThis = this;
+         return;
+      }
+
+      f.apply(this, arguments);
+
+      isThrottled = true;
+
+      setTimeout(function () {
+         isThrottled = false;
+         if (savedArg) {
+            wrapper.apply(savedThis, savedArg);
+            savedArg = null;
+            savedThis = null;
+         }
+      }, ms)
+   }
+
+   return wrapper;
+}
+
+function f(a) {
+   console.log(a);
+}
+
+let f1000 = throttle(f, 1000);
+
+f1000(1); // 1
+f1000(2);
+f1000(3); // 3
