@@ -16,5 +16,8 @@
    "homepage": "https://bitbucket.org/miguelagol/jscardio#readme",
    "devDependencies": {
       "prettier": "^1.14.3"
+   },
+   "dependencies": {
+      "lodash": "^4.17.11"
    }
 }
