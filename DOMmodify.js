@@ -16,7 +16,7 @@ let textNode = document.createTextNode('Here I am');
 <ol id="list">
    <li>0</li>
    <li>1</li>
-</ol>
+</ol>;
 
 let newLi = document.createElement('li');
 newLi.innerHTML = 'Hello';
@@ -31,7 +31,7 @@ list.appendChild(newLi);
 <ol id="list2">
    <li>0</li>
    <li>1</li>
-</ol>
+</ol>;
 
 let newLi2 = document.createElement('li');
 newLi2.innerHTML = 'Hello';
@@ -47,7 +47,7 @@ list2.insertBefore(newLi2, list2.children[0]);
    <li>0</li>
    <li>1</li>
    <li>2</li>
-</ol>
+</ol>;
 
 let newLi3 = document.createElement('li');
 newLi3.innerHTML = 'Hello';
@@ -56,7 +56,7 @@ list3.replaceChild(newLi3, list3.children[1]);
    2. Hello
    3. 2
 */
-// ^ ^ ^ ^ ^ These methods are “old school” 
+// ^ ^ ^ ^ ^ These methods are “old school”
 
 // prepend/append/before/after
 /* This set of methods provides more flexible insertions:
@@ -70,7 +70,7 @@ list3.replaceChild(newLi3, list3.children[1]);
    <li>0</li>
    <li>1</li>
    <li>2</li>
-</ol>
+</ol>;
 
 ol.before('before');
 ol.after('after');
@@ -93,7 +93,7 @@ ol.append(appendLi);
 */
 
 // We can insert multiple lists of nodes and text pieces in a single call.
-<div id="div"></div>
+<div id="div" />;
 
 div.before('<p>Hello</p>', document.createElement('hr'));
 // strings are inserted in a safe way, like element.textContent does it.
@@ -113,10 +113,10 @@ div.before('<p>Hello</p>', document.createElement('hr'));
       - "beforeend" – insert html into elem, at the end,
       - "afterend" – insert html after elem.
 */
-<div id="div"></div>
+<div id="div" />;
 
-div.insertAdjacentHTML("beforebegin", "<p>Hello</p>");
-div.insertAdjacentHTML("afterend", "<p>Bye</p>");
+div.insertAdjacentHTML('beforebegin', '<p>Hello</p>');
+div.insertAdjacentHTML('afterend', '<p>Bye</p>');
 /*    <p>Hello</p>
       <div id="div"></div>
       <p>Bye</p>
@@ -136,7 +136,7 @@ div.insertAdjacentHTML("afterend", "<p>Bye</p>");
 */
 <div class="alert" id="div">
    <strong>Hi there!</strong> You've read an important message.
-</div>
+</div>;
 
 let div2 = div.cloneNode(true);
 div2.querySelector('strong').innerHTML = 'Bye there';
@@ -163,7 +163,7 @@ div.after(div2);
 <body>
    <div id="first">First</div>
    <div id="second">Second</div>
-</body>
+</body>;
 
 second.after(first);
 
@@ -174,7 +174,9 @@ second.after(first);
 <body>
    <p>Somewhere in the page...</p>
    <script>
-      document.write('<b>Hello from JS</b>');
+      document.write('
+         <b>Hello from JS</b>
+      ');
    </script>
    <p>The end</p>
 </body>;
@@ -185,14 +187,17 @@ second.after(first);
 <body>
    <p>After one second the content of this page will be replaced...</p>
    <script>
-      setTimeout(() => document.write('<b>... by this.</b>'), 1000);
+      setTimeout(() => document.write('
+      <b>... by this.</b>
+      '), 1000);
    </script>
 </body>;
 
 // Let make an alert
 let messageDiv = document.createElement('div');
 messageDiv.class = 'alert alert-success';
-messageDiv.innerHTML = "<strong>Hi there!</strong> You're read an important message."
+messageDiv.innerHTML =
+   "<strong>Hi there!</strong> You're read an important message.";
 document.body.appendChild(messageDiv);
 /* or 
    document.body.insertAdjacentHTML("afterbegin", `<div class="alert alert-success">
@@ -254,7 +259,7 @@ For instance, style is acceptable if we calculate coordinates of an element dyna
 // className and classList
 
 // the elem.className corresponds to the "class" attribute
-<body class="main page"></body>
+<body class="main page" />;
 console.log(document.body.className); // main page
 
 // If we assign something to element.className, it replaces the whole strings of classes.
@@ -279,7 +284,7 @@ for (let name of document.body.classList) {
 //--------------------------------------------------------------------------------------------------
 
 // element.style
-// The property elem.style is an object that corresponds to what’s written in the "style" attribute. 
+// The property elem.style is an object that corresponds to what’s written in the "style" attribute.
 // For multi-word property the camelCase is used
 element.style.backgroundColor = prompt('background color?', 'green');
 element.style.borderLeftWidth = prompt('norder left width', '20px');
@@ -292,12 +297,12 @@ button.style.MozBorderRadius = '5px';
 // Resetting the style property
 // If we want to assign a style property, and later remove it we should assign an empty line to it.
 document.bosy.style.display = 'none'; // hide
-setTimeout(() => document.body.style.display = "", 1000); // back to normal
+setTimeout(() => (document.body.style.display = ''), 1000); // back to normal
 
 // style.cssText
 // style.* is to assign individual style property, to set the full style as a string,
 // there's a spectial property
-<div id="div">Button</div>
+<div id="div">Button</div>;
 div.style.cssText = `color: red !important;
    background-color: yellow;
    width: 100px;
@@ -331,15 +336,17 @@ alert(document.body.style.marginTop); // 20px
 //--------------------REMEMBER-------------------
 // The style property operates only on the value of the "style" attribute, without any CSS cascade.
 // So we can’t read anything that comes from CSS classes using elem.style.
-{/* <style> body { color: red; margin: 5px } </style> */ }
+{
+   /* <style> body { color: red; margin: 5px } </style> */
+}
 
 alert(document.body.style.color); // ''
 alert(document.body.style.margin); // ''
 
-let computesStyle = getComputedStyle(document.body);
+let computedStyle = getComputedStyle(document.body);
 
-alert(computesStyle.color); // rgb(255, 0, 0)
-alert(computesStyle.marginTop); // 5px
+alert(computedStyle.color); // rgb(255, 0, 0)
+alert(computedStyle.marginTop); // 5px
 
 //--------------------------------------------------------------------------------------------------
 
@@ -401,10 +408,10 @@ alert(computesStyle.marginTop); // 5px
    Both commands result in adding the text "as text" into the elem
 */
 <body>
-   <div id="elem1"></div>
-   <div id="elem2"></div>
-   <div id="elem3"></div>
-</body>
+   <div id="elem1" />
+   <div id="elem2" />
+   <div id="elem3" />
+</body>;
 
 let text = '<b>text</b>';
 
@@ -418,12 +425,12 @@ elem3.innerHTML = text; // text
 <ol id="elem">
    <li>Hello</li>
    <li>World</li>
-</ol>
+</ol>;
 
 function clear(elem) {
    let lis = elem.querySelectorAll('li');
    for (let li of lis) {
-      li.remove()
+      li.remove();
    }
 }
 
@@ -432,7 +439,7 @@ clear(elem);
 // or
 function clear2(elem) {
    while (elem.firstChild) {
-      elem.firstChild.remove()
+      elem.firstChild.remove();
    }
 }
 
@@ -449,7 +456,7 @@ function clear3(elem) {
    <tr>
       <td>Test</td>
    </tr>
-</table>
+</table>;
 
 alert(table); // [object HTMLTableElement]
 table.remove();
@@ -471,7 +478,7 @@ table.remove();
       - Create the <li> with it and add it to <ul>.
       - Continue until the user cancels the input (by pressing Esc or CANCEL in prompt).
 */
-<p>Your list</p>
+<p>Your list</p>;
 
 let ul = document.createElement('ul');
 document.body.append(ul);
@@ -489,30 +496,30 @@ while (true) {
 // TASK 5 - Create a tree from the object
 // Write a function createTree that creates a nested ul/li list from the nested object.
 // Solution 1 - Create tree nodes and append with DOM methods
-<div id="container"></div>
+<div id="container" />;
 
 let data = {
-   "Fish": {
-      "trout": {},
-      "salmon": {}
+   Fish: {
+      trout: {},
+      salmon: {},
    },
-   "Tree": {
-      "Huge": {
-         "sequoia": {},
-         "oak": {}
+   Tree: {
+      Huge: {
+         sequoia: {},
+         oak: {},
       },
-      "Flowering": {
-         "redbud": {},
-         "magnolia": {}
-      }
-   }
+      Flowering: {
+         redbud: {},
+         magnolia: {},
+      },
+   },
 };
 
 function isEmpty(object) {
    for (let key in object) {
-      return false
+      return false;
    }
-   return true
+   return true;
 }
 
 function createTree(where, what) {
@@ -577,14 +584,15 @@ function createText(data) {
 }
 
 // or
-function createText2(obj) { // standalone recursive function
+function createText2(obj) {
+   // standalone recursive function
    let li = '';
    let ul;
    for (let key in obj) {
       li += '<li>' + key + createTreeText(obj[key]) + '</li>';
    }
    if (li) {
-      ul = '<ul>' + li + '</ul>'
+      ul = '<ul>' + li + '</ul>';
    }
    return ul || '';
 }
@@ -596,18 +604,21 @@ createTree2(container, data);
 
 // TASK 6 - Show descendants in a tree
 <ul>
-   <li>Animals
+   <li>
+      Animals
       <ul>
-         <li>Mammals
-          <ul>
+         <li>
+            Mammals
+            <ul>
                <li>Cows</li>
                <li>Donkeys</li>
                <li>Dogs</li>
                <li>Tigers</li>
             </ul>
          </li>
-         <li>Other
-          <ul>
+         <li>
+            Other
+            <ul>
                <li>Snakes</li>
                <li>Birds</li>
                <li>Lizards</li>
@@ -615,22 +626,25 @@ createTree2(container, data);
          </li>
       </ul>
    </li>
-   <li>Fishes
+   <li>
+      Fishes
       <ul>
-         <li>Aquarium
-          <ul>
+         <li>
+            Aquarium
+            <ul>
                <li>Guppy</li>
                <li>Angelfish</li>
             </ul>
          </li>
-         <li>Sea
-          <ul>
+         <li>
+            Sea
+            <ul>
                <li>Sea trout</li>
             </ul>
          </li>
       </ul>
    </li>
-</ul>
+</ul>;
 
 let lis = document.querySelectorAll('li');
 for (let li of lis) {
@@ -652,7 +666,8 @@ for (let li of lis) {
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - Create a calendar
-{/*
+{
+   /*
    <style>
       table {
          border-collapse: collapse;
@@ -669,11 +684,12 @@ for (let li of lis) {
          background-color: #E6E6E6;
       }
    </style>
-*/}
+*/
+}
 
 <body>
-   <div id="calendar"></div>
-</body>
+   <div id="calendar" />
+</body>;
 
 function createCalendar(elem, year, month) {
    elem.innerHTML = createTable(year, month);
@@ -695,21 +711,19 @@ function createTable(year, month) {
 }
 
 function createCell(i, start, end) {
-   let cell = ''
+   let cell = '';
    let td = i - start + 1;
    if (i < start) {
       cell += '<td></td>';
-   }
-   else if (i % 7 == 0 && i != (end + 7 - end % 7)) {
+   } else if (i % 7 == 0 && i != end + 7 - (end % 7)) {
       cell += '<td>' + td + '</td>';
       cell += '</tr><tr>';
    } else if (td <= end) {
       cell += '<td>' + td + '</td>';
-   }
-   else {
+   } else {
       cell += '<td></td>';
    }
-   return cell
+   return cell;
 }
 
 function createTableTr(start, end) {
@@ -724,26 +738,23 @@ function createTableTr(start, end) {
          tr += createCell(i, start, end);
       }
    } else if ((start == 7 && end == 30) || (start >= 6 && end == 31)) {
-      for (let i = 1; i <= end + 14 - end % 7; i++) {
-         let cell = ''
+      for (let i = 1; i <= end + 14 - (end % 7); i++) {
+         let cell = '';
          let td = i - start + 1;
          if (i < start) {
             cell += '<td></td>';
-         }
-         else if (i % 7 == 0 && i != (end + 14 - end % 7)) {
+         } else if (i % 7 == 0 && i != end + 14 - (end % 7)) {
             cell += '<td>' + td + '</td>';
             cell += '</tr><tr>';
          } else if (td <= end) {
             cell += '<td>' + td + '</td>';
-         }
-         else {
+         } else {
             cell += '<td></td>';
          }
-         tr += cell
+         tr += cell;
       }
-   }
-   else {
-      for (let i = 1; i <= end + 7 - end % 7; i++) {
+   } else {
+      for (let i = 1; i <= end + 7 - (end % 7); i++) {
          tr += createCell(i, start, end);
       }
    }
@@ -783,7 +794,8 @@ function createCalendar2(elem, year, month) {
    let month = month - 1; // months in JS are 0..11, not 1..12
    let date = new Date(year, mon);
 
-   let table = '<table><tr><th>MO</th><th>TU</th><th>WE</th><th>TH</th><th>FR</th><th>SA</th><th>SU</th></tr><tr>';
+   let table =
+      '<table><tr><th>MO</th><th>TU</th><th>WE</th><th>TH</th><th>FR</th><th>SA</th><th>SU</th></tr><tr>';
 
    // spaces for the first row
    // from Monday till the first day of the month
@@ -796,7 +808,8 @@ function createCalendar2(elem, year, month) {
    while (date.getMonth() == month) {
       table += '<td>' + date.getDate() + '</td>';
 
-      if (getDay(date) % 7 == 6) { // sunday, last day of week - newline
+      if (getDay(date) % 7 == 6) {
+         // sunday, last day of week - newline
          table += '</tr><tr>';
       }
 
@@ -817,7 +830,8 @@ function createCalendar2(elem, year, month) {
    elem.innerHTML = table;
 }
 
-function getDay(date) { // get day number from 0 (monday) to 6 (sunday)
+function getDay(date) {
+   // get day number from 0 (monday) to 6 (sunday)
    let day = date.getDay();
    if (day == 0) day = 7; // make Sunday (0) the last day
    return day - 1;
@@ -830,7 +844,7 @@ createCalendar2(calendar, 2012, 9);
 // TASK 8 - Colored clock with setInterval
 // click on this button calls clockStart()
 <div id="clock">
-   <span class="hour"></span>:<span class="min"></span>:<span class="sec"></span>
+   <span class="hour" />:<span class="min" />:<span class="sec" />
 </div>;
 
 <input type="button" onclick="clockStart()" value="Start" />;
@@ -872,7 +886,7 @@ clockStart();
 <ul id="ul">
    <li id="one">1</li>
    <li id="two">4</li>
-</ul>
+</ul>;
 
 let li1 = document.getElementById('one');
 let li4 = document.getElementById('two');
@@ -913,11 +927,14 @@ one.insertAdjacentHTML('afterend', '<li>2</li><li>3</li>');
       <td>Lee</td>
       <td>5</td>
    </tr>
-</table>
+</table>;
 
 let sortedRows = Array.from(table.rows)
    .slice(1)
-   .sort((rowA, rowB) => rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1);
+   .sort(
+      (rowA, rowB) =>
+         rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1,
+   );
 
 table.tBodies[0].append(...sortedRows);
 
@@ -930,7 +947,8 @@ table.tBodies[0].append(...sortedRows);
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 11 - Create a notification
-{/* <style>
+{
+   /* <style>
    .notification {
       position: fixed;
       z-index: 1000;
@@ -945,7 +963,8 @@ table.tBodies[0].append(...sortedRows);
       background: #b80000;
       color: yellow;
    }
-</style> */}
+</style> */
+}
 
 function showNotification(options) {
    let div = document.createElement('div');
@@ -969,6 +988,6 @@ setInterval(() => {
       top: 10, // 10px from the top of the window (by default 0px)
       right: 10, // 10px from the right edge of the window (by default 0px)
       html: 'Hello ' + i++, // the HTML of notification
-      className: "welcome" // an additional class for the div (optional)
+      className: 'welcome', // an additional class for the div (optional)
    });
 }, 2000);
