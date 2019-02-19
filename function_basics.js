@@ -532,7 +532,7 @@ let age = prompt('What is your age?', 18);
 
 let welcome = age < 18 ? () => alert('Hello') : () => alert('Greetings!');
 
-welcome(); // ok now
+welcome(); // Greetings!
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -566,6 +566,12 @@ let str = '... receive the code from a server dynamically ...';
 
 let func = new Function(str);
 func();
+
+//--------------------REMEMBER--------------------
+/*  Arrow functions can’t run with new
+    Not having this naturally means another limitation: arrow functions can’t be used as constructors.
+    They can’t be called with new.
+*/
 
 //------------------------------------------------------------------------------------------
 
