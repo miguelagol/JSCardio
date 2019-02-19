@@ -454,6 +454,214 @@ f(); // [object Window]
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Property flags
+/* Object properties, besides a value, have three special attributes (so-called “flags”):
+      - writable – if true, can be changed, otherwise it’s read-only.
+      - enumerable – if true, then listed in loops, otherwise not listed.
+      - configurable – if true, the property can be deleted and these attributes can be modified, otherwise not.
+*/
+
+// Object.getOwnPropertyDescriptor
+// allows to query the full information about a property
+/* let descriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
+   obj - the object to get information from
+   propertyName - the name of the property
+The returned value is a so-called “property descriptor” object: it contains the value and all the flags.
+*/
+let user = {
+   name: 'Jack',
+};
+
+let descriptor = Object.getOwnPropertyDescriptor(user, 'name');
+
+console.log(JSON.stringify(descriptor, null, 2));
+/*
+{
+  "value": "Jack",
+  "writable": true,
+  "enumerable": true,
+  "configurable": true
+} */
+
+// Object.getOwnPropertyDescriptors
+// with Object.defineProperties it can be used as a “flags-aware” way of cloning an object:
+let clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(obj));
+
+// we can do that
+for (let key in user) {
+   clone[key] = user[key];
+}
+// but
+//  that does not copy flags
+//  that for..in ignores symbolic properties
+
+//------------------------------------------------------------------------------------------
+
+// Object.defineProperty
+/* let defineProp = Object.defineProperty(obj, propertyName, descriptor);
+   obj, propertyName - the object and property to work on
+   descriptor - property descriptor to apply
+If the property exists, defineProperty updates its flags.
+Otherwise, it creates the property with the given value and flags; in that case, if a flag is not supplied, it is assumed false.
+*/
+let user = {};
+
+Object.defineProperty(user, 'name', { value: 'Jack' });
+
+let descriptor = Object.getOwnPropertyDescriptor(user, 'name');
+
+console.log(JSON.stringify(descriptor, null, 2));
+/* 
+{
+  "value": "Jack",
+  "writable": false,
+  "enumerable": false,
+  "configurable": false
+} */
+
+// Object.defineProperties
+/* Object.defineProperties(obj, {
+      prop1: descriptor1,
+      prop2: descriptor2
+      // ...
+   });
+*/
+Object.defineProperties(user, {
+   name: { value: 'John', writable: false },
+   surname: { value: 'Smith', writable: false },
+   // ...
+});
+
+//------------------------------------------------------------------------------------------
+
+// Read-only
+let user = {
+   name: 'Ann',
+};
+
+Object.defineProperty(user, 'name', {
+   writable: false,
+});
+
+console.log(user.name); // Ann
+
+user.name = 'Pete'; // there is no error but the operation still won’t succeed
+
+console.log(user.name); // Ann
+
+//--------------------REMEMBER--------------------
+// Errors appear only in use strict
+('use strict');
+let user = {
+   name: 'Ann',
+};
+
+Object.defineProperty(user, 'name', {
+   writable: false,
+});
+
+console.log(user.name); // Ann
+
+user.name = 'Pete'; // Error: Cannot assign to read only property 'name' of object '#<Object>'
+
+// the same operation, but for the case when a property doesn’t exist
+let user = {};
+
+Object.defineProperty(user, 'name', {
+   value: 'Jack',
+   enumerable: true,
+   configurable: true,
+});
+
+console.log(user.name); // Jack
+
+user.name = 'Pete';
+
+console.log(user.name); // Jack
+
+//------------------------------------------------------------------------------------------
+
+// Non-enumerable
+// Normally, a built-in toString for objects is non-enumerable, it does not show up in for..in.
+// But if we add toString of our own, then by default it shows up in for..in
+let user = {
+   name: 'Pete',
+   toString() {
+      return this.name;
+   },
+};
+
+for (let key in user) {
+   console.log(key); // name, toString
+}
+
+// If we don’t like it, then we can set enumerable:false
+Object.defineProperty(user, 'toString', {
+   enumerable: false,
+});
+
+for (let key in user) {
+   console.log(key); // name
+}
+
+// Non-enumerable properties are also excluded from Object.keys:
+console.log(Object.keys(user)); // [ 'name' ]
+
+//------------------------------------------------------------------------------------------
+
+// Non-configurable
+// A non-configurable property can not be deleted or altered with definePropert
+let descriptor = Object.getOwnPropertyDescriptor(Math, 'PI');
+
+console.log(JSON.stringify(descriptor, null, 2));
+/* {
+  "value": 3.141592653589793,
+  "writable": false,
+  "enumerable": false,
+  "configurable": false
+} */
+
+let user = {};
+
+Object.defineProperty(user, 'name', {
+   value: 'Ann',
+   writable: false,
+   configurable: false,
+});
+
+// won't be able to change user.name or its flags
+// all this won't work:
+//   user.name = "Pete"
+//   delete user.name
+//   defineProperty(user, "name", ...)
+
+//------------------------------------------------------------------------------------------
+
+// Sealing an object globally
+// Property descriptors work at the level of individual properties.
+/* There are also methods that limit access to the whole object:
+      -  Object.preventExtensions(obj)
+         Forbids to add properties to the object.
+      -  Object.seal(obj)
+         Forbids to add/remove properties, sets for all existing properties configurable: false.
+      -  Object.freeze(obj)
+         Forbids to add/remove/change properties, sets for all existing properties configurable: false, writable: false.
+
+   And also there are tests for them:
+      -  Object.isExtensible(obj)
+         Returns false if adding properties is forbidden, otherwise true.
+      -  Object.isSealed(obj)
+         Returns true if adding/removing properties is forbidden, and all existing properties have configurable: false.
+      -  Object.isFrozen(obj)
+         Returns true if adding/removing/changing properties is forbidden, and all current properties are configurable: false, writable: false.
+*/
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Property getters/setters
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Hello, object
 let user = {};
 user.name = 'John';
