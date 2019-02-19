@@ -659,6 +659,164 @@ Object.defineProperty(user, 'name', {
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Property getters/setters
+/* There are two kinds of properties.
+      - The first kind is data properties
+      - The second type of properties is accessor properties. They are essentially functions that work on getting and setting a value,
+        but look like regular properties to an external code.
+*/
+let obj = {
+   get propName() {
+      // getter, the code executed on getting obj.propName
+   },
+   set propName(value) {
+      // setter, the code executed on setting obj.propName = value
+   },
+};
+
+let user = {
+   name: 'Jack',
+   surname: 'Sparrow',
+
+   get fullName() {
+      // fullName has only a getter.
+      return `${this.name} ${this.surname}`;
+   },
+};
+
+//  an accessor property looks like a regular one. That’s the idea of accessor properties.
+// We don’t call user.fullName as a function, we read it normally: the getter runs behind the scenes.
+console.log(user.fullName); // Jack Sparrow
+
+let user = {
+   name: 'Jack',
+   surname: 'Sparrow',
+
+   get fullName() {
+      // fullName has a getter
+      return `${this.name} ${this.surname}`;
+   },
+
+   set fullName(value) {
+      // and a setter
+      [this.name, this.surname] = value.split(' ');
+   },
+};
+
+user.fullName = 'Alice Cooper';
+
+console.log(user.name); // Alice
+console.log(user.surname); // Cooper
+
+//--------------------REMEMBER--------------------
+// Accessor properties are only accessible with get/set
+// A property can either be a “data property” or an “accessor property”, but not both.
+// Sometimes it’s normal that there’s only a setter or only a getter.
+// But the property won’t be readable or writable in that case.
+
+//------------------------------------------------------------------------------------------
+
+// Accessor descriptors
+/* Accessor descriptor may have:
+      - get    – a function without arguments, that works when a property is read,
+      - set    – a function with one argument, that is called when the property is set,
+      - enumerable   – same as for data properties,
+      - configurable – same as for data properties.
+*/
+let user = {
+   name: 'Alice',
+   surname: 'Cooper',
+};
+
+Object.defineProperty(user, 'fullName', {
+   get() {
+      return `${this.name} ${this.surname}`;
+   },
+
+   set(value) {
+      [this.name, this.surname] = value.split(' ');
+   },
+});
+
+console.log(user.fullName); // Alice Cooper
+
+for (let key in user) {
+   console.log(key); // name, surname
+}
+
+// If we try to supply both get and value in the same descriptor, there will be an error:
+Object.defineProperty({}, 'prop', {
+   get() {
+      return 1;
+   },
+
+   value: 2,
+}); // Error: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute, #<Object>
+
+//------------------------------------------------------------------------------------------
+
+// Getters/setters can be used as wrappers over “real” property values to gain more control over them.
+let user = {
+   get name() {
+      return this._name;
+   },
+
+   set name(value) {
+      if (value.length < 4) {
+         console.log('Name is too short, need at least 4 characters');
+         return;
+      }
+      this._name = value;
+   },
+};
+
+user.name = 'Pete';
+
+console.log(user.name); // Pete
+
+user.name = 'Ala'; // Name is too short, need at least 4 characters
+
+//------------------------------------------------------------------------------------------
+
+// Using for compatibility
+// getters and setters – they allow to take control over a “normal” data property and tweak it at any moment.
+
+// we started implementing user objects using data properties name and age
+function User(name, age) {
+   this.name = name;
+   this.age = age;
+}
+
+let john = new User('John', 25);
+
+console.log(john.age); // 25
+
+// …But sooner or later, things may change. Instead of age we may decide to store birthday
+function User(name, birthday) {
+   this.name = name;
+   this.birthday = birthday;
+}
+
+let john = new User('John', new Date(1992, 6, 1));
+
+// Now what to do with the old code that still uses age property?
+// Adding a getter for age mitigates the problem
+function User(name, birthday) {
+   this.name = name;
+   this.birthday = birthday;
+
+   // age is calculated from the current date and birthday
+   Object.defineProperty(this, 'age', {
+      get() {
+         let todayYear = new Date().getFullYear();
+         return todayYear - this.birthday.getFullYear();
+      },
+   });
+}
+
+let john = new User('John', new Date(1992, 6, 1));
+
+console.log(john.birthday); // 1992-06-30T22:00:00.000Z
+console.log(john.age); // 27
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
