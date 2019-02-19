@@ -68,6 +68,30 @@ function f() {
 
 f(1); // 1
 
+// That’s great for decorators, when we need to forward a call with the current this and arguments.
+function defer(f, ms) {
+   return function() {
+      setTimeout(() => f.apply(this, arguments), ms);
+   };
+}
+
+function sayHi(who) {
+   console.log('Hello, ' + who);
+}
+
+let sayHiDeferred = defer(sayHi, 2000);
+sayHiDeferred('Jack'); // Hello, Jack
+
+// the same without arrow function
+function defer(f, ms) {
+   return function(...args) {
+      let context = this;
+      setTimeout(function() {
+         return f.apply(context, args);
+      }, ms);
+   };
+}
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // SPREAD OPERATOR
