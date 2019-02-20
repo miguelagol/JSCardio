@@ -149,6 +149,83 @@ console.log(animal.isSleeping); // undefined
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
+// the 'prototype' property
+// In the old times, there was only one way to set a prototype: to use a "prototype" property of the constructor function.
+// When a new object is created with new F(), the object’s [[Prototype]] is set to F.prototype.
+// In other words, if F has a prototype property with a value of the object type, then new operator uses it to set [[Prototype]] for the new object.
+let animal = {
+   eats: true,
+};
+
+function Rabbit(name) {
+   this.name = name;
+}
+
+Rabbit.prototype = animal;
+
+let rabbit = new Rabbit('White rabbit');
+// the same as
+// rabbit.__proto__ = animal;
+
+console.log(rabbit.eats); // true
+
+//------------------------------------------------------------------------------------------
+
+// Default F.prototype, constructor property
+// Every function has the 'prototype' property even if we don't supply it
+
+// The default "prototype" is an object with the only property constructor that points back to the function itself.
+function Rabbit() {}
+/* default prototype
+Rabbit.prototype = { constructor: Rabbit };
+*/
+
+console.log(Rabbit.prototype.constructor == Rabbit); // true
+
+// if we do nothing, the constructor property is available to all rabbits through [[Prototype]]
+let rabbit = new Rabbit(); // inherits from {constructor: Rabbit}
+
+console.log(rabbit.constructor == Rabbit); // true (from prototype)
+
+// We can use constructor property to create a new object using the same constructor as the existing one.
+function Rabbit(name) {
+   this.name = name;
+   console.log(name);
+}
+
+let rabbit = new Rabbit('White rabbit');
+
+let rabbit2 = new rabbit.constructor('Black rabbit');
+
+//--------------------REMEMBER-------------------
+// JavaScript itself does not ensure the right "constructor" value.
+
+//  if we replace the default prototype as a whole, then there will be no "constructor" in it.
+function Rabbit() {}
+Rabbit.prototype = {
+   jumps: true,
+};
+
+let rabbit = new Rabbit();
+console.log(rabbit.constructor === Rabbit); // false
+
+// to keep the right "constructor" we can choose to add/remove properties to the default "prototype" instead of overwriting it as a whole
+function Rabbit() {}
+
+Rabbit.prototype.jumps = true;
+
+let rabbit = new Rabbit();
+
+console.log(rabbit.constructor === Rabbit); // true
+
+// or recreate the constructor property manually
+Rabbit.prototype = {
+   jumps: true,
+   constructor: Rabbit,
+};
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Working with prototype
 // Which values are shown in the process?
 let animal = {
@@ -289,3 +366,98 @@ speedy.eat('apple');
 console.log(speedy.stomach); // ['apple']
 
 console.log(lazy.stomach); // []
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Changing 'prototype'
+function Rabbit() {}
+Rabbit.prototype = {
+   eats: true,
+};
+
+let rabbit = new Rabbit();
+
+console.log(rabbit.eats); // true
+
+// 1. We added one more string (emphasized), what shows now?
+function Rabbit() {}
+Rabbit.prototype = {
+   eats: true,
+};
+
+let rabbit = new Rabbit();
+
+Rabbit.prototype = {}; // The assignment to Rabbit.prototype sets up [[Prototype]] for new objects, but it does not affect the existing ones.
+
+console.log(rabbit.eats); // true
+
+// 2. …And if the code is like this (replaced one line)?
+function Rabbit() {}
+Rabbit.prototype = {
+   eats: true,
+};
+
+let rabbit = new Rabbit();
+
+Rabbit.prototype.eats = false;
+// Objects are assigned by reference.
+// The object from Rabbit.prototype is not duplicated,
+// it’s still a single object is referenced both by Rabbit.prototype and by the [[Prototype]] of rabbit.
+// So when we change its content through one reference, it is visible through the other one.
+
+console.log(rabbit.eats); // false
+
+// 3. Like this (replaced one line)?
+function Rabbit() {}
+Rabbit.prototype = {
+   eats: true,
+};
+
+let rabbit = new Rabbit();
+
+delete rabbit.eats; // All delete operations are applied directly to the object.
+// Here delete rabbit.eats tries to remove eats property from rabbit, but it doesn’t have it.
+// So the operation won’t have any effect.
+
+console.log(rabbit.eats); // true
+
+// 4. The last variant:
+function Rabbit() {}
+Rabbit.prototype = {
+   eats: true,
+};
+
+let rabbit = new Rabbit();
+
+delete Rabbit.prototype.eats; // The property eats is deleted from the prototype, it doesn’t exist any more.
+
+console.log(rabbit.eats); // undefined
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Create an object with the same constructor
+// We have an arbitrary object obj, created by a constructor function – we don’t know which one, but we’d like to create a new object using it.
+// Can we do it like that?
+let obj2 = new obj.constructor();
+
+// an example of a constructor function for obj which lets such code work right
+function Animal() {
+   console.log('animal');
+}
+
+let obj = new Animal(); // animal
+
+let obj2 = new obj.constructor(); // animal
+
+// an example that makes it work wrong
+function Animal() {
+   console.log('animal2');
+}
+
+Animal.prototype = {
+   jump: true,
+};
+
+let obj = new Animal(); // animal2
+
+let obj2 = new obj.constructor();
