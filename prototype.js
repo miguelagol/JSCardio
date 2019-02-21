@@ -250,7 +250,7 @@ let array = [1, 2, 3];
 console.log(array.__proto__ === Array.prototype); // true
 
 // all built-in prototypes have Object.prototype on the top
-console.log(array.__proto__.__proto__ === Object.prototype) // true
+console.log(array.__proto__.__proto__ === Object.prototype); // true
 
 // Some methods in prototypes may overlap
 // Array.prototype has its own toString that lists comma-delimited elements
@@ -289,7 +289,7 @@ console.dir([1, 2, 3]);
 //------------------------------------------------------------------------------------------
 
 // Changing native prototypes
-String.prototype.show = function () {
+String.prototype.show = function() {
    console.log(this);
 };
 
@@ -304,7 +304,7 @@ String.prototype.show = function () {
    (or any of those that we want to support), then may implement it manually and populate the built-in prototype with it
 */
 if (!String.prototype.repeat) {
-   String.prototype.repeat = function (n) {
+   String.prototype.repeat = function(n) {
       return new Array(n + 1).join(this);
    };
 }
@@ -326,6 +326,126 @@ function showArgs2() {
 }
 
 showArgs2('Jack', 'Pete', 'Ann'); // Jack - Pete - Ann
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Methods for prototypes
+/* There are also other ways to get/set a prototype:
+      - Object.create(proto[, descriptors])  – creates an empty object with given proto as [[Prototype]] and optional property descriptors.
+      - Object.getPrototypeOf(obj)     – returns the [[Prototype]] of obj.
+      - Object.setPrototypeOf(obj, proto)    – sets the [[Prototype]] of obj to proto.
+*/
+let animal = {
+   eats: true,
+};
+
+// create a new object with animal as a prototype
+let rabbit = Object.create(animal);
+
+console.log(rabbit.eats); // true
+console.log(Object.getPrototypeOf(rabbit) === animal); // true
+
+Object.setPrototypeOf(rabbit, {});
+console.log(rabbit.eats); // undefined
+
+// Object.create has an optional second argument: property descriptors.
+let animal = {
+   eats: true,
+};
+
+let rabbit = Object.create(animal, {
+   jumps: {
+      value: true,
+   },
+});
+
+console.log(rabbit.jumps); // true
+
+// we can use Object.create to perform an object cloning
+let clone = Object.create(
+   Object.getPrototypeOf(obj),
+   Object.getOwnPropertyDescriptors(obj),
+);
+// This call makes a truly exact copy of obj, including all properties: enumerable and non-enumerable,
+// data properties and setters/getters – everything, and with the right [[Prototype]].
+
+/* If we count all the ways to manage [[Prototype]], there’s a lot! Many ways to do the same!
+   That’s for historical reasons.
+      - The "prototype" property of a constructor function works since very ancient times.
+      - Later in the year 2012: Object.create appeared in the standard. It allowed to create objects with the given prototype,
+        but did not allow to get/set it. So browsers implemented non-standard __proto__ accessor that allowed to
+        get/set a prototype at any time.
+      - Later in the year 2015: Object.setPrototypeOf and Object.getPrototypeOf were added to the standard.
+        The __proto__ was de-facto implemented everywhere, so it made its way to the Annex B of the standard,
+        that is optional for non-browser environments.
+*/
+
+// if we try to store user-provided keys in it (for instance, a user-entered dictionary), we can see an interesting glitch:
+// all keys work fine except "__proto__"
+let obj = {};
+let key = prompt("What's the key", '__proto__');
+
+obj[key] = 'some value';
+
+// Here if the user types in __proto__, the assignment is ignored!
+alert(obj[key]); // [object Object]
+
+// to evade a problem Object.create(null) creates an empty object without a prototype
+let obj = Object.create(null);
+
+let key = prompt("What's the key?", '__proto__');
+obj[key] = 'some value';
+
+alert(obj[key]); // "some value"
+// A downside is that such objects lack any built-in object methods
+
+//------------------------------------------------------------------------------------------
+
+// Getting all properties
+/* Thera are many ways to get keys/values from an object:
+      -  Object.keys(obj) / Object.values(obj) / Object.entries(obj)
+         returns an array of enumerable own string property names/values/key-value pairs.
+         These methods only list enumerable properties, and those that have strings as keys.
+      -  Object.getOwnPropertySymbols(obj)   – returns an array of all own symbolic property names.
+      -  Object.getOwnPropertyNames(obj) – returns an array of all own string property names (non-enumerable properties)
+      -  Reflect.ownKeys(obj) – returns an array of all own property names.
+*/
+// Properties from the prototype are not listed
+// But the for..in loop loops over inherited properties too.
+let animal = {
+   eats: true,
+};
+
+let rabbit = {
+   jumps: true,
+   __proto__: animal,
+};
+
+// only own keys
+console.log(Object.keys(rabbit)); // [ 'jumps' ]
+
+// inherited keys too
+for (let key in rabbit) console.log(key); // jumps, eats
+
+// obj.hasOwnProperty(key)
+// it returns true if obj has its own (not inherited) property named key
+// If we want to distinguish inherited properties
+let animal = {
+   eats: true,
+};
+
+let rabbit = {
+   jumps: true,
+   __proto__: animal,
+};
+
+for (let key in rabbit) {
+   let isOwn = rabbit.hasOwnProperty(key);
+   console.log(key + ': ' + isOwn);
+} // jumps: true, eats: false
+
+// …But why hasOwnProperty does not appear in for..in loop, if it lists all inherited properties?
+// The answer is simple: it’s not enumerable. Just like all other properties of Object.prototype. That’s why they are not listed.
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -568,9 +688,9 @@ let obj2 = new obj.constructor();
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 7 - Add method 'f.defer(ms)' to functions
-Function.prototype.defer = function (ms) {
-   setTimeout(this, ms)
-}
+Function.prototype.defer = function(ms) {
+   setTimeout(this, ms);
+};
 
 function f() {
    console.log('Hello');
@@ -581,15 +701,59 @@ f.defer(3000);
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 8 - Add decorating 'defer()' to functions
-Function.prototype.defer = function (ms) {
+Function.prototype.defer = function(ms) {
    let f = this;
-   return function (...args) {
-      setTimeout(() => f.apply(this, args), ms)
+   return function(...args) {
+      setTimeout(() => f.apply(this, args), ms);
    };
-}
+};
 
 function f(a, b) {
    console.log(a + b);
 }
 
 f.defer(1000)(1, 2);
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 9 - Add toString to the dictionary
+let dictionary = Object.create(null);
+
+Object.defineProperties(dictionary, {
+   toString: {
+      value() {
+         return Object.keys(this).join(', ');
+      },
+      // enumerable: false // by default
+   },
+});
+
+dictionary.apple = 'Apple';
+dictionary.__proto__ = 'test';
+
+for (let key in dictionary) {
+   console.log(key); // apple,    __proto__
+}
+
+console.log(dictionary); // apple, __proto__
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 10 - The difference between calls
+function Rabbit(name) {
+   this.name = name;
+}
+
+Rabbit.prototype.sayHi = function() {
+   console.log(this.name);
+};
+
+let rabbit = new Rabbit('White Rabbit');
+
+// These calls do the same thing or not?
+rabbit.sayHi(); // White Rabbit
+Rabbit.prototype.sayHi(); // undefined
+Object.getPrototypeOf(rabbit).sayHi(); // undefined
+rabbit.__proto__.sayHi(); // undefined
+
+// The first call has this == rabbit, the other ones have this equal to Rabbit.prototype, because it’s actually the object before the dot.
