@@ -152,7 +152,8 @@ console.log(animal.isSleeping); // undefined
 // the 'prototype' property
 // In the old times, there was only one way to set a prototype: to use a "prototype" property of the constructor function.
 // When a new object is created with new F(), the object’s [[Prototype]] is set to F.prototype.
-// In other words, if F has a prototype property with a value of the object type, then new operator uses it to set [[Prototype]] for the new object.
+// In other words, if F has a prototype property with a value of the object type,
+// then new operator uses it to set [[Prototype]] for the new object.
 let animal = {
    eats: true,
 };
@@ -223,6 +224,108 @@ Rabbit.prototype = {
    jumps: true,
    constructor: Rabbit,
 };
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Object.prototype
+
+let obj = {};
+// the same as
+// let obj = new Object(); // Object – is a built-in object constructor function
+
+// When new Object() is called (or a literal object {...} is created),
+// the [[Prototype]] of it is set to Object.prototype
+console.log(obj); // {}
+
+// the constructor function vfunction has Object.prototype that references a huge object with toString and other functions
+console.log(String(obj)); // [object Object]
+
+console.log(obj.__proto__ === Object.prototype); // true
+
+// Other built-in prototypes
+let array = [1, 2, 3];
+// when we create an array [1, 2, 3], the default new Array() constructor is used internally.
+// So the array data is written into the new object, and Array.prototype becomes its prototype and provides methods.
+
+console.log(array.__proto__ === Array.prototype); // true
+
+// all built-in prototypes have Object.prototype on the top
+console.log(array.__proto__.__proto__ === Object.prototype) // true
+
+// Some methods in prototypes may overlap
+// Array.prototype has its own toString that lists comma-delimited elements
+let array = [1, 2, 3];
+
+console.log(String(array)); // 1,2,3
+// Object.prototype has toString as well, but Array.prototype is closer in the chain, so the array variant is used.
+
+// In-browser tools like Chrome developer console also show inheritance (may need to use console.dir for built-in objects
+console.dir([1, 2, 3]);
+/* Array[3]
+      0: 1
+      1: 2
+      2: 3
+      length: 3
+      __proto__: Array.prototype
+      ...
+*/
+
+//------------------------------------------------------------------------------------------
+
+// Primitives are not objects
+/* But if we try to access their properties, then temporary wrapper objects are created
+   using built-in constructors String, Number, Boolean, they provide the methods and disappear.
+
+   These objects are created invisibly to us and most engines optimize them out, but the specification describes it exactly this way.
+   Methods of these objects also reside in prototypes, available as String.prototype, Number.prototype and Boolean.prototype.
+*/
+
+//--------------------REMEMBER-------------------
+// Values null and undefined have no object wrappers
+/* Special values null and undefined stand apart. They have no object wrappers, so methods and properties are not available for them.
+   And there are no corresponding prototypes too.
+*/
+
+//------------------------------------------------------------------------------------------
+
+// Changing native prototypes
+String.prototype.show = function () {
+   console.log(this);
+};
+
+'BOOM'.show(); // [String: 'BOOM']
+
+// changing native prototypes is generally a bad idea.
+// Prototypes are global, so it’s easy to get a conflict. If two libraries add a method String.prototype.show,
+// then one of them overwrites the other one.
+
+/* In modern programming, there is only one case when modifying native prototypes is approved. That’s polyfills.
+   In other words, if there’s a method in JavaScript specification that is not yet supported by our JavaScript engine
+   (or any of those that we want to support), then may implement it manually and populate the built-in prototype with it
+*/
+if (!String.prototype.repeat) {
+   String.prototype.repeat = function (n) {
+      return new Array(n + 1).join(this);
+   };
+}
+
+console.log('La'.repeat(3)); // LaLaLa
+
+//------------------------------------------------------------------------------------------
+
+// Borrowing from prototypes
+function showArgs() {
+   console.log([].join.call(arguments, ' - '));
+}
+
+showArgs('Jack', 'Pete', 'Ann'); // Jack - Pete - Ann
+
+// Because join resides in Array.prototype, we can call it from there directly
+function showArgs2() {
+   console.log(Array.prototype.join.call(arguments, ' - '));
+}
+
+showArgs2('Jack', 'Pete', 'Ann'); // Jack - Pete - Ann
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -461,3 +564,32 @@ Animal.prototype = {
 let obj = new Animal(); // animal2
 
 let obj2 = new obj.constructor();
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Add method 'f.defer(ms)' to functions
+Function.prototype.defer = function (ms) {
+   setTimeout(this, ms)
+}
+
+function f() {
+   console.log('Hello');
+}
+
+f.defer(3000);
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 8 - Add decorating 'defer()' to functions
+Function.prototype.defer = function (ms) {
+   let f = this;
+   return function (...args) {
+      setTimeout(() => f.apply(this, args), ms)
+   };
+}
+
+function f(a, b) {
+   console.log(a + b);
+}
+
+f.defer(1000)(1, 2);
