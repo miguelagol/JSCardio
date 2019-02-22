@@ -754,6 +754,7 @@ Object.defineProperty({}, 'prop', {
 
 //------------------------------------------------------------------------------------------
 
+// Smarter getters/setters
 // Getters/setters can be used as wrappers over “real” property values to gain more control over them.
 let user = {
    get name() {
@@ -774,6 +775,10 @@ user.name = 'Pete';
 console.log(user.name); // Pete
 
 user.name = 'Ala'; // Name is too short, need at least 4 characters
+
+// Technically, the external code may still access the name directly by using user._name.
+// But there is a widely known agreement that properties starting with an underscore "_"
+// are internal and should not be touched from outside the object.
 
 //------------------------------------------------------------------------------------------
 
