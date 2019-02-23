@@ -383,6 +383,377 @@ let article = Article.createTodays();
 console.log(article.title); // Today's digest
 
 // Static methods are also used in database-related classes to search/save/remove entries from the database
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// Class inheritance
+// To inherit from another class, we should specify "extends" and the parent class before the brackets {..}.
+class Animal {
+   constructor(name) {
+      this.speed = 0;
+      this.name = name;
+   }
+
+   run(speed) {
+      this.speed += speed;
+      console.log(`${this.name} runs with speed ${this.speed}.`);
+   }
+
+   stop() {
+      this.speed = 0;
+      console.log(`${this.name} stopped.`);
+   }
+}
+
+// Inherit from Animal
+class Rabbit extends Animal {
+   // The extends keyword actually adds a [[Prototype]] reference from Rabbit.prototype to Animal.prototype
+   hide() {
+      console.log(`${this.name} hides!`);
+   }
+}
+
+let rabbit = new Rabbit('White rabbit');
+
+rabbit.run(5); // White rabbit runs with speed 5.
+rabbit.hide(); // White rabbit hides!
+
+// Any expression is allowed after extends
+// Class syntax allows to specify not just a class, but any expression after extends.
+function f(phrase) {
+   return class {
+      sayHi() {
+         console.log(phrase);
+      }
+   };
+}
+
+class User extends f('Hello') {}
+
+new User().sayHi(); // Hello
+
+//------------------------------------------------------------------------------------------
+
+// Overriding a method
+// If we specify our own method (the same name as a parent method), then it will be used instead
+// But usually we don’t want to totally replace a parent method, but rather to build on top of it, tweak or extend its functionality.
+// We do something in our method, but call the parent method before/after it or in the process.
+
+/* Classes provide "super" keyword for that.
+      - super.method(...) to call a parent method.
+      - super(...) to call a parent constructor (inside our constructor only).
+*/
+class Animal {
+   constructor(name) {
+      this.speed = 0;
+      this.name = name;
+   }
+
+   run(speed) {
+      this.speed += speed;
+      console.log(`${this.name} runs with speed ${this.speed}.`);
+   }
+
+   stop() {
+      this.speed = 0;
+      console.log(`${this.name} stopped.`);
+   }
+}
+
+class Rabbit extends Animal {
+   hide() {
+      console.log(`${this.name} hides!`);
+   }
+
+   stop() {
+      super.stop(); // call parent stop
+      this.hide(); // and then hide
+   }
+}
+
+let rabbit = new Rabbit('Black rabbit');
+
+rabbit.run(8); // Black rabbit runs with speed 8.
+rabbit.stop(); // Black rabbit stopped. Black rabbit hides!
+
+//--------------------REMEMBER-------------------
+// Arrow functions have no super
+class Rabbit extends Animal {
+   stop() {
+      // The super in the arrow function is the same as in stop(), so it works as intended
+      setTimeout(() => super.stop(), 1000); // call parent stop after 1sec
+   }
+}
+
+//------------------------------------------------------------------------------------------
+
+// Overriding constructor
+// If a class extends another class and has no constructor, then the following constructor is generated
+class Rabbit extends Animal {
+   // generated for extending classes without own constructors
+   constructor(...args) {
+      super(...args);
+   }
+}
+
+// But if we add a custom constructor to Rabbit
+class Animal {
+   constructor(name) {
+      this.speed = 0;
+      this.name = name;
+   }
+   // ...
+}
+
+class Rabbit extends Animal {
+   constructor(name, earLength) {
+      this.speed = 0;
+      this.name = name;
+      this.earLength = earLength;
+   }
+   // ...
+}
+
+// Doesn't work!
+let rabbit = new Rabbit('White Rabbit', 10); // Error: this is not defined.
+// (Error: Must call super constructor in derived class before accessing 'this' or returning from derived constructor)
+
+// That's because
+//--------------------REMEMBER-------------------
+// constructors in inheriting classes must call super(...), and (!) do it before using this.
+
+/* In an inheriting class, the corresponding constructor function is labelled with a special internal property
+      [[ConstructorKind]]:"derived".
+
+   The difference is:
+      - When a normal constructor runs, it creates an empty object as this and continues with it.
+      - But when a derived constructor runs, it doesn’t do it. It expects the parent constructor to do this job.
+*/
+class Animal {
+   constructor(name) {
+      this.speed = 0;
+      this.name = name;
+   }
+   // ...
+}
+
+class Rabbit extends Animal {
+   constructor(name, earLength) {
+      super(name);
+      this.earLength = earLength;
+   }
+   // ...
+}
+
+// now fine
+let rabbit = new Rabbit('White Rabbit', 10);
+
+console.log(rabbit.name); // White Rabbit
+console.log(rabbit.earLength); // 10
+
+//------------------------------------------------------------------------------------------
+
+// Super: internals, [[HomeObject]]
+let animal = {
+   name: 'Animal',
+   eat() {
+      console.log(`${this.name} eats.`);
+   },
+};
+
+let rabbit = {
+   __proto__: animal,
+   name: 'Rabbit',
+   eat() {
+      // that's how super.eat() could presumably work
+      this.__proto__.eat.call(this); // (*)
+   },
+};
+
+// It works
+rabbit.eat(); // Rabbit eats.
+
+// But if we ass one more object to the chain
+let animal = {
+   name: 'Animal',
+   eat() {
+      console.log(`${this.name} eats.`);
+   },
+};
+
+let rabbit = {
+   __proto__: animal,
+   eat() {
+      // ...bounce around rabbit-style and call parent (animal) method
+      this.__proto__.eat.call(this); // longEar.__proto__.eat.call(this)
+   },
+};
+
+let longEar = {
+   __proto__: rabbit,
+   eat() {
+      // ...do something with long ears and call parent (rabbit) method
+      this.__proto__.eat.call(this); // rabbit.eat.call(this)
+   },
+};
+
+longEar.eat(); // Error: Maximum call stack size exceeded
+
+// inside longEar.eat() we have this = longEar
+this.__proto__.eat.call(this);
+// becomes
+longEar.__proto__.eat.call(this);
+// that is
+rabbit.eat.call(this);
+
+// and
+// inside rabbit.eat() we also have this = longEar (bacause of /call(this))
+this.__proto__.eat.call(this); // (*)
+// becomes
+longEar.__proto__.eat.call(this);
+// or (again)
+rabbit.eat.call(this);
+
+// [[HomeObject]]
+// When a function is specified as a class or object method, its [[HomeObject]] property becomes that object.
+// [[HomeObject]] is used only for calling parent methods in super, to resolve the prototype
+let animal = {
+   name: 'Animal',
+   eat() {
+      // [[HomeObject]] === animal
+      console.log(`${this.name} eats.`);
+   },
+};
+
+let rabbit = {
+   __proto__: animal,
+   name: 'Rabbit',
+   eat() {
+      // [[HomeObject]] === rabbit
+      super.eat();
+   },
+};
+
+let longEar = {
+   __proto__: rabbit,
+   name: 'Long Ear',
+   eat() {
+      // [[HomeObject]] === longEar
+      super.eat();
+   },
+};
+
+longEar.eat(); // Long Ear eats.
+
+//--------------------REMEMBER-------------------
+// for objects, methods must be specified exactly the given way: as method(), not as "method: function()".
+let animal = {
+   eat: function() {
+      // should be the short syntax: eat() {...}
+      // ...
+   },
+};
+
+let rabbit = {
+   __proto__: animal,
+   eat: function() {
+      super.eat();
+   },
+};
+
+rabbit.eat(); // Error: 'super' keyword unexpected here
+
+//------------------------------------------------------------------------------------------
+
+// Static methods and inheritance
+// The class syntax supports inheritance for static properties too.
+class Animal {
+   constructor(name, speed) {
+      this.speed = speed;
+      this.name = name;
+   }
+   run(speed = 0) {
+      this.speed += speed;
+      console.log(`${this.name} runs with speed ${this.speed}.`);
+   }
+
+   static compare(animalA, animalB) {
+      return animalA.speed - animalB.speed;
+   }
+}
+
+class Rabbit extends Animal {
+   hide() {
+      console.log(`${this.name} hides!`);
+   }
+}
+
+let rabbits = [new Rabbit('White Rabbit', 10), new Rabbit('Black Rabbit', 5)];
+
+rabbits.sort(Rabbit.compare);
+
+rabbits[0].run(); // Black Rabbit runs with speed 5.
+
+// This way Rabbit has access to all static methods of Animal.
+class Animal {}
+class Rabbit extends Animal {}
+
+// for static properties and methods
+console.log(Rabbit.__proto__ === Animal); // true
+
+// and the next step is Function.prototype
+console.log(Animal.__proto__ === Function.prototype); // true
+
+// that's in addition to the "normal" prototype chain for object methods
+console.log(Rabbit.prototype.__proto__ === Animal.prototype); // true
+
+//--------------------REMEMBER-------------------
+// No static inheritance in built-ins
+// Please note that built-in classes don’t have such static [[Prototype]] reference. For instance, Object has Object.defineProperty,
+// Object.keys and so on, but Array, Date etc do not inherit them.
+
+// Symbol.species
+// Symbol.species specifies a function-valued property that the constructor function uses to create derived objects.
+class PowerArray extends Array {
+   isEmpty() {
+      return this.length === 0;
+   }
+
+   // built-in methods will use this as the constructor
+   static get [Symbol.species]() {
+      return Array;
+   }
+}
+
+let arr = new PowerArray(1, 2, 5, 10, 50);
+console.log(arr.isEmpty()); // false
+
+// filter creates new array using arr.constructor[Symbol.species] as constructor
+let filteredArr = arr.filter(item => item >= 10);
+
+console.log(filteredArr instanceof PowerArray); // false
+console.log(filteredArr instanceof Array); // true
+
+// filteredArr is not PowerArray, but Array
+console.log(filteredArr.isEmpty()); // Error: filteredArr.isEmpty is not a function
+
+
+//------------------------------------------------------------------------------------------
+
+// Natives are extendable
+// Built-in classes like Array, Map and others are extendable also.
+class PowerArray extends Array {
+   isEmpty() {
+      return this.length === 0;
+   }
+}
+
+let arr = new PowerArray(1, 2, 5, 10, 50);
+console.log(arr.isEmpty()); // false
+
+// when arr.filter() is called, it internally creates the new array of results exactly as new PowerArray
+let filteredArr = arr.filter(item => item >= 10);
+console.log(filteredArr); // PowerArray [ 10, 50 ]
+console.log(filteredArr.isEmpty()); // false
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -507,42 +878,42 @@ class Clock {
 
    _render() {
       let date = new Date();
-   
+
       let hours = date.getHours();
       if (hours < 10) hours = '0' + hours;
-   
+
       let mins = date.getMinutes();
       if (mins < 10) mins = '0' + mins;
-   
+
       let secs = date.getSeconds();
       if (secs < 10) secs = '0' + secs;
-   
+
       let output = this.template
          .replace('h', hours)
          .replace('m', mins)
          .replace('s', secs);
-   
+
       console.log(output);
    }
 
    stop() {
       clearInterval(this._timer);
    }
-   
+
    start() {
       this._render();
       this._timer = setInterval(() => this._render(), 1000);
    }
 }
 
-
 let clock = new Clock({ template: 'h:m:s' });
 clock.start();
 
 setTimeout(() => clock.stop(), 5000);
 
-// Konrad's examples
+//------------------------------------------------------------------------------------------------------------------------------------------
 
+// Konrad's examples
 class A {
    constructor() {
       A.numOfInstances++;
