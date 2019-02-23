@@ -155,6 +155,18 @@ rabbit.jump(); // White Rabbit jumps!
 
 // The 'class' syntax
 // The “class” construct allows to define prototype-based classes with a clean, nice-looking syntax.
+/* class MyClass {
+      constructor(...) {
+         // ...
+      }
+      method1(...) {}
+      method2(...) {}
+      get something(...) {}
+      set something(...) {}
+      static staticMethod(..) {}
+      // ...
+   }
+*/
 
 // a prototype-based class User
 function User(name) {
@@ -331,6 +343,47 @@ User.staticMethod = function() {
 // The value of this inside User.staticMethod() is the class constructor User itself
 User.staticMethod(); // true
 
+// static methods are used to implement functions that belong to the class, but not to any particular object of it.
+class Article {
+   constructor(title, date) {
+      this.title = title;
+      this.date = date;
+   }
+
+   // It’s not a method of an article, but rather of the whole class.
+   static compare(articleA, articleB) {
+      return articleA.date - articleB.date;
+   }
+}
+
+let articles = [
+   new Article('Mind', new Date(2016, 1, 1)),
+   new Article('Body', new Date(2015, 0, 1)),
+   new Article('Javascript', new Date(2016, 11, 1)),
+];
+
+articles.sort(Article.compare);
+
+console.log(articles[0].title); // Body
+
+class Article {
+   constructor(title, date) {
+      this.title = title;
+      this.date = date;
+   }
+
+   static createTodays() {
+      // because of this === Article
+      return new this("Today's digest", new Date());
+   }
+}
+
+let article = Article.createTodays();
+
+console.log(article.title); // Today's digest
+
+// Static methods are also used in database-related classes to search/save/remove entries from the database
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - An error in the inheritance, find it
@@ -447,6 +500,46 @@ setTimeout(() => clock.stop(), 5000);
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 3 - Rewrite to class
+class Clock {
+   constructor({ template }) {
+      this.template = template;
+   }
+
+   _render() {
+      let date = new Date();
+   
+      let hours = date.getHours();
+      if (hours < 10) hours = '0' + hours;
+   
+      let mins = date.getMinutes();
+      if (mins < 10) mins = '0' + mins;
+   
+      let secs = date.getSeconds();
+      if (secs < 10) secs = '0' + secs;
+   
+      let output = this.template
+         .replace('h', hours)
+         .replace('m', mins)
+         .replace('s', secs);
+   
+      console.log(output);
+   }
+
+   stop() {
+      clearInterval(this._timer);
+   }
+   
+   start() {
+      this._render();
+      this._timer = setInterval(() => this._render(), 1000);
+   }
+}
+
+
+let clock = new Clock({ template: 'h:m:s' });
+clock.start();
+
+setTimeout(() => clock.stop(), 5000);
 
 // Konrad's examples
 
