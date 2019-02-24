@@ -756,6 +756,111 @@ console.log(filteredArr.isEmpty()); // false
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
+// Class checking: 'instanceof'
+// The instanceof operator allows to check whether an object belongs to a certain class. It also takes inheritance into account.
+// object instanceof Class
+// It returns true if obj belongs to the Class (or a class inheriting from it).
+class Rabbit {}
+let rabbit = new Rabbit();
+
+// is it an object of Rabbit class?
+console.log(rabbit instanceof Rabbit); // true
+
+// It also works with constructor functions
+function Rabbit() {}
+
+console.log(new Rabbit() instanceof Rabbit); // true
+
+// And with built-in classes like Array
+let arr = [1, 2, 3];
+console.log(arr instanceof Array); // true
+console.log(arr instanceof Object); // true
+
+// The instanceof operator examines the prototype chain for the check, and is also fine-tunable using the static method Symbol.hasInstance.
+// If there’s a static method Symbol.hasInstance, then use it
+class Animal {
+   static [Symbol.hasInstance](obj) {
+      if (obj.canEat) return true;
+   }
+}
+
+let object = { canEat: true };
+console.log(object instanceof Animal); // treu
+
+// Most classes do not have Symbol.hasInstance. In that case, check if Class.prototype equals to one of prototypes in the obj prototype chain.
+object.__proto__ === Class.prototype;
+object.__proto__.__proto__ === Class.prototype;
+object.__proto__.__proto__.__proto__ === Class.prototype;
+// ...
+
+// In the case of an inheritance, rabbit is an instance of the parent class as well
+class Animal {}
+class Rabbit extends Animal {}
+
+let rabbit = new Rabbit();
+console.log(rabbit instanceof Animal); // true
+// rabbit.__proto__ === Rabbit.prototype
+// rabbit.__proto__.__proto__ === Animal.prototype (match!)
+
+// there’s also a method objA.isPrototypeOf(objB), that returns true if objA is somewhere in the chain of prototypes for objB.
+// So the test of obj instanceof Class can be rephrased as Class.prototype.isPrototypeOf(obj).
+
+// the Class constructor itself does not participate in the check! Only the chain of prototypes and Class.prototype matters.
+function Rabbit() {}
+let rabbit = new Rabbit();
+
+// if we changed the prototype
+Rabbit.prototype = {};
+
+// ...not a rabbit any more!
+console.log(rabbit instanceof Rabbit); // false
+
+//------------------------------------------------------------------------------------------
+
+// Object to String for the type
+/* By specification, the built-in toString can be extracted from the object and executed in the context of any other value.
+   And its result depends on that value.
+      -  For a number, it will be [object Number]
+      -  For a boolean, it will be [object Boolean]
+      -  For null: [object Null]
+      -  For undefined: [object Undefined]
+      -  For arrays: [object Array]
+      -  …etc (customizable).
+*/
+let objectToString = Object.prototype.toString;
+let arr = [];
+
+console.log(objectToString.call(arr)); // [object Array]
+
+let toStr = Object.prototype.toString;
+
+console.log(toStr.call(123)); // [object Number]
+console.log(toStr.call(null)); // [object Null]
+console.log(toStr.call(false)); // [object Boolean]
+
+// Symbol.toStringTag
+// The behavior of Object toString can be customized using a special object property Symbol.toStringTag.
+// It can be used instead of instanceof for built-in objects when we want to get the type as a string rather than just to check.
+let user = {
+   [Symbol.toStringTag]: 'User',
+};
+
+console.log({}.toString.call(user)); // [object User]
+
+console.log(global[Symbol.toStringTag]); // global
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+/* 
+               works for	                        returns
+typeof	      primitives	                        string
+{}.toString	   primitives, built-in objects,       string
+               objects with Symbol.toStringTag	
+instanceof	   objects	                           true/false
+*/
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - An error in the inheritance, find it
 function Animal(name) {
    this.name = name;
@@ -1029,6 +1134,22 @@ class Rabbit	            class Rabbit extends Object
 Rabbit.__proto__ === 	   Rabbit.__proto__ === Object
 Function.prototype
 */
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Strange instanceof
+// Why instanceof below returns true?
+function A() {}
+function B() {}
+
+A.prototype = B.prototype = {};
+
+let a = new A();
+
+console.log(a instanceof B); // true
+
+// Because of a.__proto__ == B.prototype
+//the prototype actually defines the type, not the constructor function.
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
