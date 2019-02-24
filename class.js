@@ -861,6 +861,126 @@ instanceof	   objects	                           true/false
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
+// Mixins
+// In JavaScript we can only inherit from a single object. There can be only one [[Prototype]] for an object.
+// And a class may extend only one other class.
+// A mixin is a class that contains methods for use by other classes without having to be the parent class of those other classes.
+let sayMixin = {
+   sayHi() {
+      console.log(`Hello ${this.name}!`);
+   },
+
+   sayBys() {
+      console.log(`Bye ${this.name}!`);
+   },
+};
+
+class User {
+   constructor(name) {
+      this.name = name;
+   }
+}
+
+Object.assign(User.prototype, sayMixin);
+
+new User('Dude').sayHi(); // Hello Dude!
+
+// There’s no inheritance, but a simple method copying. So User may extend some other class
+// and also include the mixin to “mix-in” the additional methods
+
+// Mixins can make use of inheritance inside themselves.
+let sayPhraseMixin = {
+   say(phrase) {
+      console.log(phrase);
+   },
+};
+
+let sayMixin = {
+   __proto__: sayPhraseMixin,
+
+   sayHi() {
+      // call parent method
+      // he call to the parent method super.say() from sayHiMixin looks for the method in the prototype of that mixin, not the class.
+      super.say(`Hello ${this.name}`);
+   },
+
+   sayBye() {
+      super.say(`Bye ${this.name}`);
+   },
+};
+
+class User {
+   constructor(name) {
+      this.name = name;
+   }
+}
+
+Object.assign(User.prototype, sayMixin);
+
+new User('Dude').sayHi(); // Hello Dude
+
+//------------------------------------------------------------------------------------------
+
+// EventMixin
+let eventMixin = {
+   /* Subscribe to event, usage:
+      menu.on('select', function(item) {...})
+   */
+   on(eventName, handler) {
+      if (!this._eventHandlers) this._eventHandlers = {};
+      if (!this._eventHandlers[eventName]) {
+         this._eventHandlers[eventName] = [];
+      }
+      this._eventHandlers[eventName].push(handler);
+   },
+
+   /* Cancel the subscription, usage:
+      menu.off('select', handler)
+   */
+   off(eventName, handler) {
+      let handlers = this._eventHandlers && this._eventHandlers[eventName];
+      if (!handlers) return;
+      for (let i = 0; i < handlers.length; i++) {
+         if (handlers[i] === handler) {
+            handlers.splice(i--, 1);
+         }
+      }
+   },
+
+   /* Generate the event and attach the data to it
+      this.trigger('select', data1, data2);
+   */
+   trigger(eventName, ...args) {
+      if (!this._eventHandlers || !this._eventHandlers[eventName]) {
+         return; // no handlers for that event name
+      }
+
+      // call the handlers
+      this._eventHandlers[eventName].forEach(handler =>
+         handler.apply(this, args),
+      );
+   },
+};
+
+class Menu {
+   choose(value) {
+      this.trigger('select', value)
+   }
+}
+
+// Add the mixin
+Object.assign(Menu.prototype, eventMixin);
+
+let menu = new Menu();
+
+// call the handler on selection
+menu.on('select', value => console.log(`Value selected: ${value}`));
+
+// triggers the event
+menu.choose('123'); // Value selected: 123
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - An error in the inheritance, find it
 function Animal(name) {
    this.name = name;
