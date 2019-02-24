@@ -736,7 +736,6 @@ console.log(filteredArr instanceof Array); // true
 // filteredArr is not PowerArray, but Array
 console.log(filteredArr.isEmpty()); // Error: filteredArr.isEmpty is not a function
 
-
 //------------------------------------------------------------------------------------------
 
 // Natives are extendable
@@ -910,6 +909,126 @@ let clock = new Clock({ template: 'h:m:s' });
 clock.start();
 
 setTimeout(() => clock.stop(), 5000);
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - Error creating an instance
+//  What’s wrong? Fix it.
+class Animal {
+   constructor(name) {
+      this.name = name;
+   }
+}
+
+class Rabbit extends Animal {
+   constructor(name) {
+      this.name = name;
+      this.created = Date.now();
+   }
+}
+
+let rabbit = new Rabbit('White Rabbit'); // Error: this is not defined
+console.log(rabbit.name);
+
+// Fixed class
+class Animal {
+   constructor(name) {
+      this.name = name;
+   }
+}
+
+class Rabbit extends Animal {
+   constructor(name) {
+      super(name);
+      this.created = Date.now();
+   }
+}
+
+let rabbit = new Rabbit('White Rabbit'); // Error: this is not defined
+console.log(rabbit.name); // White Rabbit
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Extended clock
+class Extended extends Clock {
+   constructor({ template, precision = 1000 }) {
+      super({ template });
+      this._precision = precision;
+   }
+   start() {
+      this._render();
+      this._timer = setInterval(() => this._render(), this._precision);
+   }
+}
+
+let lowResolutionClock = new ExtendedClock({
+   template: 'h:m:s',
+   precision: 10000,
+});
+
+lowResolutionClock.start();
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Class extends Object?
+class Rabbit {
+   constructor(name) {
+      this.name = name;
+   }
+}
+
+let rabbit = new Rabbit('Rab');
+
+// hasOwnProperty method is from Object.prototype
+// rabbit.__proto__ === Object.prototype
+console.log(rabbit.hasOwnProperty('name')); // true
+
+// it doesn’t work – why? fix it?
+class Rabbit extends Object {
+   constructor(name) {
+      this.name = name;
+   }
+}
+
+let rabbit = new Rabbit('Rab');
+
+console.log(rabbit.hasOwnProperty('name'));
+
+// Fixed class
+class Rabbit extends Object {
+   constructor(name) {
+      super();
+      this.name = name;
+   }
+}
+
+let rabbit = new Rabbit('Rab');
+
+console.log(rabbit.hasOwnProperty('name')); // true
+
+//  difference in "class Rabbit extends Object" versus class Rabbit
+/* The “extends” syntax sets up two prototypes:
+      - Between "prototype" of the constructor functions (for methods).
+      - Between the constructor functions itself (for static methods).
+*/
+class Rabbit extends Object {}
+
+console.log(Rabbit.prototype.__proto__ === Object.prototype); // true
+console.log(Rabbit.__proto__ === Object); // true
+
+// But if we don’t have extends Object, then Rabbit.__proto__ is not set to Object
+class Rabbit {}
+
+console.log(Rabbit.prototype.__proto__ === Object.prototype); // true
+console.log(Rabbit.__proto__ === Object); // false
+console.log(Rabbit.__proto__ === Function.prototype); // true
+
+/* 
+class Rabbit	            class Rabbit extends Object
+   –	                     needs to call super() in constructor
+Rabbit.__proto__ === 	   Rabbit.__proto__ === Object
+Function.prototype
+*/
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
