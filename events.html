@@ -315,6 +315,7 @@
       background: rgba(245, 183, 180, 0.795);
    }
 </style>
+
 <table id="delegationTable">
    <tr>
       <td>1</td>
@@ -571,7 +572,9 @@ Prevent browser actions
      If it is so, then the event was handled, and we don’t need to react on it. -->
 <div id="documentImitation3">
    <p>Right-click for the document menu</p>
-   <button id="buttonMenu3">Right-click for the button menu (fixed with event.defaultPrevented)</button>
+   <button id="buttonMenu3">
+      Right-click for the button menu (fixed with event.defaultPrevented)
+   </button>
 </div>
 
 <script>
@@ -733,6 +736,7 @@ Prevent browser actions
       display: none;
    }
 </style>
+
 <span id="span1">▶</span>
 <span id="span2">▼</span>
 
@@ -782,6 +786,7 @@ Prevent browser actions
       display: block;
    }
 </style>
+
 <div id="menu" class="sweeties">
    <span class="title">Show me menu!</span>
    <ul id="sweet">
@@ -837,6 +842,7 @@ Prevent browser actions
       cursor: pointer;
    }
 </style>
+
 <div>
    <div class="panel">
       <button class="remove-button">[x]</button>
@@ -892,6 +898,7 @@ Prevent browser actions
       position: relative;
    }
 </style>
+
 <div>
    <div class="pane">
       <h3>Horse</h3>
@@ -1012,12 +1019,13 @@ Prevent browser actions
       display: block;
    }
 
-   img {
+   #images img {
       width: 130px;
       height: 130px;
       display: block;
    }
 </style>
+
 <div id="content-box">
    <button class="arrow left">⇦</button>
    <div id="carousel">
@@ -1087,6 +1095,7 @@ Prevent browser actions
       position: relative;
    }
 </style>
+
 <div id="container">
    <div class="pan">
       <h3>Horse</h3>
@@ -1301,13 +1310,12 @@ Prevent browser actions
    }
 </style>
 
-<p>LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa</p>
-<p>LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa</p>
-
 <button data-tooltip="the tooltip is longer than the element">
    Short button
 </button>
 <button data-tooltip="HTML<br>tooltip">One more button</button>
+<br />
+<br />
 
 <p>
    Scroll the page to make buttons appear on the top, check if the tooltips show
@@ -1317,16 +1325,230 @@ Prevent browser actions
 <script>
    document.onmouseover = function(event) {
       if (!event.target.dataset.tooltip) return;
+
       let div = document.createElement('div');
       div.classList.add('tooltip');
       div.innerHTML = event.target.dataset.tooltip;
-      div.style.bottom = '30px';
       event.target.append(div);
+
+      let coords = event.target.getBoundingClientRect();
+
+      let left = coords.left;
+      if (left < 0) left = 0; // don't cross the left window edge
+
+      let top = coords.top - div.offsetHeight - 5;
+      if (top < 0) {
+         top = coords.top + event.target.offsetHeight + 5;
+      }
+
+      div.style.top = top + 'px';
+      div.style.left = left + 'px';
    };
 
    document.onmouseout = function(event) {
       if (!event.target.dataset.tooltip) return;
+      event.target.lastChild.remove();
    };
 </script>
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 12 - Why "return false" doesn't work? -->
+<!-- Why in the code below return false doesn’t work at all? -->
+<script>
+   function handler1() {
+      alert('...');
+      return false;
+   }
+</script>
+
+<a href="http://w3.org" onclick="handler1()">the browser will go to w3.org</a>
+<br />
+
+<!--  When the browser reads the on* attribute like onclick, it creates the handler from its content.
+      For onclick="handler()" the function will be:
+         function(event) {
+            handler() // the content of onclick
+         }
+      The value returned by handler() is not used and does not affect the result. -->
+
+<!-- Solution 1 -->
+<script>
+   function handler2() {
+      alert('...');
+      return false;
+   }
+</script>
+
+<a href="http://w3.org" onclick="return handler2()"
+   >w3.org (Solution 1 - with return handler() )</a
+>
+<br />
+
+<!-- Solution 2 -->
+<script>
+   function handler3(event) {
+      alert('...');
+      event.preventDefault();
+   }
+</script>
+
+<a href="http://w3.org" onclick="handler3(event)"
+   >w3.org (Solution 2 - with event.preventDefault() )</a
+>
+<br />
+<br />
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 13 - Catch links in the element -->
+<fieldset id="contents">
+   <legend>#contents</legend>
+   <p>
+      How about to read <a href="http://wikipedia.org">Wikipedia</a> or visit
+      <a href="http://w3.org"><i>W3.org</i></a> and learn about modern
+      standards?
+   </p>
+</fieldset>
+
+<script>
+   contents.onclick = function(event) {
+      if (
+         event.target.tagName == 'A' ||
+         event.target.parentElement.tagName == 'A'
+      ) {
+         let answer = confirm('Do you want to leave?');
+         if (!answer) event.preventDefault();
+      }
+   };
+</script>
+<br />
+<br />
+
+<!-- or -->
+<fieldset id="contents2">
+   <legend>#contents</legend>
+   <p>
+      How about visit <a href="http://onet.pl"><i>Onet</i></a> and see the news?
+   </p>
+</fieldset>
+
+<script>
+   contents2.onclick = function(event) {
+      function handleLink(href) {
+         let isLeaving = confirm(`Leave for ${href}?`);
+         if (!isLeaving) return false;
+      }
+
+      let target = event.target.closest('a');
+
+      if (target && contents2.contains(target)) {
+         return handleLink(target.getAttribute('href'));
+      }
+   };
+</script>
+<br />
+<br />
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- TASK 14 - Image gallery -->
+<style>
+   #largeImg {
+      border: solid 1px #ccc;
+      width: 550px;
+      height: 400px;
+      padding: 5px;
+   }
+
+   #thumbs a {
+      border: solid 1px #ccc;
+      width: 100px;
+      height: 100px;
+      padding: 3px;
+      margin: 2px;
+      float: left;
+   }
+
+   #thumbs a:hover {
+      border-color: #ff9900;
+   }
+
+   #thumbs li {
+      list-style: none;
+   }
+
+   #thumbs {
+      margin: 0;
+      padding: 0;
+   }
+</style>
+
+<p>
+   <img
+      id="largeImg"
+      src="https://en.js.cx/gallery/img1-lg.jpg"
+      alt="Large image"
+   />
+</p>
+
+<ul id="thumbs">
+   <!-- the browser shows a small built-in tooltip on hover with the text from "title" attribute -->
+   <li>
+      <a href="https://en.js.cx/gallery/img2-lg.jpg" title="Image 2"
+         ><img src="https://en.js.cx/gallery/img2-thumb.jpg"
+      /></a>
+   </li>
+   <li>
+      <a href="https://en.js.cx/gallery/img3-lg.jpg" title="Image 3"
+         ><img src="https://en.js.cx/gallery/img3-thumb.jpg"
+      /></a>
+   </li>
+   <li>
+      <a href="https://en.js.cx/gallery/img4-lg.jpg" title="Image 4"
+         ><img src="https://en.js.cx/gallery/img4-thumb.jpg"
+      /></a>
+   </li>
+   <li>
+      <a href="https://en.js.cx/gallery/img5-lg.jpg" title="Image 5"
+         ><img src="https://en.js.cx/gallery/img5-thumb.jpg"
+      /></a>
+   </li>
+   <li>
+      <a href="https://en.js.cx/gallery/img6-lg.jpg" title="Image 6"
+         ><img src="https://en.js.cx/gallery/img6-thumb.jpg"
+      /></a>
+   </li>
+</ul>
+
+<script>
+   thumbs.onclick = function(event) {
+      if (!event.target.closest('a')) return;
+
+      let target = event.target.closest('a');
+
+      largeImg.src = target.href;
+      largeImg.alt = target.title;
+
+      event.preventDefault();
+   };
+</script>
+
+<!-- or -->
+<!--
+<script>
+   thumbs.onclick = function(event) {
+      let thumbnail = event.target.closest('a');
+
+      if (!thumbnail) return;
+      showThumbnail(thumbnail.href, thumbnail.title);
+      event.preventDefault();
+   }
+
+   function showThumbnail(href, title) {
+      largeImg.src = href;
+      largeImg.alt = title;
+   }
+</script> -->
+<br />
+<br />
