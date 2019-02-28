@@ -816,6 +816,51 @@ Before...
 
 <!--------------------------------------------------------------------------------------------------->
 
+<!-- Moving: mouseover/out, mouseenter/leave -->
+
+<!-- The mouseover event occurs when a mouse pointer comes over an element, and mouseout – when it leaves. -->
+<!-- These events are special, because they have a relatedTarget. -->
+<!--  For mouseover:
+      -  event.target – is the element where the mouse came over.
+      -  event.relatedTarget – is the element from which the mouse came.
+
+      For mouseout:
+      -  event.target – is the element that mouse left.
+      -  event.relatedTarget – is the new under-the-pointer element (that mouse left for). -->
+
+<!-- -------------------REMEMBER------------------- -->
+<!-- The relatedTarget property can be null. -->
+<!-- That just means that the mouse came not from another element, but from out of the window. Or that it left the window. -->
+
+<!-------------------------------------------------------------------------------->
+
+<!-- Events frequency -->
+<!--  The mousemove event triggers when the mouse moves. The browser checks the mouse position from time to time.
+      And if it notices changes then triggers the events. That means that if the visitor is moving the mouse very fast
+      then DOM-elements may be skipped: -->
+
+<!-- “Extra” mouseout when leaving for a child -->
+<!-- -------------------REMEMBER------------------- -->
+<!--  According to the browser logic, the mouse cursor may be only over a single element at any time –
+      the most nested one (and top by z-index). -->
+
+<!-------------------------------------------------------------------------------->
+
+<!-- Events mouseenter and mouseleave -->
+<!-- Events mouseenter/mouseleave are like mouseover/mouseout. They also trigger when the mouse pointer enters/leaves the element.
+   But there are two differences:
+      -  Transitions inside the element are not counted.
+      -  Events mouseenter/mouseleave do not bubble.
+
+When the pointer enters an element – the mouseenter triggers, and then doesn’t matter where it goes while inside the element.
+The mouseleave event only triggers when the cursor leaves it. Children are ignored. -->
+
+<!-------------------------------------------------------------------------------->
+
+
+
+<!--------------------------------------------------------------------------------------------------->
+
 <!-- Custom events -->
 <!--  For our own, custom events we should use new CustomEvent.
             Technically CustomEvent is the same as Event, with one exception.
@@ -1900,12 +1945,11 @@ Before...
       if (event.ctrlKey || event.metaKey) {
          event.target.classList.add('selected');
       } else {
-         for (let li of document.querySelectorAll('li')) {
+         for (let li of ul.querySelectorAll('li')) {
             if (li.className) {
                li.classList.toggle('selected');
             }
          }
-
          event.target.classList.add('selected');
       }
    };
