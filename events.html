@@ -661,6 +661,7 @@ Prevent browser actions
    let event2 = new Event('hello', { bubbles: true });
    hello.dispatchEvent(event2);
 </script>
+<br />
 
 <!--------------------------------------------------------------------------------------------------->
 
@@ -683,6 +684,135 @@ Prevent browser actions
 
    console.log(mouseClick.clientX);
 </script>
+
+<!-- Mouse events types -->
+<!-- We can split mouse events into two categories: “simple” and “complex” -->
+
+<!-- Simple events (the most used):
+      -  mousedown/mouseup    -  Mouse button is clicked/released over an element.
+      -  mouseover/mouseout   -  Mouse pointer comes over/out from an element.
+      -  mousemove   -  Every mouse move over an element triggers that event.
+
+     Complex events
+      -  click    -  Triggers after mousedown and then mouseup over the same element if the left mouse button was used.
+      -  contextmenu    -  Triggers after mousedown if the right mouse button was used.
+      -  dblclick    -  Triggers after a double click over an element.
+
+Complex events are made of simple ones, so in theory we could live without them.
+But they exist, and that’s good, because they are convenient. -->
+
+<!-- Events order
+      An action may trigger multiple events.
+      For instance, a click first triggers mousedown, when the button is pressed, then mouseup and click when it’s released.
+      In cases when a single action initiates multiple events, their order is fixed.
+      That is, the handlers are called in the order mousedown → mouseup → click. Events are handled in the same sequence:
+      onmouseup finishes before onclick runs. -->
+
+<!-------------------------------------------------------------------------------->
+
+<!-- Getting the button: which -->
+<!-- Click-related events always have the which property, which allows to get the exact mouse button.
+      event.which == 1 – the left button
+      event.which == 2 – the middle button
+      event.which == 3 – the right button -->
+
+<!-------------------------------------------------------------------------------->
+
+<!-- Modifiers: shift, alt, ctrl and meta -->
+<!-- All mouse events include the information about pressed modifier keys.
+   The properties are:
+      -  shiftKey
+      -  altKey
+      -  ctrlKey
+      -  metaKey (Cmd for Mac) -->
+<button id="modButton">Alt+Shift+Click on me!</button>
+
+<script>
+   modButton.onclick = function(event) {
+      if (event.altKey && event.shiftKey) {
+         alert('Hooray!');
+      }
+   };
+</script>
+<br />
+<br />
+
+<!--  Attention: on Mac it’s usually Cmd instead of Ctrl
+On Windows and Linux there are modifier keys Alt, Shift and Ctrl. On Mac there’s one more: Cmd, it corresponds to the property metaKey.
+
+In most cases when Windows/Linux uses Ctrl, on Mac people use Cmd (Windows user: Ctrl+Enter or Ctrl+A, a Mac user: Cmd+Enter or Cmd+A)
+
+Even if we’d like to force Mac users to Ctrl+click – that’s kind of difficult.
+The problem is: a left-click with Ctrl is interpreted as a right-click on Mac, and it generates the contextmenu event,
+not click like Windows/Linux. -->
+
+<!-------------------------------------------------------------------------------->
+
+<!-- Coordinates: clientX/Y, pageX/Y -->
+<!-- All mouse events have coordinates in two flavours:
+      -  Window-relative: clientX and clientY.
+      -  Document-relative: pageX and pageY. -->
+<input
+   onmousemove="this.value=event.clientX+':'+event.clientY"
+   value="Mouse over me"
+/>
+<br />
+<br />
+
+<!-------------------------------------------------------------------------------->
+
+<!-- No selection on mousedown -->
+<!-- If we want to handle click events ourselves, then the “extra” selection doesn’t look good. -->
+<b ondblclick="alert('dblclick')">Double-click me (and select :( )</b>
+<br />
+<br />
+
+<style>
+   #noSelect {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+   }
+</style>
+
+<!-- There’s a CSS way to stop the selection: the user-select property -->
+Before...
+<b id="noSelect" ondblclick="alert(`Yeah! I'm not selected`)">
+   Unselectable by double-click (thanks to user-select: none)
+</b>
+...After
+<br />
+<br />
+
+<!--  A text selection is the default browser action on mousedown event.
+      So the alternative solution would be to handle mousedown and prevent it -->
+Before...
+<b ondblclick="alert(`Yeah! I'm not selected`)" onmousedown="return false">
+   Unselectable by double-click (thanks to onmousedown="return false")
+</b>
+...After
+<br />
+<br />
+
+<!-- Instead of preventing the selection, we can cancel it “post-factum” in the event handler. -->
+Before...
+<b ondblclick="getSelection().removeAllRanges()">
+   Double-click me (canceled selection by
+   ondblclick="getSelection().removeAllRanges()")
+</b>
+...After
+<br />
+<br />
+
+<!-- Preventing copying -->
+<!-- If we want to disable selection to protect our content from copy-pasting, then we can use another event: oncopy. -->
+<div oncopy="alert('Copying forbidden!');return false">
+   Dear user, The copying is forbidden for you. If you know JS or HTML, then you
+   can get everything from the page source though.
+</div>
+<br />
+<br />
 
 <!--------------------------------------------------------------------------------------------------->
 
@@ -709,14 +839,18 @@ Prevent browser actions
 
 <!-- event.preventDefault() -->
 <!-- We can call event.preventDefault() on a script-generated event if cancelable:true flag is specified. -->
+<!--  If the event has a non-standard name, then it’s not known to the browser, and there’s no “default browser action” for it.
+
+      The call of event.preventDefault() is a way for the handler to send a signal that those actions shouldn’t be performed.
+      In that case the call to elem.dispatchEvent(event) returns false.
+      And the event-generating code knows that the processing shouldn’t continue. -->
 <pre id="rabbit">
             |\   /|
              \|_|/
              /. .\
             =\_Y_/=
              {>o<}
-      </pre
->
+</pre>
 
 <script>
    // hide() will be called automatically in 2 seconds
@@ -791,6 +925,8 @@ Prevent browser actions
 
    document.addEventListener('menu-open2', () => alert('nested'));
 </script>
+<br />
+<br />
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
