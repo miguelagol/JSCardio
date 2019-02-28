@@ -613,6 +613,187 @@ Prevent browser actions
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
+<!-- Dispatching custom events -->
+
+<!-- Event constructor -->
+<!-- Events form a hierarchy, just like DOM element classes. The root is the built-in Event class. -->
+<!-- let event = new Event(event type[, options]);
+   Arguments:
+   -  event type – may be any string, like "click" or our own like "hey-ho!".
+   -  options – the object with two optional properties:
+      -  bubbles: true/false – if true, then the event bubbles.
+      -  cancelable: true/false – if true, then the “default action” may be prevented.
+         Later we’ll see what it means for custom events.
+   By default both are false: {bubbles: false, cancelable: false}.
+-->
+
+<!-- dispatchEvent -->
+<!--  After an event object is created, we should “run” it on an element using the call elem.dispatchEvent(event).
+      Then handlers react on it as if it were a regular built-in event. -->
+<button id="buttonClick" onclick='console.log("Autoclick!")'>Autoclick</button>
+
+<script>
+   let event = new Event('click');
+   buttonClick.dispatchEvent(event);
+</script>
+<br />
+<br />
+
+<!-- -------------------REMEMBER------------------- -->
+<!-- event.isTrusted -->
+<!--  There is a way to tell a “real” user event from a script-generated one.
+            event.isTrusted is true for events that come from real user actions and false for script-generated events. -->
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- Bubbling example -->
+<h3 id="hello">Hello from the script!</h3>
+
+<script>
+   // catch on document...
+   document.addEventListener('hello', function(event) {
+      // We should use addEventListener for our custom events, because on<event> only exists for built-in events,
+      // document.onhello doesn’t work.
+      console.log('Hello from ' + event.target.tagName); // Hello from H1
+   });
+
+   // ...dispatch on elem!
+   let event2 = new Event('hello', { bubbles: true });
+   hello.dispatchEvent(event2);
+</script>
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- MouseEvent, KeyboardEvent and others -->
+<!-- Here’s a short list of classes for UI Events from the UI Event specification:
+            -  UIEvent
+            -  FocusEvent
+            -  MouseEvent
+            -  WheelEvent
+            -  KeyboardEvent
+            -  …     -->
+<!-- The right constructor allows to specify standard properties for that type of event. -->
+<script>
+   let mouseClick = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 100,
+      clientY: 100,
+   });
+
+   console.log(mouseClick.clientX);
+</script>
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- Custom events -->
+<!--  For our own, custom events we should use new CustomEvent.
+            Technically CustomEvent is the same as Event, with one exception.
+            In the second argument (object) we can add an additional property detail
+            for any custom information that we want to pass with the event. -->
+<h3 id="eventDetail">Hello for Jack!</h3>
+
+<script>
+   eventDetail.addEventListener('hello', function(event) {
+      console.log(event.detail.name);
+   });
+
+   eventDetail.dispatchEvent(
+      new CustomEvent('hello', {
+         detail: { name: 'Jack' },
+      }),
+   );
+</script>
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- event.preventDefault() -->
+<!-- We can call event.preventDefault() on a script-generated event if cancelable:true flag is specified. -->
+<pre id="rabbit">
+            |\   /|
+             \|_|/
+             /. .\
+            =\_Y_/=
+             {>o<}
+      </pre
+>
+
+<script>
+   // hide() will be called automatically in 2 seconds
+   function hide() {
+      let hideRabbit = new CustomEvent('hide', {
+         cancelable: true, // without that flag preventDefault doesn't work
+      });
+      if (!rabbit.dispatchEvent(hideRabbit)) {
+         alert('The action was prevented by a handler');
+      } else {
+         rabbit.hidden = true;
+      }
+   }
+
+   rabbit.addEventListener('hide', function(event) {
+      if (confirm('Call preventDefault?')) {
+         event.preventDefault();
+      }
+   });
+
+   // hide in 2 seconds
+   setTimeout(hide, 2000);
+</script>
+
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- Events-in-events are synchronous -->
+<!--  Usually events are processed asynchronously. That is: if the browser is processing onclick and in the process a new event occurs,
+            then it awaits till onclick processing is finished.
+            The exception is when one event is initiated from within another one.
+            Then the control jumps to the nested event handler, and after it goes back. -->
+<button id="nestedMenu">Nested menu (click me)</button>
+
+<script>
+   // 1 -> nested -> 2
+   nestedMenu.onclick = function() {
+      alert(1);
+
+      // alert("nested")
+      nestedMenu.dispatchEvent(
+         new CustomEvent('menu-open', {
+            bubbles: true,
+         }),
+      );
+
+      alert(2);
+   };
+
+   document.addEventListener('menu-open', () => alert('nested'));
+</script>
+
+<button id="nestedMenu2">Second nested menu (click me)</button>
+
+<script>
+   // 1 -> 2 -> nested
+   nestedMenu2.onclick = function() {
+      alert(1);
+
+      // alert(2)
+      setTimeout(
+         () =>
+            nestedMenu2.dispatchEvent(
+               new CustomEvent('menu-open2', {
+                  bubbles: true,
+               }),
+            ),
+         0,
+      );
+
+      alert(2);
+   };
+
+   document.addEventListener('menu-open2', () => alert('nested'));
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
 <!-- TASK 1 - Hide on click -->
 <button id="hider">Click to hide the text</button>
 <br />
