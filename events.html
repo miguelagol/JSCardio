@@ -1100,7 +1100,7 @@ Drag'n'Drop the ball anywhere
       draggableBall.onmouseup = function() {
          document.removeEventListener('mousemove', onMouseMove);
          draggableBall.onmouseup = null;
-      }
+      };
    };
 
    // we must disable the browsers Drag'n'Drop
@@ -1124,15 +1124,20 @@ Drag'n'Drop the ball anywhere
       height: 46px;
    }
 
-   #draggableBall, #draggableBall2 {
+   #draggableBall,
+   #draggableBall2 {
       cursor: pointer;
       width: 40px;
       height: 40px;
    }
 </style>
-Drag'n'Drop the ball to  the soccer gate
+Drag'n'Drop the ball to the soccer gate
 <img src="https://en.js.cx/clipart/ball.svg" id="draggableBall2" />
-<img src="https://en.js.cx/clipart/soccer-gate.svg" id="gate" class="droppable">
+<img
+   src="https://en.js.cx/clipart/soccer-gate.svg"
+   id="gate"
+   class="droppable"
+/>
 
 <script>
    draggableBall2.onmousedown = function(event) {
@@ -1156,23 +1161,26 @@ Drag'n'Drop the ball to  the soccer gate
          moveAt(event.pageX, event.pageY);
 
          draggableBall2.hidden = true;
-         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+         let elemBelow = document.elementFromPoint(
+            event.clientX,
+            event.clientY,
+         );
          draggableBall2.hidden = false;
 
-         if(!elemBelow) return;
+         if (!elemBelow) return;
 
          let droppableBelow = elemBelow.closest('.droppable');
 
-         if(currentDroppable != droppableBelow) {
+         if (currentDroppable != droppableBelow) {
             // note: both values can be null
             //   currentDroppable=null if we were not over a droppable (e.g over an empty space)
             //   droppableBelow=null if we're not over a droppable now, during this event
             if (currentDroppable) {
-               leaveDroppable(currentDroppable)
+               leaveDroppable(currentDroppable);
             }
 
             currentDroppable = droppableBelow;
-            if(currentDroppable) {
+            if (currentDroppable) {
                enterDroppable(currentDroppable);
             }
          }
@@ -1183,16 +1191,16 @@ Drag'n'Drop the ball to  the soccer gate
       draggableBall2.onmouseup = function() {
          document.removeEventListener('mousemove', onMouseMove2);
          draggableBall2.onmouseup = null;
-      }
+      };
    };
 
- function enterDroppable(elem) {
+   function enterDroppable(elem) {
       elem.style.background = 'rgb(223, 79, 168)';
-    }
+   }
 
-    function leaveDroppable(elem) {
+   function leaveDroppable(elem) {
       elem.style.background = '';
-    }
+   }
    // we must disable the browsers Drag'n'Drop
    draggableBall2.ondragstart = function() {
       return false;
@@ -1203,7 +1211,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 1 - Hide on click -->
+TASK 1 - Hide on click
+<br />
 <button id="hider">Click to hide the text</button>
 <br />
 <br />
@@ -1220,7 +1229,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 2 - Hide self -->
+TASK 2 - Hide self
+<br />
 <button id="hideSelf" onclick='hideSelf.style.display = "none"'>
    Hide the button
 </button>
@@ -1241,7 +1251,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 4 - Move the ball across the field -->
+TASK 4 - Move the ball across the field
+<br />
 <style>
    #field {
       width: 200px;
@@ -1312,7 +1323,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 5 - Create a sliding menu -->
+TASK 5 - Create a sliding menu
+<br />
 <style>
    #span2 {
       display: none;
@@ -1398,7 +1410,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 6 - Add a closing button -->
+TASK 6 - Add a closing button
+<br />
 <style>
    h3 {
       margin: 0;
@@ -1547,7 +1560,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 7 - Create a carousel -->
+TASK 7 - Create a carousel
+<br />
 <style>
    #content-box {
       background: #eeeeee;
@@ -1676,7 +1690,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 8 - Hide messages with delegation -->
+TASK 8 - Hide messages with delegation
+<br />
 <style>
    .pan {
       background: #e1ebf5;
@@ -1741,7 +1756,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 9 - Tree menu -->
+TASK 9 - Tree menu
+<br />
 <!-- Create a tree that shows/hides node children on click:
       A click outside the node title (on an empty space) should not do anything. -->
 <ul class="tree" id="tree">
@@ -1807,7 +1823,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 10 - Sortable table -->
+TASK 10 - Sortable table
+<br />
 <!-- Make the table sortable: clicks on <th> elements should sort it by corresponding column. -->
 <table id="grid">
    <thead>
@@ -1881,7 +1898,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 11 - Tooltip behavior -->
+TASK 11 - Tooltip behavior
+<br />
 <!-- When a mouse comes over an element with data-tooltip, the tooltip should appear over it, and when it’s gone then hide -->
 <style>
    .tooltipOne {
@@ -1941,7 +1959,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 12 - Why "return false" doesn't work? -->
+TASK 12 - Why "return false" doesn't work?
+<br />
 <!-- Why in the code below return false doesn’t work at all? -->
 <script>
    function handler1() {
@@ -1989,7 +2008,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 13 - Catch links in the element -->
+TASK 13 - Catch links in the element
+<br />
 <fieldset id="contents">
    <legend>#contents</legend>
    <p>
@@ -2010,7 +2030,6 @@ Drag'n'Drop the ball to  the soccer gate
       }
    };
 </script>
-<br />
 <br />
 
 <!-- or -->
@@ -2036,11 +2055,11 @@ Drag'n'Drop the ball to  the soccer gate
    };
 </script>
 <br />
-<br />
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 14 - Image gallery -->
+TASK 14 - Image gallery
+<br />
 <style>
    #largeImg {
       border: solid 1px #ccc;
@@ -2069,6 +2088,10 @@ Drag'n'Drop the ball to  the soccer gate
    #thumbs {
       margin: 0;
       padding: 0;
+   }
+
+   #noFloat {
+      clear: left;
    }
 </style>
 
@@ -2121,6 +2144,8 @@ Drag'n'Drop the ball to  the soccer gate
       event.preventDefault();
    };
 </script>
+<div id="noFloat"></div>
+<br />
 
 <!-- or -->
 <!--
@@ -2141,11 +2166,9 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 15 - Selectable list -->
+TASK 15 - Selectable list
+<br />
 <style>
-   #noFloat {
-      clear: left;
-   }
    .selected {
       background: #0f0;
    }
@@ -2155,7 +2178,7 @@ Drag'n'Drop the ball to  the soccer gate
    }
 </style>
 
-<div id="noFloat">Click on a list item to select it.</div>
+Click on a list item to select it.
 <ul id="ul">
    <li>Christopher Robin</li>
    <li>Winnie-the-Pooh</li>
@@ -2187,7 +2210,7 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 16 - Improved tooltip behavior -->
+TASK 16 - Improved tooltip behavior
 <style>
    .tooltipTwo {
       position: fixed;
@@ -2283,6 +2306,7 @@ Drag'n'Drop the ball to  the soccer gate
       event.target.lastChild.remove();
    };
 </script>
+<br />
 
 <!-- or -->
 <!-- <script>
@@ -2329,7 +2353,8 @@ Drag'n'Drop the ball to  the soccer gate
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
-<!-- TASK 17 - "Smart" tooltip -->
+TASK 17 - "Smart" tooltip
+<br />
 <style>
    .hours {
       color: rgb(119, 1, 70);
@@ -2480,4 +2505,70 @@ Drag'n'Drop the ball to  the soccer gate
          },
       });
    }, 2000);
+</script>
+<br />
+<br />
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+TASK 18 - Slider
+<style>
+   .slider {
+      border-radius: 5px;
+      background: #e0e0e0;
+      background: linear-gradient(left top, #e0e0e0, #eeeeee);
+      width: 310px;
+      height: 15px;
+      margin: 5px;
+   }
+
+   .thumb {
+      width: 30px;
+      height: 25px;
+      border-radius: 3px;
+      position: relative;
+      left: 10px;
+      top: -5px;
+      background: blue;
+      cursor: pointer;
+   }
+</style>
+
+<div id="slider" class="slider">
+   <div class="thumb" id="thumb"></div>
+</div>
+
+<script>
+   thumb.onmousedown = function(event) {
+      event.preventDefault();
+      let shiftX = event.clientX - thumb.getBoundingClientRect().left;
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+
+      function onMouseMove(event) {
+         let newLeft =
+            event.clientX - shiftX - slider.getBoundingClientRect().left;
+
+         // the pointer is out of slider => lock the thumb within the bounaries
+         if (newLeft < 0) {
+            newLeft = 0;
+         }
+         let rightEdge = slider.offsetWidth - thumb.offsetWidth;
+         if (newLeft > rightEdge) {
+            newLeft = rightEdge;
+         }
+
+         thumb.style.left = newLeft + 'px';
+      }
+
+      function onMouseUp(event) {
+         document.removeEventListener('mouseup', onMouseUp);
+         document.removeEventListener('mousemove', onMouseMove);
+      }
+   };
+
+   thumb.ondragstart = function() {
+      return false;
+   };
 </script>
