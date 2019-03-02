@@ -1066,6 +1066,143 @@ The mouseleave event only triggers when the cursor leaves it. Children are ignor
 
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
+<!-- Drag'n'Drop algorithm -->
+<!--  1. Catch mousedown on a draggable element.
+      2. Prepare the element for moving (maybe create a copy of it or whatever).
+      3. Then on mousemove move it by changing left/top and position:absolute.
+      4. On mouseup (button release) – perform all actions related to a finished Drag’n’Drop. -->
+Drag'n'Drop the ball anywhere
+<img src="https://en.js.cx/clipart/ball.svg" id="draggableBall" />
+
+<script>
+   draggableBall.onmousedown = function(event) {
+      draggableBall.style.position = 'absolute';
+      draggableBall.style.zIndex = 1000;
+
+      let shiftX = event.clientX - draggableBall.getBoundingClientRect().left;
+      let shiftY = event.clientY - draggableBall.getBoundingClientRect().top;
+
+      document.body.append(draggableBall);
+
+      moveAt(event.pageX, event.pageY);
+
+      function moveAt(pageX, pageY) {
+         draggableBall.style.left = pageX - shiftX + 'px';
+         draggableBall.style.top = pageY - shiftY + 'px';
+      }
+
+      function onMouseMove(event) {
+         moveAt(event.pageX, event.pageY);
+      }
+
+      document.addEventListener('mousemove', onMouseMove);
+
+      draggableBall.onmouseup = function() {
+         document.removeEventListener('mousemove', onMouseMove);
+         draggableBall.onmouseup = null;
+      }
+   };
+
+   // we must disable the browsers Drag'n'Drop
+   draggableBall.ondragstart = function() {
+      return false;
+   };
+</script>
+<br />
+<br />
+
+<!-- document.elementFromPoint(clientX, clientY) -->
+<!-- It returns the most nested element on given window-relative coordinates (or null if coordinates are out of the window). -->
+
+<!-- In the modern HTML standard there’s a draggable global attribute is an enumerated attribute that indicates whether the element can be dragged, using the HTML Drag and Drop API. -->
+<style>
+   #gate {
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      width: 83px;
+      height: 46px;
+   }
+
+   #draggableBall, #draggableBall2 {
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+   }
+</style>
+Drag'n'Drop the ball to  the soccer gate
+<img src="https://en.js.cx/clipart/ball.svg" id="draggableBall2" />
+<img src="https://en.js.cx/clipart/soccer-gate.svg" id="gate" class="droppable">
+
+<script>
+   draggableBall2.onmousedown = function(event) {
+      draggableBall2.style.position = 'absolute';
+      draggableBall2.style.zIndex = 1000;
+
+      let shiftX = event.clientX - draggableBall2.getBoundingClientRect().left;
+      let shiftY = event.clientY - draggableBall2.getBoundingClientRect().top;
+      let currentDroppable = null;
+
+      document.body.append(draggableBall2);
+
+      moveAt(event.pageX, event.pageY);
+
+      function moveAt(pageX, pageY) {
+         draggableBall2.style.left = pageX - shiftX + 'px';
+         draggableBall2.style.top = pageY - shiftY + 'px';
+      }
+
+      function onMouseMove2(event) {
+         moveAt(event.pageX, event.pageY);
+
+         draggableBall2.hidden = true;
+         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+         draggableBall2.hidden = false;
+
+         if(!elemBelow) return;
+
+         let droppableBelow = elemBelow.closest('.droppable');
+
+         if(currentDroppable != droppableBelow) {
+            // note: both values can be null
+            //   currentDroppable=null if we were not over a droppable (e.g over an empty space)
+            //   droppableBelow=null if we're not over a droppable now, during this event
+            if (currentDroppable) {
+               leaveDroppable(currentDroppable)
+            }
+
+            currentDroppable = droppableBelow;
+            if(currentDroppable) {
+               enterDroppable(currentDroppable);
+            }
+         }
+      }
+
+      document.addEventListener('mousemove', onMouseMove2);
+
+      draggableBall2.onmouseup = function() {
+         document.removeEventListener('mousemove', onMouseMove2);
+         draggableBall2.onmouseup = null;
+      }
+   };
+
+ function enterDroppable(elem) {
+      elem.style.background = 'rgb(223, 79, 168)';
+    }
+
+    function leaveDroppable(elem) {
+      elem.style.background = '';
+    }
+   // we must disable the browsers Drag'n'Drop
+   draggableBall2.ondragstart = function() {
+      return false;
+   };
+</script>
+<br />
+<br />
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
 <!-- TASK 1 - Hide on click -->
 <button id="hider">Click to hide the text</button>
 <br />
@@ -2257,7 +2394,6 @@ The mouseleave event only triggers when the cursor leaves it. Children are ignor
       }
 
       onMouseOver(event) {
-
          // if we're over the element, then ignore the event
          // we are already measuring the speed
          if (this.isOver) {
@@ -2330,13 +2466,13 @@ The mouseleave event only triggers when the cursor leaves it. Children are ignor
       }
    }
 
-
    setTimeout(function() {
       new HoverIntent({
          clock,
          over() {
-            tooltipthree.style.left = window.innerWidth - clock.offsetWidth + 'px';
-            tooltipthree.style.bottom = clock.offsetHeight + 5 +'px';
+            tooltipthree.style.left =
+               window.innerWidth - clock.offsetWidth + 'px';
+            tooltipthree.style.bottom = clock.offsetHeight + 5 + 'px';
             tooltipthree.hidden = false;
          },
          out() {
@@ -2344,5 +2480,4 @@ The mouseleave event only triggers when the cursor leaves it. Children are ignor
          },
       });
    }, 2000);
-
 </script>
