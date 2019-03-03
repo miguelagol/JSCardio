@@ -2523,7 +2523,7 @@ TASK 18 - Slider
    }
 
    .thumb {
-      width: 30px;
+      width: 10px;
       height: 25px;
       border-radius: 3px;
       position: relative;
@@ -2539,27 +2539,27 @@ TASK 18 - Slider
 </div>
 
 <script>
+   let thumb = document.querySelector('.thumb');
+
    thumb.onmousedown = function(event) {
       event.preventDefault();
-      let shiftX = event.clientX - thumb.getBoundingClientRect().left;
 
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
 
+      let shiftX = event.clientX - thumb.getBoundingClientRect().left;
+
       function onMouseMove(event) {
-         let newLeft =
+         let moveLeft =
             event.clientX - shiftX - slider.getBoundingClientRect().left;
-
-         // the pointer is out of slider => lock the thumb within the bounaries
-         if (newLeft < 0) {
-            newLeft = 0;
+         let rightEdge = slider.offsetWidth - thumb.clientWidth;
+         if (moveLeft < 0) {
+            thumb.style.left = 0;
+         } else if (moveLeft > rightEdge) {
+            thumb.style.left = rightEdge;
+         } else {
+            thumb.style.left = moveLeft + 'px';
          }
-         let rightEdge = slider.offsetWidth - thumb.offsetWidth;
-         if (newLeft > rightEdge) {
-            newLeft = rightEdge;
-         }
-
-         thumb.style.left = newLeft + 'px';
       }
 
       function onMouseUp(event) {
@@ -2571,4 +2571,279 @@ TASK 18 - Slider
    thumb.ondragstart = function() {
       return false;
    };
+</script>
+<br />
+<br />
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+TASK 19 - Drag superheroes around the field
+<style>
+   #herosField {
+      width: 800px;
+      height: 500px;
+      float: left;
+   }
+   .hero {
+      background: url(https://js.cx/drag-heroes/heroes.png);
+      width: 130px;
+      height: 128px;
+      float: left;
+   }
+
+   #hero1 {
+      background-position: 0 0;
+   }
+
+   #hero2 {
+      background-position: 0 -128px;
+   }
+
+   #hero3 {
+      background-position: -120px 0;
+   }
+
+   #hero4 {
+      background-position: -125px -128px;
+   }
+
+   #hero5 {
+      background-position: -248px -128px;
+   }
+
+   #hero6 {
+      background-position: -244px 0;
+   }
+
+   .draggable {
+      cursor: pointer;
+   }
+</style>
+
+<svg
+   id="herosField"
+   width="22cm"
+   height="14cm"
+   viewBox="0 0 1150 720"
+   stroke="white"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+>
+   <!--图纸区-->
+   <rect x="0" y="0" width="1150" height="720" fill="green" />
+   <!--球场框和中线-->
+   <path
+      d="M 575,20 L 50,20 50,700 1100,700 1100,20 575,20 575,700 z"
+      stroke="white"
+      stroke-width="2"
+      fill="green"
+   />
+   <!--中线-->
+   <circle
+      cx="575"
+      cy="360"
+      r="91.5"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <circle cx="575" cy="360" r="2" stroke="white" fill="white" />
+   <!--罚球点-->
+   <circle cx="160" cy="360" r="2" stroke="white" fill="white" />
+   <circle cx="990" cy="360" r="2" stroke="white" fill="white" />
+   <!--球门-->
+   <path
+      d="M 50,324.4 L 40,324.4 40, 396.6 50 396.6 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 1100,324.4 L 1110,324.4 1110,396.6 1100,396.6 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <!--球门区-->
+   <path
+      d="M 50,269.4 L 105,269.4 105,451.6 50 451.6 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 1100,269.4 L 1045,269.4 1045,451.6 1100,451.6 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <!--禁区 -->
+   <path
+      d="M 50,159.4 L 215,159.4 215,561.6 50 561.6 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 1100,159.4 L 935,159.4 935,561.6 1100,561.6 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 215,286.875 A 91.5,91.5 0 0,1 215,433.125 z"
+      stroke="white"
+      stroke-width="2"
+      fill="green"
+   />
+   <path
+      d="M 935,286.875 A 91.5,91.5 0 0,0 935,433.125 z"
+      stroke="white"
+      stroke-width="2"
+      fill="green"
+   />
+   <!--角球弧-->
+   <path
+      d="M 50,30 A 10,10 0 0,0 60,20 L 50,20 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 60,700 A 10,10 0 0,0 50,690 L 50,700 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 1100,690 A 10,10 0 0,0 1090,700 L 1100,700 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+   <path
+      d="M 1090,20 A 10,10 0 0,0 1100,30 L 1100,20 z"
+      stroke="white"
+      stroke-width="2"
+      fill-opacity="0"
+   />
+</svg>
+
+<div class="hero draggable" id="hero1"></div>
+<div class="hero draggable" id="hero2"></div>
+<div class="hero draggable" id="hero3"></div>
+<div class="hero draggable" id="hero4"></div>
+<div class="hero draggable" id="hero5"></div>
+<div class="hero draggable" id="hero6"></div>
+
+<img src="https://en.js.cx/clipart/ball.svg" class="draggable" />
+
+<div style="clear:both"></div>
+
+<script>
+   let isDragging = false;
+
+document.addEventListener('mousedown', function(event) {
+   let dragged = event.target.closest('.draggable');
+
+   if (!dragged) return;
+
+   event.preventDefault();
+   
+   dragged.ondragstart = function() {
+      return false;
+   };
+   
+   function onMouseMove(event) {
+      moveAt(event.clientX, event.clientY);
+   }
+
+   function onMouseUp(event) {
+      finishDrag();
+   }
+
+   let shiftX, shiftY;
+
+   startDrag(dragged, event.clientX, event.clientY);
+
+   function startDrag(element, clientX, clientY) {
+      if (isDragging) return;
+
+      isDragging = true;
+
+      document.addEventListener('mousemove', onMouseMove);
+      element.addEventListener('mouseup', onMouseUp);
+
+      shiftX = clientX - element.getBoundingClientRect().left;
+      shiftY = clientY - element.getBoundingClientRect().top;
+
+      element.style.position = 'fixed';
+
+      moveAt(clientX, clientY);
+   }
+
+   function finishDrag() {
+      if (!isDragging) return;
+
+      isDragging = false;
+
+      dragged.style.top = parseInt(dragged.style.top) + pageYOffset + 'px';
+      dragged.style.position = 'absolute';
+
+      document.removeEventListener('mousemove', onMouseMove);
+      dragged.removeEventListener('mouseup', onMouseUp);
+   }
+
+   function moveAt(clientX, clientY) {
+      // new window-relative coordinates
+      let dragX = clientX - shiftX;
+      let dragY = clientY - shiftY;
+
+      // check if the new coordinates are below the bottom window edge
+      let dragBottom = dragY + dragged.offsetHeight;
+      
+      // below the window? let's scroll the page
+      if (dragBottom > window.innerHeight) {
+         // window-relative coordinate of document end
+         let documentBottom = document.documentElement.getBoundingClientRect().bottom;
+
+         let scrollY = Math.min(documentBottom - dragBottom, 10);
+
+         if (scrollY < 0) scrollY = 0;
+
+         window.scrollBy(0, scrollY);
+
+         // a swift mouse move make put the cursor beyond the document end
+         // limit the new dragY by the maximally possible (right at the bottom of the document)
+         dragY = Math.min(
+            dragY,
+            document.documentElement.clientHeight - dragged.offsetHeight
+         )
+      }
+      
+      // check if the new coordinates are above the top window edge
+      if (dragY < 0) {
+         let scrollY = Math.min(-dragY, 10);
+
+         if (scrollY < 0) scrollY = 0;
+
+         window.scrollBy(0, -scrollY);
+
+         dragY = Math.max(dragY, 0);
+      }
+
+      if (dragX < 0) dragX = 0;
+
+      if (
+         dragX >
+         document.documentElement.clientWidth - dragged.offsetWidth
+      ) {
+         dragX = document.documentElement.clientWidth - dragged.offsetWidth;
+      }
+
+      dragged.style.left = dragX + 'px';
+      dragged.style.top = dragY + 'px';
+   }
+
+});
 </script>
