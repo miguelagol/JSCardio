@@ -611,6 +611,26 @@ Prevent browser actions
    To prevent a default action – use either event.preventDefault() or return false. The second method works only for handlers
    assigned with on<event>. -->
 
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- Scrolling -->
+Current scrol =
+<div id="showScroll"></div>
+
+<script>
+   window.addEventListener('scroll', function() {
+      document.getElementById('showScroll').innerHTML = pageYOffset + 'px';
+   });
+</script>
+<br />
+
+<!-- Prevent scrolling -->
+<!--  We can’t prevent scrolling by using event.preventDefault() in onscroll listener, because it triggers after the scroll has already happened.
+      But we can prevent scrolling by event.preventDefault() on an event that causes the scroll.
+         For instance:
+         -  wheel event – a mouse wheel roll (a “scrolling” touchpad action generates it too).
+         -  keydown event for pageUp and pageDown.    -->
+
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
 <!-- Dispatching custom events -->
@@ -2664,7 +2684,7 @@ TASK 18 - Slider
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
 TASK 19 - Drag superheroes around the field
-<br>
+<br />
 <style>
    #herosField {
       width: 800px;
@@ -2932,7 +2952,7 @@ TASK 19 - Drag superheroes around the field
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
 TASK 20 - Extended hotkeys
-<br>
+<br />
 Please press A, S and D keys
 <script>
    function runOnKeys(func, ...codes) {
@@ -2958,3 +2978,61 @@ Please press A, S and D keys
 
    runOnKeys(() => alert('Hello!'), 'KeyA', 'KeyS', 'KeyD');
 </script>
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+TASK 21 - Endless page
+<br />
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+TASK 22 - Up/down button
+<style>
+   #matrix {
+      width: 400px;
+      margin: auto;
+      overflow: auto;
+      text-align: justify;
+   }
+
+   #arrowTop {
+      height: 9px;
+      width: 14px;
+      color: green;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      cursor: pointer;
+   }
+
+   #arrowTop:before {
+      content: '▲';
+   }
+</style>
+
+<div id="matrix">
+   <script>
+      for (let i = 0; i < 2000; i++) document.writeln(i);
+   </script>
+</div>
+
+<div id="arrowTop"></div>
+
+<script>
+   let topArrow = document.querySelector('#arrowTop');
+   topArrow.style.display = 'none';
+
+   topArrow.addEventListener('click', function(event) {
+      window.scrollTo(0, matrix.offsetTop);
+   });
+
+   document.addEventListener('scroll', function(event) {
+     pageYOffset > matrix.offsetTop + window.innerHeight ?
+       topArrow.style.display = 'block' : topArrow.style.display = 'none'
+   });
+</script>
+<br>
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+TASK 21
