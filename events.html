@@ -1220,7 +1220,8 @@ Drag'n'Drop the ball anywhere
 <!-- document.elementFromPoint(clientX, clientY) -->
 <!-- It returns the most nested element on given window-relative coordinates (or null if coordinates are out of the window). -->
 
-<!-- In the modern HTML standard there’s a draggable global attribute is an enumerated attribute that indicates whether the element can be dragged, using the HTML Drag and Drop API. -->
+<!-- In the modern HTML standard there’s a draggable global attribute is an enumerated attribute that indicates whether the element
+      can be dragged, using the HTML Drag and Drop API. -->
 <style>
    #gate {
       cursor: pointer;
@@ -1315,6 +1316,112 @@ Drag'n'Drop the ball to the soccer gate
 <br />
 <br />
 
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- Page lifecycle -->
+
+<!-- The lifecycle of an HTML page has three important events:
+      -  DOMContentLoaded – the browser fully loaded HTML, and the DOM tree is built, but external resources like pictures <img>
+         and stylesheets may be not yet loaded.
+      -  load – the browser loaded all resources (images, styles etc).
+      -  beforeunload/unload – when the user is leaving the page. -->
+
+<!-- DOMContentLoaded -->
+<!-- The DOMContentLoaded event happens on the document object. -->
+<script>
+   function ready() {
+      alert('DOM is ready');
+   }
+
+   document.addEventListener('DOMContentLoaded', ready);
+</script>
+
+<!--  When the browser initially loads HTML and comes across a <script>...</script> in the text, it can’t continue building DOM.
+      It must execute the script right now. So DOMContentLoaded may only happen after all such scripts are executed.
+      External scripts (with src) also put DOM building to pause while the script is loading and executing.
+      So DOMContentLoaded waits for external scripts as well. The only exception are external scripts with async and defer attributes.
+      They tell the browser to continue processing without waiting for the scripts. -->
+
+<!-- Scripts with async and defer -->
+<!-- 
+                     async	                                                    defer
+Order	               Scripts with async execute in the load-first order.       Scripts with defer always execute in the 
+                     Their document order doesn’t matter – 	document order     (as they go in the document).
+                     which loads first runs first.
+
+DOMContentLoaded	   Scripts with async may load and execute while             Scripts with defer execute after the document is loaded 
+                     the documenthas not yet been fully downloaded.            and parsed (they wait if needed),
+                     That happens if scripts are small or cached,              right before DOMContentLoaded.
+                     and the document is long enough.	
+-->
+
+<!-- DOMContentLoaded and styles -->
+<!-- External style sheets don’t affect DOM, and so DOMContentLoaded does not wait for them
+But there’s a pitfall: if we have a script after the style, then that script must wait for the stylesheet to execute -->
+
+<!-- Built-in browser autofill -->
+<!-- Firefox, Chrome and Opera autofill forms on DOMContentLoaded.
+   If the page has a form with login and password, and the browser remembered the values, then on DOMContentLoaded it may try to
+   autofill them (if approved by the user).
+   So if DOMContentLoaded is postponed by long-loading scripts, then autofill also awaits. -->
+
+<!-- window.onload -->
+<!-- The load event on the window object triggers when the whole page is loaded including styles, images and other resources. -->
+<script>
+   window.onload = function() {
+      alert('Page loaded');
+   };
+</script>
+
+<!-- window.onunload -->
+<!-- When a visitor leaves the page, the unload event triggers on window. We can do something there that doesn’t involve a delay,
+      like closing related popup windows.  -->
+
+<!-- window.onbeforeunload -->
+<!-- If a visitor initiated navigation away from the page or tries to close the window, the beforeunload handler asks for
+      additional confirmation. -->
+<script>
+   function setHandler() {
+      window.onbeforeunload = function() {
+         return 'There are unsaved changes. Leave now?';
+      };
+   }
+</script>
+
+<button onclick="setHandler()">Set window.onbeforeunload</button>
+<a href="http://wikipedia.pl">Leave for wikipedia.pl</a>
+<br />
+<br />
+
+<!--  readyState -->
+<!-- The document.readyState property gives us information about it. There are 3 possible values:
+      -  "loading" – the document is loading.
+      -  "interactive" – the document was fully read.
+      -  "complete" – the document was fully read and all resources (like images) are loaded too.  -->
+
+<!--  - document.readyState becomes interactive right before DOMContentLoaded. These two events actually mean the same.
+      - document.readyState becomes complete when all resources are loaded. We can see that it happens in about the same time
+        as the last resource) and window.onload. Switching to complete state means the same as window.onload.
+        The difference is that window.onload always works after all other load handlers. -->
+        
+<!-- We can check document.readyState and setup a handler or execute the code immediately if it’s ready.
+   Like this:
+
+      function work() { /*...*/ }
+      
+      if (document.readyState == 'loading') {
+         document.addEventListener('DOMContentLoaded', work);
+      } else {
+         work();
+      }
+-->
+<script>
+   // current state
+   console.log(document.readyState);
+
+   // print state changes
+   document.addEventListener('readystatechange', () => console.log(document.readyState));
+</script>
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
 TASK 1 - Hide on click
