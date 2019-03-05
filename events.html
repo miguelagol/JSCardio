@@ -2499,6 +2499,7 @@ TASK 17 - "Smart" tooltip
 </style>
 
 <div id="clock" class="clock">
+      <!-- <div style="background-color: #0f0; width: 85px; height: 2px" ></div> -->
    <span class="hours">12</span> : <span class="minutes">30</span> :
    <span class="seconds">00</span>
 </div>
@@ -2601,8 +2602,7 @@ TASK 17 - "Smart" tooltip
       new HoverIntent({
          clock,
          over() {
-            tooltipthree.style.left =
-               window.innerWidth - clock.offsetWidth + 'px';
+            tooltipthree.style.left = clock.offsetLeft + 'px';
             tooltipthree.style.bottom = clock.offsetHeight + 5 + 'px';
             tooltipthree.hidden = false;
          },
