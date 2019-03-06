@@ -1369,7 +1369,7 @@ But there’s a pitfall: if we have a script after the style, then that script m
 <!-- The load event on the window object triggers when the whole page is loaded including styles, images and other resources. -->
 <script>
    window.onload = function() {
-      alert('Page loaded');
+      alert('Page was loaded');
    };
 </script>
 
@@ -1403,7 +1403,7 @@ But there’s a pitfall: if we have a script after the style, then that script m
       - document.readyState becomes complete when all resources are loaded. We can see that it happens in about the same time
         as the last resource) and window.onload. Switching to complete state means the same as window.onload.
         The difference is that window.onload always works after all other load handlers. -->
-        
+
 <!-- We can check document.readyState and setup a handler or execute the code immediately if it’s ready.
    Like this:
 
@@ -1420,8 +1420,58 @@ But there’s a pitfall: if we have a script after the style, then that script m
    console.log(document.readyState);
 
    // print state changes
-   document.addEventListener('readystatechange', () => console.log(document.readyState));
+   document.addEventListener('readystatechange', () =>
+      console.log(document.readyState),
+   );
 </script>
+
+<!--------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- Resource loading -->
+<!-- The browser allows to track the loading of external resources – scripts, iframes, pictures and so on.
+   There are two events for it:
+      -  onload – successful load,
+      -  onerror – an error occurred. -->
+
+<!-- Loading a script -->
+
+<!-- script.onload -->
+<!-- The main helper is the load event. It triggers after the script was loaded and executed. -->
+<script>
+   let script = document.createElement('script');
+
+   // can load any script, from any domain
+   script.src =
+      'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.3.0/lodash.js';
+   document.head.append(script);
+
+   script.onload = function() {
+      // the script creates a helper function "_"
+      alert('External script was loaded');
+      alert(_); // the function is available
+   };
+</script>
+
+<!-- script.onerror -->
+<!-- Errors that occur during the loading (but not execution) of the script can be tracked on error event. -->
+<script>
+   let script2 = document.createElement('script');
+   script2.src = 'https://example.com/404.js'; // no such script
+   document.head.append(script2);
+
+   script2.onerror = function() {
+      alert('Error loading ' + this.src); // Error loading https://example.com/404.js
+   };
+</script>
+
+<!-- Other resources -->
+<!-- The load and error events also work for other resources. There may be minor differences though.
+
+   For instance:
+      <img>, <link> (external stylesheets)   -  Both load and error events work as expected.
+      <iframe>    -  Only load event when the iframe loading finished. It triggers both for successful load and in case of an error.
+                     That’s for historical reasons. -->
+
 <!--------------------------------------------------------------------------------------------------------------------------------------->
 
 TASK 1 - Hide on click
