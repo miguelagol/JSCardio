@@ -163,7 +163,7 @@ let json = '{ "age": 30 }';
 try {
    let user = JSON.parse(json);
 
-   if(!user.name) {
+   if (!user.name) {
       throw new SyntaxError('Incomplete data: no name');
    }
 
@@ -175,5 +175,165 @@ try {
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Rethrowing
+let json = '{ "age": 30 }'; // incomplete data
 
+try {
+   let user = JSON.parse(json);
+   blabla();
+   // ...
+} catch (err) {
+   console.log('JSON Error: ' + err); // JSON Error: ReferenceError: blabla is not defined
+   // (no JSON Error actually)
+}
 
+/* Catch should only process errors that it knows and “rethrow” all others.
+   The “rethrowing” technique can be explained in more detail as:
+      1. Catch gets all errors.
+      2. In catch(err) {...} block we analyze the error object err.
+      3. If we don’t know how to handle it, then we do throw err.
+*/
+let json = '{ "age": 30 }';
+
+try {
+   let user = JSON.parse(json);
+
+   if (!user.name) {
+      throw new SyntaxError('Incomplete data: no name');
+   }
+
+   blabla();
+
+   console.log(user.name);
+} catch (error) {
+   if (error.name == 'SyntaxError') {
+      console.log('JSON Error: ' + error.message);
+   } else {
+      throw error; // rethrow
+   } // ReferenceError: blabla is not defined
+}
+
+// how such errors can be caught by one more level of try..catch
+function readData() {
+   let json = '{ "age": 30 }';
+
+   try {
+      blabla();
+   } catch (error) {
+      if (error.name != 'SyntaxError') {
+         throw error; // rethrow
+      }
+   }
+}
+
+try {
+   readData();
+} catch (error) {
+   console.log('External catch got: ' + error); // External catch got: ReferenceError: blabla is not defined
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Try...catch.finally
+/* The try..catch construct may have one more code clause: finally.
+   If it exists, it runs in all cases:
+   - after try, if there were no errors,
+   - after catch, if there were errors.
+*/
+/* 
+try {
+   // ... try to execute the code
+} catch (error) {
+   // ... handle errors   
+} finally {
+   // ... execute always
+}
+*/
+//The finally clause is often used when we start doing something before try..catch and want to finalize it in any case of outcome.
+try {
+   console.log('try'); // try
+   if (confirm('Make an error?')) BAD_CODE();
+} catch (error) {
+   console.log('catch'); // catch (if yes)
+} finally {
+   console.log('finally'); // finally
+}
+
+let number = +prompt('Enter a positive integer number', 35);
+let diff, result;
+
+function fibonacci(n) {
+   if (n < 0 || Math.trunc(n) != n) {
+      throw new Error('Number must not be negative, and also an integer.');
+   }
+   return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+let start = Date.now();
+
+try {
+   result = fibonacci(number);
+} catch (error) {
+   result = 0;
+   alert(error);
+} finally {
+   diff = Date.now() - start;
+}
+
+alert(result || 'error occured');
+
+alert(`Execution took ${diff}ms`);
+
+//--------------------REMEMBER--------------------
+// Variables are local inside try..catch..finally
+// The finally clause works for any exit from try..catch. 
+// finally is executed just before the control returns to the outer code.
+function func() {
+   try {
+      return 1;
+   } catch(error) {
+      // ...
+   } finally {
+      console.log('finally');
+   }
+}
+
+console.log(func()); // finally,    1
+
+//-----------------------------------------------------------------------------------------
+
+// try...finally
+/* The try..finally construct, without catch clause, is also useful. We apply it when we don’t want to handle errors right here,
+   but want to be sure that processes that we started are finalized.
+   
+   function func() {
+      // start doing something that needs completion
+      try {
+         // ...
+      } finally {
+         // complete that thing even if all dies
+      }
+   }
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Global catch
+/* Let’s imagine we’ve got a fatal error outside of try..catch, and the script died. Like a programming error or something else terrible.
+Node.JS has process.on(‘uncaughtException’) for that. And in the browser we can assign a function to special window.onerror property.
+It will run in case of an uncaught error.
+
+window.onerror = function(message, url, line, col, error) {};
+   message - error message
+   url - URL of the script where error happened
+   line,col - line and column numbers where error happened
+   error - error object
+*/
+window.onerror = function(message, url, line, col, error) {
+   this.alert(`${message}\n At ${line}:${col} of ${url}`);
+};
+
+function readData() {
+   badFunc();
+}
+
+readData();
