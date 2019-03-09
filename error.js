@@ -285,12 +285,12 @@ alert(`Execution took ${diff}ms`);
 
 //--------------------REMEMBER--------------------
 // Variables are local inside try..catch..finally
-// The finally clause works for any exit from try..catch. 
+// The finally clause works for any exit from try..catch.
 // finally is executed just before the control returns to the outer code.
 function func() {
    try {
       return 1;
-   } catch(error) {
+   } catch (error) {
       // ...
    } finally {
       console.log('finally');
@@ -337,3 +337,56 @@ function readData() {
 }
 
 readData();
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - Finally or just the code?
+// First fragment
+try {
+   // work, work
+} catch (error) {
+   // handle errors
+} finally {
+   // cleanup the working space
+}
+
+// Second fragment
+try {
+   // work, work
+} catch (error) {
+   // handle errors
+}
+// cleanup the working space
+
+/* The behavior is different if there’s a “jump out” of try..catch.
+when there’s a return inside try..catch. The finally clause works in case of any exit from try..catch, even via the return statement:
+right after try..catch is done, but before the calling code gets the control.
+*/
+function f() {
+   try {
+      console.log('start');
+      return 'result';
+   } catch (error) {
+      // ...
+   } finally {
+      console.log('cleanup!');
+   }
+}
+
+console.log(f()); // start    cleanup!    result
+
+// or when there's a throw
+function f() {
+   try {
+      console.log('start');
+      throw new Error('An error');
+   } catch (error) {
+      if ("can't handle the error") {
+         throw error;
+      }
+   } finally {
+      console.log('cleanup!');
+   }
+}
+
+console.log(f()); // start    cleanup!    Error: An error
