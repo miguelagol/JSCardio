@@ -340,6 +340,203 @@ readData();
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Custom errors
+/* When we develop something, we often need our own error classes to reflect specific things that may go wrong in our tasks.
+   For errors in network operations we may need HttpError, for database operations DbError and so on.
+   Our errors should support basic error properties like message, name and, preferably, stack.
+   But they also may have other properties of their own, e.g. HttpError objects may have statusCode property with a value (404, 403 or 500).
+*/
+
+// Extending Error
+/* JavaScript allows to use throw with any argument, so technically our custom error classes don’t need to inherit from Error.
+   But if we inherit, then it becomes possible to use obj instanceof Error to identify error objects. So it’s better to inherit from it.
+*/
+// The "pseudocode" for the built-in Error class defined by JavaScript itself
+/* class Error {
+      constructor(message) {
+         this.message = message;
+         this.name = "Error"; // (different names for different built-in error classes)
+         this.stack = <nested calls>; // non-standard, but most environments support it
+      }
+   }
+*/
+class ValidationError extends Error {
+   constructor(message) {
+      super(message);
+      this.name = 'ValidationError';
+   }
+}
+
+function test() {
+   throw new ValidationError('Whoops!');
+}
+
+try {
+   test();
+} catch (error) {
+   console.log(error.message); // Whoops!
+   console.log(error.name); // ValidationError
+   console.log(error.stack); // ValidationError: Whoops!
+}
+
+class ValidationError extends Error {
+   constructor(message) {
+      super(message);
+      this.name = 'ValidationError';
+   }
+}
+
+function readUser(json) {
+   let user = JSON.parse(json);
+
+   if (!user.age) {
+      throw new ValidationError('No field: age');
+   }
+
+   if (!user.name) {
+      throw new ValidationError('No field: name');
+   }
+
+   return user;
+}
+
+try {
+   let user = readUser('{ "age": 30 }');
+} catch (error) {
+   // the same as: if (error.name == 'ValidationError')
+   if (error instanceof ValidationError) {
+      console.log('Invalid data: ' + error.message); // Invalid data: No field: name
+   } else if (error instanceof SyntaxError) {
+      console.log('JSON Syntax Error: ' + error.message);
+   } else {
+      throw error;
+   }
+}
+
+// Further inheritance
+class ValidationError extends Error {
+   constructor(message) {
+      super(message);
+      this.name = 'ValidationError';
+   }
+}
+
+class PropertyRequiredError extends ValidationError {
+   constructor(property) {
+      super('No property: ' + property);
+      this.name = 'PropertyRequiredError';
+      this.property = property;
+   }
+}
+
+function readUser(json) {
+   let user = JSON.parse(json);
+
+   if (!user.age) {
+      throw new PropertyRequiredError('age');
+   }
+
+   if (!user.name) {
+      throw new PropertyRequiredError('name');
+   }
+
+   return user;
+}
+
+try {
+   let user = readUser('{ "name": "Jack" }');
+} catch (error) {
+   if (error instanceof ValidationError) {
+      console.log('Invalid data: ' + error.message); // Invalid data: No property: age
+      console.log(error.name); // PropertyRequiredError
+      console.log(error.property); // age
+   } else if (error instanceof SyntaxError) {
+      console.log('JSON Syntax Error: ' + error.message);
+   } else {
+      throw error;
+   }
+}
+
+// We can ommit the assign this.name = <class name> for every time
+class MyError extends Error {
+   constructor(message) {
+      super(message);
+      this.name = this.constructor.name;
+   }
+}
+
+class ValidationError extends MyError {}
+
+class PropertyRequiredError extends ValidationError {
+   constructor(property) {
+      super('No property: ' + property);
+      this.property = property;
+   }
+}
+
+console.log(new PropertyRequiredError('field').name); // PropertyRequiredError
+
+//-----------------------------------------------------------------------------------------
+
+// Wrapping exceptions
+class ReadError extends Error {
+   constructor(message, cause) {
+      super(message);
+      this.cause = cause;
+      this.name = 'ReadError';
+   }
+}
+
+class ValidationError extends Error {}
+class PropertyRequiredError extends ValidationError {}
+
+function validateUser(user) {
+   if (!user.age) {
+      throw new PropertyRequiredError('age');
+   }
+
+   if (!user.name) {
+      throw new PropertyRequiredError('name');
+   }
+}
+
+function readUser(json) {
+   let user;
+
+   try {
+      user = JSON.parse(json);
+   } catch (error) {
+      if (error instanceof SyntaxError) {
+         throw new ReadError('Syntax Error', error);
+      } else {
+         throw error;
+      }
+   }
+
+   try {
+      validateUser(user);
+   } catch (error) {
+      if (error instanceof ValidationError) {
+         throw new ReadError('Validation Error', error);
+      } else {
+         throw error;
+      }
+   }
+}
+
+try {
+   readUser('{bad json');
+} catch (error) {
+   if (error instanceof ReadError) {
+      console.log(error); // { ReadError: Syntax Error at readUser... cause: SyntaxError: Unexpected... name: 'ReadError' }
+      console.log('Original error: ' + error.cause); // Original error: SyntaxError: Unexpected token b in JSON at position 1
+   } else {
+      throw error;
+   }
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Finally or just the code?
 // First fragment
 try {
