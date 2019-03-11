@@ -187,16 +187,16 @@ function getWeekDay(date) {
    return day === 0
       ? 'SU'
       : day === 1
-         ? 'MO'
-         : day === 2
-            ? 'TU'
-            : day === 3
-               ? 'WE'
-               : day === 4
-                  ? 'TH'
-                  : day === 5
-                     ? 'FR'
-                     : 'SA';
+      ? 'MO'
+      : day === 2
+      ? 'TU'
+      : day === 3
+      ? 'WE'
+      : day === 4
+      ? 'TH'
+      : day === 5
+      ? 'FR'
+      : 'SA';
 }
 
 let date = new Date(2012, 0, 3);
@@ -351,10 +351,10 @@ function formatDate(date) {
    return result < 1000
       ? 'right now'
       : result < 60000
-         ? `${sec} sec. ago`
-         : result < 3600000
-            ? `${min} min. ago`
-            : `${day}.${month + 1}.${year} ${hour}:${minute}`;
+      ? `${sec} sec. ago`
+      : result < 3600000
+      ? `${min} min. ago`
+      : `${day}.${month + 1}.${year} ${hour}:${minute}`;
 }
 
 console.log(formatDate(new Date(new Date() - 1))); // right now

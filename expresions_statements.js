@@ -20,14 +20,14 @@ There are two major syntactic categories in Javascript:
 //---------------------------------------------------------------------------------------------------------------------------------------------
 
 // Expresions
-// Expressions are Javascript code snippets that result in a single value. 
-2 + 2 * 3 / 2
+// Expressions are Javascript code snippets that result in a single value.
+2 + (2 * 3) / 2
 
 (Math.random() * (100 - 20)) + 20
 
 functionCall()
 
-1+1, 2+2, 3+3
+1 + 1, 2 + 2, 3 + 3
 
 true && functionCall()
 
@@ -61,29 +61,29 @@ console.log(foo(function myName() {}));
       (that is, where it is not expecting a value), will result in a function declaration.
 */
 if (true) {
-   function foo () {} // top level of block, declaration
+   function foo() {} // top level of block, declaration
 }
 
-function foo () {} //global level, declaration
+function foo() {} //global level, declaration
 
-function foo () {
+function foo() {
    function bar() {} //top level of block, declaration
 }
 
-function foo () {
-   return function bar () {} // named function expression
+function foo() {
+   return function bar() {}; // named function expression
 }
 
-foo(function () {}) // anonymous function expression
+foo(function() {}); // anonymous function expression
 
-function foo () {
-   return function bar () {
-      function baz () {} // top level of block, declaration
-   }
+function foo() {
+   return function bar() {
+      function baz() {} // top level of block, declaration
+   };
 }
 
 // SyntaxError: function statement requires a name
-// function () {} 
+// function () {}
 
 // if (true){
 //    function () {} //SyntaxError: function statement requires a name
@@ -101,14 +101,14 @@ function foo () {
 
 // Semi-colon vs Comma operator
 // With semi-colon, you can keep multiple statements on the same line
-const a; function foo () {}; const b = 2
+const a; function foo () {}; const b = 2;
 
 // The comma operator allows you to chain multiple expression, returning only the last expression
-console.log( (1+2,3,4) ) //4
+console.log((1 + 2, 3, 4)); //4
 
-console.log( (2, 9/3, function () {}) ) // function (){}
+console.log((2, 9 / 3, function() {})); // function (){}
 
-console.log( (3, true ? 2+2 : 1+1) ) // 4
+console.log((3, true ? 2 + 2 : 1 + 1)) // 4
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -121,14 +121,16 @@ function () {};
 (function() {});
 
 // If putting a anonymous function inside a parentheses immediately returns the same anonymous function, that means we can call it straight away
-(function () {
-   console.log('Immediately invoke anonymous function call')
-})() // "immediately invoke anonymous function call"
+(function() {
+   console.log('Immediately invoke anonymous function call');
+})(); // "immediately invoke anonymous function call"
 
-console.log((function () {
-   return 3
-})()) // 3
+console.log(
+   (function() {
+      return 3;
+   })()
+);// 3
 
-(function (a) {
-   console.log(a)
-})("I'm an argument") // I'm an argument
+(function(a) {
+    console.log(a);
+})("I'm an argument"); // I'm an argument

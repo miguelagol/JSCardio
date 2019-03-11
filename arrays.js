@@ -664,9 +664,8 @@ camelize('-webkit-transition'); // WebkitTransition
 function camelize2(string) {
    return string
       .split('-')
-      .map(
-         (str, index) =>
-            index == 0 ? str : str[0].toUpperCase() + str.slice(1),
+      .map((str, index) =>
+         index == 0 ? str : str[0].toUpperCase() + str.slice(1),
       )
       .join('');
 }

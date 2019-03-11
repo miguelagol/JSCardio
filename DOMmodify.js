@@ -175,7 +175,7 @@ second.after(first);
    <p>Somewhere in the page...</p>
    <script>
       document.write('
-         <b>Hello from JS</b>
+      <b>Hello from JS</b>
       ');
    </script>
    <p>The end</p>
@@ -931,9 +931,8 @@ one.insertAdjacentHTML('afterend', '<li>2</li><li>3</li>');
 
 let sortedRows = Array.from(table.rows)
    .slice(1)
-   .sort(
-      (rowA, rowB) =>
-         rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1,
+   .sort((rowA, rowB) =>
+      rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1,
    );
 
 table.tBodies[0].append(...sortedRows);

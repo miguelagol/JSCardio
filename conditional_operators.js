@@ -82,10 +82,10 @@ let message =
    age2 < 3
       ? 'Hi, baby!'
       : age2 < 18
-         ? 'Hello!'
-         : age2 < 100
-            ? 'Greetings!'
-            : 'What an unusual age!';
+      ? 'Hello!'
+      : age2 < 100
+      ? 'Greetings!'
+      : 'What an unusual age!';
 
 alert(message);
 
@@ -167,7 +167,7 @@ let message =
    login == 'Employee'
       ? 'Hello'
       : login == 'Director'
-         ? 'Greetings'
-         : login == ''
-            ? 'No login'
-            : '';
+      ? 'Greetings'
+      : login == ''
+      ? 'No login'
+      : '';

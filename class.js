@@ -964,7 +964,7 @@ let eventMixin = {
 
 class Menu {
    choose(value) {
-      this.trigger('select', value)
+      this.trigger('select', value);
    }
 }
 
