@@ -23,10 +23,10 @@ let quotesList = `Quotes:
     * Backsticks`;
 console.log(quotesList);
 /*  Quotes:
-        * Double quotes
-        * Single quotes
-        * Backsticks
-*/
+ * Double quotes
+ * Single quotes
+ * Backsticks
+ */
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
