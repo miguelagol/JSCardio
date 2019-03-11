@@ -311,11 +311,13 @@ function loadScript(src) {
    });
 }
 
-let promise = loadScript("https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js");
+let promise = loadScript(
+   'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js',
+);
 
 promise.then(
    script => console.log(`${script.src} is loaded!`),
-   error => console.log(`Error: ${error.message}`)
+   error => console.log(`Error: ${error.message}`),
 );
 
 promise.then(script => console.log('One more handler to do something else!'));
@@ -335,22 +337,24 @@ promise.then(script => console.log('One more handler to do something else!'));
 
 // TASK 1 - Animated circle with callback
 {
-   /* <style>
+   /* 
+<style>
    .circle {
-   transition-property: width, height, margin-left, margin-top;
-   transition-duration: 2s;
-   position: fixed;
-   transform: translateX(-50%) translateY(-50%);
-   background-color: red;
-   border-radius: 50%;
+      transition-property: width, height, margin-left, margin-top;
+      transition-duration: 2s;
+      position: fixed;
+      transform: translateX(-50%) translateY(-50%);
+      background-color: red;
+      border-radius: 50%;
    }
 
    .message-ball {
-   font-size: 20px;
-   line-height: 200px;
-   text-align: center;
+      font-size: 20px;
+      line-height: 200px;
+      text-align: center;
    }
-</style> */
+</style>
+*/
 }
 
 <button onclick="go()">Let's animate</button>;
@@ -380,4 +384,60 @@ function showCircle(cx, cy, radius, callback) {
          callback(circle);
       });
    }, 0);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 2 - Re-solve a promise?
+// What's the output of the code below?
+let promise = new Promise(function(resolve, reject) {
+   resolve(1);
+
+   setTimeout(() => resolve(2), 1000);
+});
+
+promise.then(console.log); // 1
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 3 - Delay with a promise
+function delay(ms) {
+   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+delay(5000).then(() => console.log('Runs after 5 seconds'));
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 4 - Animated circle with promise
+
+<button onclick="go()">Let's animate</button>;
+
+function go() {
+   showCircle(150, 150, 100).then(div => {
+      div.classList.add('message-ball');
+      div.append('Hello, world!');
+   });
+}
+
+function showCircle(cx, cy, radius) {
+   let circle = document.createElement('div');
+   circle.style.height = 0;
+   circle.style.width = 0;
+   circle.style.left = cx + 'px';
+   circle.style.top = cy + 'px';
+   circle.className = 'circle';
+   document.body.append(circle);
+
+   return new Promise(resolve => {
+      setTimeout(() => {
+         circle.style.width = radius * 2 + 'px';
+         circle.style.height = radius * 2 + 'px';
+
+         circle.addEventListener('transitionend', function handler() {
+            circle.removeEventListener('transitionend', handler);
+            resolve(circle);
+         });
+      }, 0);
+   });
 }
