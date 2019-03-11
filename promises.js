@@ -60,8 +60,8 @@ function loadScript(src, callback) {
 
    script.src = src;
 
-   script.onload() = () => callback(null, script);
-   script.onerror() = () => callback(new Error(`Script load error for ${src}`));
+   script.onload = () => callback(null, script);
+   script.onerror = () => callback(new Error(`Script load error for ${src}`));
 
    document.head.append(script);
 }
@@ -106,43 +106,43 @@ loadScript('1.js', function(error, script) {
 loadScript('1.js', step1);
 
 function step1(error, script) {
-  if (error) {
-    handleError(error);
-  } else {
-    // ...
-    loadScript('2.js', step2);
-  }
+   if (error) {
+      handleError(error);
+   } else {
+      // ...
+      loadScript('2.js', step2);
+   }
 }
 
 function step2(error, script) {
-  if (error) {
-    handleError(error);
-  } else {
-    // ...
-    loadScript('3.js', step3);
-  }
+   if (error) {
+      handleError(error);
+   } else {
+      // ...
+      loadScript('3.js', step3);
+   }
 }
 
 function step3(error, script) {
-  if (error) {
-    handleError(error);
-  } else {
-    // ...continue after all scripts are loaded (*)
-  }
+   if (error) {
+      handleError(error);
+   } else {
+      // ...continue after all scripts are loaded (*)
+   }
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // Promise Object
 /* Syntax:
-  let promise = new Promise(function(resolve, reject) {
-    // executor (the producing code)
-  });
+   let promise = new Promise(function(resolve, reject) {
+      // executor (the producing code)
+   });
 */
-/*  The function passed to new Promise is called the executor. When the promise is created, this executor function runs automatically.
-    It contains the producing code, that should eventually produce a result.
+/* The function passed to new Promise is called the executor. When the promise is created, this executor function runs automatically.
+   It contains the producing code, that should eventually produce a result.
 
-  The resulting promise object has internal properties:
+   The resulting promise object has internal properties:
     - state — initially “pending”, then changes to either “fulfilled” or “rejected”,
     - result — an arbitrary value of your choosing, initially undefined.
 
@@ -156,38 +156,186 @@ function step3(error, script) {
 */
 // Fulfilled promise
 let promise = new Promise(function(resolve, reject) {
-  // The executor receives two arguments: resolve and reject — these functions are pre-defined by the JavaScript engine.
-  // We should write the executor to call them when ready.
-  setTimeout(() => resolve('done!'), 1000);
+   // The executor receives two arguments: resolve and reject — these functions are pre-defined by the JavaScript engine.
+   // We should write the executor to call them when ready.
+   setTimeout(() => resolve('done!'), 1000);
 }); // calls resolve('done') ->  state: 'fulfilled'  result: 'done'
 
 // Rejected promise
 let promise = new Promise(function(resolve, reject) {
-  setTimeout(() => reject(new Error('Whooops!'), 1000));
+   setTimeout(() => reject(new Error('Whooops!'), 1000));
 }); // calls reject(error) ->   state: 'rejected'   result: error
 
-/*  The executor should do a job (something that takes time usually) and then call resolve or reject to change the state
-    of the corresponding Promise object.
-    The Promise that is either resolved or rejected is called “settled”, as opposed to a “pending” Promise.
+/* The executor should do a job (something that takes time usually) and then call resolve or reject to change the state
+   of the corresponding Promise object.
+   The Promise that is either resolved or rejected is called “settled”, as opposed to a “pending” Promise.
 */
 
 //--------------------REMEMBER--------------------
 //  - There can be only a single result or an error
 //    The promise's state change is final. Alll further calls of resolve and reject are ignored
 let promise = new Promise(function(resolve, reject) {
-  resolve('done');
-  reject(new Error('...')); // ignored
-  setTimeout(() => resolve('...')); // ignored
+   resolve('done');
+   reject(new Error('...')); // ignored
+   setTimeout(() => resolve('...')); // ignored
 });
 
 //  - Reject with Error objects
 //    In case something goes wrong, we can call reject with any type of argument (just like resolve).
-//    But it is recommended to use Error objects (or objects that inherit from Error). 
+//    But it is recommended to use Error objects (or objects that inherit from Error).
+
+//  - Immediately calling resolve/reject
+//    In practice, an executor usually does something asynchronously and calls resolve/reject after some time, but it doesn’t have to
+let promise = new Promise(function(resolve, reject) {
+   // not taking our time to do the job
+   resolve(123);
+});
+
+//  - The state and result are internal
+
+//-----------------------------------------------------------------------------------------
+
+// Consumers: then, catch, finally
+/* A Promise object serves as a link between the executor (the “producing code”)
+   and the consuming functions, which will receive the result or error.
+   Consuming functions can be registered (subscribed) using methods .then, .catch and .finally.
+*/
+
+// then
+/* promise.then(
+      functiom(result) { // handle a successful result},
+      function(error) { // handle an error}
+   );
+*/
+/* The first argument of .then is a function that:
+      -  runs when the Promise is resolved, and
+      -  receives the result.
+   The second argument of .then is a function that:
+      -  runs when the Promise is rejected, and
+      -  receives the error.
+*/
+let promise = new Promise(function(resolve, reject) {
+   setTimeout(() => resolve('done!'), 1000);
+});
+
+promise.then(
+   result => console.log(result), // done!
+   error => console.log(error),
+);
+
+let promise2 = new Promise(function(resolve, reject) {
+   setTimeout(() => reject(new Error('Whoops!')), 1000);
+});
+
+promise2.then(
+   result => console.log(result),
+   error => console.log(error), // Error: Whoops!
+);
+
+// If we’re interested only in successful completions, then we can provide only one function argument to .then
+let promise = new Promise(function(resolve, reject) {
+   setTimeout(() => resolve('done!'), 1000);
+});
+
+promise.then(console.log); // done!
+
+//---------------------------------------------------------
+
+// catch
+/* If we’re interested only in errors, then we can use null as the first argument:
+   .then(null, errorHandlingFunction).
+   Or we can use .catch(errorHandlingFunction)
+*/
+let promise = new Promise(function(resolve, reject) {
+   setTimeout(() => reject(new Error('Whoops!')), 1000);
+});
+
+// promise.then(null, console.log)
+promise.catch(console.log); // Error: Whoops!
+
+//---------------------------------------------------------
+
+// finally
+/* The call .finally(f) is similar to .then(f, f) in the sense that it always runs
+   when the promise is settled: be it resolve or reject.
+*/
+/* new Promise((resolve, reject) => {
+      // do something that takes time, and then call resolve/reject
+   })
+      // runs when the promise is settled, doesn't matter successfully or not
+      .finally(() => stop loading indicator)
+      .then(result => show result, err => show error)
+*/
+// A finally handler has no arguments and passes through result and errors to thr next handler
+new Promise((resolve, reject) => {
+   setTimeout(() => resolve('result'), 1000);
+})
+   .finally(() => console.log('Promise ready')) // Promise ready
+   .then(result => console.log(result)); // result
+
+new Promise((resolve, reject) => {
+   setTimeout(() => reject(new Error('Whooops!')), 1000);
+})
+   .finally(() => console.log('Promise ready')) // Promise ready
+   .catch(error => console.log(error)); // Error: Whooops!
+
+// On settled promises handlers runs immediately
+/* If a promise is pending, .then/catch/finally handlers wait for the result.
+   Otherwise, if a promise has already settled, they execute immediately
+*/
+let promise = new Promise(resolve => resolve('done!'));
+
+promise.then(console.log); // done!
+
+// Example: loadScript
+// callback variant
+/* function loadScript(src, callback) {
+      let script = document.createElement('script');
+      script.src = src;
+
+      script.onload = () => callback(null, script);
+      script.onerror = () => callback(new Error(`Script load error ` + src));
+
+      document.head.append(script);
+   }
+*/
+function loadScript(src) {
+   return new Promise(function(resolve, reject) {
+      let script = document.createElement('script');
+      script.src = src;
+
+      script.onload = () => resolve(script);
+      script.onerror = () => reject(new Error('Script load error: ' + src));
+
+      document.head.append(script);
+   });
+}
+
+let promise = loadScript("https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js");
+
+promise.then(
+   script => console.log(`${script.src} is loaded!`),
+   error => console.log(`Error: ${error.message}`)
+);
+
+promise.then(script => console.log('One more handler to do something else!'));
+
+/* 
+   Promises	                                                   Callbacks
+   Promises allow us to do things in the natural order.        We must have a callback function at our disposal when calling 
+   First, we run loadScript(script), and .then we write        loadScript(script, callback). We must know what to do with the result
+   what to do with the result.	                              before loadScript is called.
+
+   We can call .then on a Promise as many times as we want.    There can be only one callback.
+   Each time, we’re adding a new “fan”,
+   a new subscribing function, to the “subscription list”.
+*/
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - Animated circle with callback
-{/* <style>
+{
+   /* <style>
    .circle {
    transition-property: width, height, margin-left, margin-top;
    transition-duration: 2s;
@@ -202,7 +350,8 @@ let promise = new Promise(function(resolve, reject) {
    line-height: 200px;
    text-align: center;
    }
-</style> */}
+</style> */
+}
 
 <button onclick="go()">Let's animate</button>;
 
