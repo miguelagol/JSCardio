@@ -335,6 +335,96 @@ promise.then(script => console.log('One more handler to do something else!'));
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Promise chaining
+// The idea is that the result is passed through the chain of .then handlers.
+
+new Promise(function(resolve, reject) {
+   setTimeout(() => resolve(1), 1000);
+})
+   .then(function(result) {
+      console.log(result); // 1
+      return result * 2;
+   })
+   .then(function(result) {
+      console.log(result); // 2
+      return result * 2;
+   })
+   .then(function(result) {
+      console.log(result); // 4
+      return result * 2;
+   });
+// The whole thing works, because a call to promise.then returns a promise, so that we can call the next .then on it.
+
+// technically we can also add many .then to a single promise but this is not chaining
+let promise = new Promise(function(resolve, reject) {
+   setTimeout(() => resolve(1), 1000);
+});
+
+promise.then(function(result) {
+   console.log(result); // 1
+   return result * 2;
+});
+
+promise.then(function(result) {
+   console.log(result); // 1
+   return result * 2;
+});
+
+promise.then(function(result) {
+   console.log(result); // 1
+   return result * 2;
+});
+// There are just several handlers to one promise. They don’t pass the result to each other, instead they process it idependantly.
+
+//-----------------------------------------------------------------------------------------
+
+// Returning promises
+/* Normally, a value returned by a .then handler is immediately passed to the next handler.
+   But there’s an exception.
+
+   If the returned value is a promise, then the further execution is suspended until it settles.
+   After that, the result of that promise is given to the next .then handler.
+*/
+new Promise(function(resolve, reject) {
+   setTimeout(() => resolve(1), 1000);
+})
+   .then(function(result) {
+      console.log(result); // 1
+
+      return new Promise((resolve, reject) => {
+         setTimeout(() => resolve(result * 2), 1000);
+      });
+   })
+   .then(function(result) {
+      console.log(result); // 2
+
+      return new Promise((resolve, reject) => {
+         setTimeout(() => resolve(result * 2), 1000);
+      });
+   })
+   .then(function(result) {
+      console.log(result); // 4
+   });
+// Returning promises allows us to build chains of asynchronous actions.
+
+// Example: loadScript
+/* loadScript('/article/promise-chaining/one.js')
+      .then(function(script) {
+         return loadScript('/article/promise-chaining/two.js');
+      })
+      .then(function(script) {
+         return loadScript('/article/promise-chaining/three.js');
+      })
+      .then(function(script) {
+         // use function declared in scripts
+         one();
+         two();
+         three();
+   });
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Animated circle with callback
 {
    /* 
