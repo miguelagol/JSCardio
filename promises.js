@@ -422,6 +422,138 @@ new Promise(function(resolve, reject) {
          three();
    });
 */
+// shorter code
+loadScript('/article/promise-chaining/one.js')
+   .then(script => loadScript('/article/promise-chaining/two.js'))
+   .then(script => loadScript('/article/promise-chaining/three.js'))
+   .then(script => {
+      one();
+      two();
+      three();
+   });
+
+//--------------------REMEMBER--------------------
+// Thenables
+/* .then may return an arbitrary “thenable” object, and it will be treated the same way as a promise.
+   A “thenable” object is any object with a method .then.
+*/
+class Thenable {
+   constructor(num) {
+      this.num = num;
+   }
+   then(resolve, reject) {
+      console.log(resolve)
+      setTimeout(() => resolve(this.num * 2), 1000);
+   }
+}
+
+new Promise(resolve => resolve(1))
+   .then(result => {
+      return new Thenable(result);
+      /* JavaScript checks the object returned by .then handler:
+         if it has a callable method named then, then it calls that method
+         providing native functions resolve, reject as arguments (similar to executor)
+         and waits until one of them is called.
+      */
+   })
+   .then(console.log);  // [Function]     2
+// This feature allows to integrate custom objects with promise chains without having to inherit from Promise.
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// fetch
+// The basic usage
+let promise = fetch(url);
+/* This makes a network request to the url and returns a promise.
+   The promise resolves with a response object when the remote server responds with headers, but before the full response is downloaded.
+   To read the full response, we should call a method response.text():
+      it returns a promise that resolves when the full text downloaded from the remote sever, with that text as a result. 
+*/
+fetch('/article/promise-chaining/user.json')
+   // .then runs when the remote server responds
+   .then(function(response) {
+      // response.text() returns a new promise that resolves with the full response text
+      // when we finish downloading it
+      return response.text;
+   })
+   .then(function(text) {
+      console.log(text); // {"name": "iliakan", isAdmin: true}
+   });
+
+// response.json()
+// this method reads the remote data and parses it as JSON
+fetch('/article/promise-chaining/user.json')
+   .then(response => response.json())
+   .then(user => console.log(user.name)); // iliakan
+
+// show the avatar
+// Make a request for user.json
+fetch('/article/promise-chaining/user.json')
+   // Load it as json
+   .then(response => response.json())
+   // Make a request to github
+   .then(user => fetch(`https://api.github.com/users/${user.name}`))
+   // Load the response as json
+   .then(response => response.json())
+   // Show the avatar image
+   .then(githubUser => {
+      let img = document.createElement('img');
+      img.src = githubUser.avatar_url;
+      document.body.append(img);
+
+      setTimeout(() => img.remove(), 3000)
+   });
+
+// As of now, there’s no way to do something after the avatar has finished showing and gets removed. 
+// To make the chain extendable, we need to return a promise that resolves when the avatar finishes showing.
+fetch('/article/promise-chaining/user.json')
+   // Load it as json
+   .then(response => response.json())
+   // Make a request to github
+   .then(user => fetch(`https://api.github.com/users/${user.name}`))
+   // Load the response as json
+   .then(response => response.json())
+   // Show the avatar image
+   .then(githubUser => new Promise(function(resolve, reject) {
+      let img = document.createElement('img');
+      img.src = githubUser.avatar_url;
+      document.body.append(img);
+
+      setTimeout(() => {
+         img.remove();
+         resolve(githubUser);
+      }, 3000);
+   }))
+   .then(githubUser => console.log(`Finished showing ${githubUser.name}`));
+
+// we can split the code into reusable functions
+function loadJson(url) {
+   return fetch(url)
+      .then(response => response.json());
+}
+
+function loadGithubUser(name) {
+   return fetch(`https://api.github.com/users/${name}`)
+      .then(response => response.json());
+}
+
+function showAvatar(githubUser) {
+   return new Promise(function(resolve, reject) {
+      let img = document.createElement('img');
+      img.src = githubUser.avatar_url;
+      document.body.append(img);
+
+      setTimeout(() => {
+         img.remove();
+         resolve(githubUser);
+      }, 3000);
+   })
+}
+
+loadJson('/article/promise-chaining/user.json')
+   .then(user => loadGithubUser(user.name))
+   .then(showAvatar)
+   .then(githubUser => console.log(`Finished showing ${githubUser.name}`));
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
