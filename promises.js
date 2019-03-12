@@ -442,7 +442,7 @@ class Thenable {
       this.num = num;
    }
    then(resolve, reject) {
-      console.log(resolve)
+      console.log(resolve);
       setTimeout(() => resolve(this.num * 2), 1000);
    }
 }
@@ -456,7 +456,7 @@ new Promise(resolve => resolve(1))
          and waits until one of them is called.
       */
    })
-   .then(console.log);  // [Function]     2
+   .then(console.log); // [Function]     2
 // This feature allows to integrate custom objects with promise chains without having to inherit from Promise.
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -501,10 +501,10 @@ fetch('/article/promise-chaining/user.json')
       img.src = githubUser.avatar_url;
       document.body.append(img);
 
-      setTimeout(() => img.remove(), 3000)
+      setTimeout(() => img.remove(), 3000);
    });
 
-// As of now, there’s no way to do something after the avatar has finished showing and gets removed. 
+// As of now, there’s no way to do something after the avatar has finished showing and gets removed.
 // To make the chain extendable, we need to return a promise that resolves when the avatar finishes showing.
 fetch('/article/promise-chaining/user.json')
    // Load it as json
@@ -514,27 +514,30 @@ fetch('/article/promise-chaining/user.json')
    // Load the response as json
    .then(response => response.json())
    // Show the avatar image
-   .then(githubUser => new Promise(function(resolve, reject) {
-      let img = document.createElement('img');
-      img.src = githubUser.avatar_url;
-      document.body.append(img);
+   .then(
+      githubUser =>
+         new Promise(function(resolve, reject) {
+            let img = document.createElement('img');
+            img.src = githubUser.avatar_url;
+            document.body.append(img);
 
-      setTimeout(() => {
-         img.remove();
-         resolve(githubUser);
-      }, 3000);
-   }))
+            setTimeout(() => {
+               img.remove();
+               resolve(githubUser);
+            }, 3000);
+         }),
+   )
    .then(githubUser => console.log(`Finished showing ${githubUser.name}`));
 
 // we can split the code into reusable functions
 function loadJson(url) {
-   return fetch(url)
-      .then(response => response.json());
+   return fetch(url).then(response => response.json());
 }
 
 function loadGithubUser(name) {
-   return fetch(`https://api.github.com/users/${name}`)
-      .then(response => response.json());
+   return fetch(`https://api.github.com/users/${name}`).then(response =>
+      response.json(),
+   );
 }
 
 function showAvatar(githubUser) {
@@ -547,7 +550,7 @@ function showAvatar(githubUser) {
          img.remove();
          resolve(githubUser);
       }, 3000);
-   })
+   });
 }
 
 loadJson('/article/promise-chaining/user.json')
@@ -663,3 +666,17 @@ function showCircle(cx, cy, radius) {
       }, 0);
    });
 }
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 5 - Promise: then versus catch
+// Are these code fragments equal?
+promise.then(f1).catch(f2);
+promise.then(f1, f2);
+
+// no, they are not the equal
+/* The difference is that if an error happens in f1, then it is handled by .catch (first code piece).
+   That's because an error is passed down the chain, and in the second code piece there's no chain below f1.
+   .then passes results/errors to the next .then/catch. So in the first example, there’s a catch below,
+   and in the second one – there isn’t, so the error is unhandled.
+*/
