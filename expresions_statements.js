@@ -116,7 +116,7 @@ console.log((3, true ? 2 + 2 : 1 + 1)) // 4
 // An anonymous function can be an expression, if we use it where Javascript is expecting a value
 
 // is invalid
-function () {};
+// function () {};
 // is valid
 (function() {});
 
