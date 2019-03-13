@@ -376,6 +376,40 @@ promise.then(function(result) {
 });
 // There are just several handlers to one promise. They don’t pass the result to each other, instead they process it idependantly.
 
+//--------------------REMEMBER--------------------
+// Any time .then or .catch is invoked, it's going to wrap whatever these functions return in a new promise
+function getPromise() {
+   return new Promise((resolve, reject) => {
+      setTimeout(() => {
+         resolve()
+      }, 2000);
+   })
+}
+
+function logA() {
+   console.log('A');
+}
+
+function logB() {
+   console.log('B');
+}
+
+function logCandThrow() {
+   console.log('C');
+
+   throw new Error();
+}
+
+function logError() {
+   console.log('Error');
+}
+
+getPromise()
+   .then(logA)
+   .then(logB)
+   .then(logCandThrow)
+   .catch(logError)  // A  B  C  Error
+
 //-----------------------------------------------------------------------------------------
 
 // Returning promises
@@ -680,3 +714,30 @@ promise.then(f1, f2);
    .then passes results/errors to the next .then/catch. So in the first example, there’s a catch below,
    and in the second one – there isn’t, so the error is unhandled.
 */
+
+function onSuccess() {
+   console.log('Success!');
+}
+
+function onError() {
+   console.log('Error!');
+}
+
+let promiseSuc = new Promise((resolve, reject) => {
+   setTimeout(() => {
+      resolve()
+   }, 3000);
+});
+
+promiseSuc.then(onSuccess); // Success!      second (after 3 seconds)
+
+let promiseEr = new Promise((resolve, reject) => {
+   setTimeout(() => {
+      reject()
+   }, 2000);
+});
+
+promiseEr.catch(onError); // Error!    first (after 2 seconds)
+
+// or
+promiseEr.then(onSuccess, onError); // Error!
