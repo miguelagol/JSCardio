@@ -945,3 +945,16 @@ promiseEr.catch(onError); // Error!    first (after 2 seconds)
 
 // or
 promiseEr.then(onSuccess, onError); // Error!
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 6 - Error in setTimeout
+// Will the .caucgh trigger?
+new Promise(function(resolve, reject) {
+   setTimeout(() => {
+      throw new Error('Whooops');
+   }, 1000);
+}).catch(console.log);
+/* There’s an "implicit try..catch" around the function code. So all synchronous errors are handled.
+   But here the error is generated not while the executor is running, but later. So the promise can’t handle it.
+*/
