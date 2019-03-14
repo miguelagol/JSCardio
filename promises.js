@@ -881,6 +881,91 @@ demoGithubUser();
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Promise API (Aplication programing interface)
+
+// There are 4 static methods in the Promise class
+
+// Promise.resolve
+// return a resolved promise with the given value
+let promise = Promise.resolve(value);
+
+// the same as
+let promise = new Promise(resolve => resolve(value));
+
+// The method is used when we already have a value, but would like to have it 'wrapped' into a promise
+
+function loadCached(url) {
+   let cache = loadCached.cache || (loadCached.cache = new Map());
+
+   if (cache.has(url)) {
+      return Promise.resolve(cache.get(url));
+   }
+
+   return fetch(url)
+      .then(response => response.text())
+      .then(text => {
+         cache.set(url, text);
+         return text;
+      });
+}
+// We can use loadCached(url).then(...) because the function is guaranteed to return a promise
+
+//-----------------------------------------------------------------------------------------
+
+// Promise.reject
+// create a rejected promise with the error
+let promise = Promise.reject(error);
+
+// the same as
+let promise = new Promise((resolve, reject) => reject(error));
+
+//-----------------------------------------------------------------------------------------
+
+// Promise.all
+// It takes an array of promises (technically can be any iterable, but usually an array) and returns a new promise.
+// The new promise resolves when all listed promises are settled and has an array of their results.
+// We use Promise.all when we want to run many promises to execute in parallel, and wait till all of them are ready
+let Promise = Promise.all([...promises]);
+
+Promise.all([
+   new Promise(resolve => setTimeout(() => resolve(1), 3000)),
+   new Promise(resolve => setTimeout(() => resolve(2), 2000)),
+   new Promise(resolve => setTimeout(() => resolve(3), 1000)),
+]).then(console.log); // [1, 2, 3]  the relative order is the same
+
+let urls = [
+   'https://api.github.com/users/iliakan',
+   'https://api.github.com/users/remy',
+   'https://api.github.com/users/jeresig',
+];
+
+// map every url to the promise fetch
+let requests = urls.map(url => fetch(url));
+
+// Promise.all waits until all jobs are resolved
+Promise.all(requests)
+   .then(responses => responses.forEach(
+      response => console.log(`${response.url}: ${response.status}`)
+   ));
+
+// the same as (+names)
+let names = ['iliakan', 'hiredgun', 'miguelagol'];
+
+let requests = names.map(name => fetch(`https://api.github.com/users/${name}`));
+
+Promise.all(requests)
+   .then(responses => {
+      for(let response of responses) {
+         console.log(`${response.url}: ${response.status}`);
+      }
+
+      return responses;
+   })
+   .then(responses => Promise.all(responses.map(response => response.json())))
+   .then(users => users.forEach(user => console.log(user.name)));
+   
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Animated circle with callback
 {
    /* 
