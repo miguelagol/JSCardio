@@ -381,9 +381,9 @@ promise.then(function(result) {
 function getPromise() {
    return new Promise((resolve, reject) => {
       setTimeout(() => {
-         resolve()
+         resolve();
       }, 2000);
-   })
+   });
 }
 
 function logA() {
@@ -408,7 +408,7 @@ getPromise()
    .then(logA)
    .then(logB)
    .then(logCandThrow)
-   .catch(logError)  // A  B  C  Error
+   .catch(logError); // A  B  C  Error
 
 //-----------------------------------------------------------------------------------------
 
@@ -592,6 +592,210 @@ loadJson('/article/promise-chaining/user.json')
    .then(showAvatar)
    .then(githubUser => console.log(`Finished showing ${githubUser.name}`));
 
+/* The promise returned by fetch rejects when it’s impossible to make a request.
+    For instance, a remote server is not available, or the URL is malformed.
+    But if the remote server responds with error 404, or even error 500, then it’s considered a valid response.
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Error handling with promises
+/* Asynchronous actions may sometimes fail: in case of an error the corresponding promise becomes rejected.
+   Promise chaining is great at that aspect. When a promise rejects, the control jumps to the closest rejection handler down the chain.
+*/
+fetch('https://no-such-server.blabla') // rejects
+   .then(response => response.json())
+   .catch(error => console.log(error)); // TypeError: Failed to fetch
+
+// The easiest way to catch all errors is to append .catch to the end of chain
+fetch('/article/promise-chaining/user.json')
+   .then(response => response.json())
+   .then(user => fetch(`https://api.github.com/users/${user.name}`))
+   .then(response => response.json())
+   .then(
+      githubUser =>
+         new Promise((resolve, reject) => {
+            let img = document.createElement('img');
+            img.src = githubUser.avatar_url;
+            img.className = 'promise-avatar-example';
+            document.body.append(img);
+
+            setTimeout(() => {
+               img.remove();
+               resolve(githubUser);
+            }, 3000);
+         }),
+   )
+   .catch(error => console.log(error.message)); // .catch doesn’t trigger at all, because there are no errors.
+
+//-----------------------------------------------------------------------------------------
+
+// implicit try...catch
+// The code of a promise executor and promise handlers has an "invisible try..catch" around it.
+// If an error happens, it gets caught and treated as a rejection.
+new Promise((resolve, reject) => {
+   throw new Error('Whooops!');
+}).catch(console.log); // Error: Whooops!
+
+// the same as
+new Promise((resolve, reject) => {
+   reject(new Error('Whooops!'));
+}).catch(console.log); // Error: Whooops!
+
+// That’s so not only in the executor, but in handlers as well.
+// If we throw inside .then handler, that means a rejected promise, so the control jumps to the nearest error handler.
+new Promise((resolve, reject) => {
+   resolve('ok');
+})
+   .then(result => {
+      throw new Error('Whooops!');
+   })
+   .catch(console.log); // Error: Whooops!
+// That’s so not only for throw, but for any errors, including programming errors as well
+// As a side effect, the final .catch not only catches explicit rejections, but also occasional errors in the handlers above.
+
+//-----------------------------------------------------------------------------------------
+
+// Rethrowing
+// .catch behaves like try..catch. We may have as many .then as we want, and then use a single .catch at the end
+// to handle errors in all of them.
+// If we throw inside .catch, then the control goes to the next closest error handler.
+// And if we handle the error and finish normally, then it continues to the closest successful .then handler.
+new Promise((resolve, reject) => {
+   throw new Error('Whooops!');
+})
+   .catch(function(error) {
+      console.log('The error is handled, continue normally'); // The error is handled, continue normally
+   })
+   .then(() => console.log('Next successful handler runs')); // Next successful handler runs
+
+// If the handler catches the error and just can’t handle it, it throws it again
+new Promise((resolve, reject) => {
+   throw new Error('Whooops!');
+})
+   .catch(function(error) {
+      if (error instanceof URIError) {
+         // handle it
+      } else {
+         console.log("Can't handle such error"); // Can't handle such error
+         throw error;
+      }
+   })
+   .then(function() {
+      // never runs here
+   })
+   .catch(error => {
+      console.log(`The unknown error has occurred: ${error}`); // The unknown error has occurred: Error: Whooops!
+   });
+
+//-----------------------------------------------------------------------------------------
+
+// Fetch error handling example
+fetch('no-such-user.json')
+   .then(response => response.json())
+   .then(user => fetch(`https://api.github.com/users/${user.name}`))
+   .then(response => response.json())
+   .catch(alert); // SyntaxError: Unexpected token < in JSON at position 0
+// As of now, the code tries to load the response as JSON no matter what and dies with a syntax error
+// the error just falls through the chain, without details: what failed and where
+
+class HttpError extends Error {
+   constructor(response) {
+      super(`${response.status} for ${response.url}`);
+      this.name = 'HttpError';
+      this.response = response;
+   }
+}
+
+function loadJSON(url) {
+   return fetch(url).then(response => {
+      if (response.status == 200) {
+         return response.json();
+      } else {
+         throw new HttpError(response);
+      }
+   });
+}
+
+loadJSON('no-such-user.json').catch(console.log); // HttpError2: 404 for http://javascript.info/no-such-user.json
+
+// second example
+function demoGithubUser() {
+   let name = prompt('Enter a name?', 'iliakan');
+
+   return loadJSON(`https://api.github.com/users/${name}`)
+      .then(user => {
+         console.log(`Full name: ${user.name}`);
+         return user;
+      })
+      .catch(error => {
+         if (error instanceof HttpError && error.response.status == 404) {
+            console.log('No such user, please reenter.');
+            return demoGithubUser();
+         } else {
+            throw error;
+         }
+      });
+}
+
+demoGithubUser();
+
+//-----------------------------------------------------------------------------------------
+
+// Unhandled rejections
+// If we just forget to append an error handler to the end of the chain
+new Promise(function() {
+   noSuchFunction();
+}).then(() => {
+   // zero or many promise handlers
+}); // without .catch at the end!
+// In case of an error, the promise state becomes “rejected”, and the execution should jump to the closest rejection handler.
+// So the error gets “stuck”.
+// Most JavaScript engines track such situations and generate a global error in that case. We can see it in the console.
+
+// In the browser we can catch such errors using the event unhandledrejection
+window.addEventListener('unhandledrejection', function(event) {
+   console.log(event.promise); // Promise {<rejected>: Error: Whoops! at <anonymous>:7:10 at new Promise (<anonymous>) at <anonymous>:6:1}
+   console.log(event.reason); // Error: Whoops!
+});
+
+new Promise(function() {
+   throw new Error('Whoops!');
+});
+
+//-----------------------------------------------------------------------------------------
+
+//  if we have load-indication, then .finally is a great handler to stop it when the fetch is complete
+function demoGithubUser() {
+   let name = prompt('Enter a name?', 'iliakan');
+
+   document.body.style.opacity = 0.3; // we indicate loading by dimming the document
+
+   return loadJSON(`https://api.github.com/users/${name}`)
+      .finally(() => {
+         // When the promise is settled, be it a successful fetch or an error, finally triggers and stops the indication.
+         document.body.style.opacity = '';
+         return new Promise(resolve => setTimeout(resolve, 0));
+      })
+      .then(user => {
+         console.log(`Full name: ${user.name}`);
+         return user;
+      })
+      .catch(error => {
+         if (error instanceof HttpError && error.response.status == 404) {
+            console.log('No such user, please reenter.');
+            return demoGithubUser();
+         } else {
+            throw error;
+         }
+      });
+}
+
+demoGithubUser();
+// There’s a little browser trick with returning a zero-timeout promise from finally. That’s because some browsers (like Chrome)
+// need “a bit time” outside promise handlers to paint document changes. So it ensures that the indication is visually stopped
+// before going further on the chain.
+
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - Animated circle with callback
@@ -725,7 +929,7 @@ function onError() {
 
 let promiseSuc = new Promise((resolve, reject) => {
    setTimeout(() => {
-      resolve()
+      resolve();
    }, 3000);
 });
 
@@ -733,7 +937,7 @@ promiseSuc.then(onSuccess); // Success!      second (after 3 seconds)
 
 let promiseEr = new Promise((resolve, reject) => {
    setTimeout(() => {
-      reject()
+      reject();
    }, 2000);
 });
 
