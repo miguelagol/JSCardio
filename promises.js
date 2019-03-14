@@ -742,6 +742,89 @@ demoGithubUser();
 
 //-----------------------------------------------------------------------------------------
 
+// HTTP response status codes
+/* HTTP response status codes indicate whether a specific HTTP request has been successfully completed.
+   Responses are grouped in five classes:
+   informational responses, successful responses, redirects, client errors, and servers errors.
+*/
+// Most frequently encountered
+
+// Information responses
+/* 100   -  Continue
+            This interim response indicates that everything so far is OK and
+            that the client shold continue with the request or ignore it if it is already finished
+*/
+
+//--------------------------------------------------------
+
+// Successful responses
+/* 200   -  OK
+            The request has succeeded. The meaning of a success varies depending on the HTTP method:
+            - GET: The resource has been fetched and is transmitted in the message body.
+            - HEAD: The entity headers are in the message body.
+            - PUT or POST: The resource describing the result of the action is transmitted in the message body.
+            - TRACE: The message body contains the request message as received by the server
+
+   201   -  Created
+            The request has succeeded and a new resource has been created as a result of it.
+            This is typically the response sent after a POST request, or after some PUT requests.
+
+   202   -  Accepted
+            The request has been received but not yet acted upon.
+            It is non-committal, meaning that there is no way in HTTP to later send an asynchronous response
+            indicating the outcome of processing the request. It is intended for cases where another process or server
+            handles the request, or for batch processing.
+
+   204   -  Non Content
+            There is no content to send for this request, but the headers may be useful.
+            The user-agent may update its cached headers for this resource with the new ones.
+*/
+
+//--------------------------------------------------------
+
+// Redirection messages
+/* 301   -  Moved Permanently
+            This response code means that the URI of the requested resource has been changed.
+            Probably, the new URI would be given in the response.
+
+   304   -  Not Modified
+            This is used for caching purposes.
+            It tells the client that the response has not been modified,
+            so the client can continue to use the same cached version of the response.
+*/
+
+//--------------------------------------------------------
+
+// Client error responses
+/* 400   -  Bad Request
+            This response means that server could not understand the request due to invalid syntax.
+
+   401   -  Unauthorized
+            Although the HTTP standard specifies "unauthorized", semantically this response means "unauthenticated".
+            That is, the client must authenticate itself to get the requested response.
+
+   403   -  Forbidden
+            The client does not have access rights to the content, i.e. they are unauthorized, so server is rejecting to give proper response.
+            Unlike 401, the client's identity is known to the server.
+
+   404   -  Not Found
+            The server can not find requested resource. In the browser, this means the URL is not recognized.
+            In an API, this can also mean that the endpoint is valid but the resource itself does not exist.
+            Servers may also send this response instead of 403 to hide the existence of a resource from an unauthorized client.
+*/
+//--------------------------------------------------------
+
+// Server error responses
+/* 500   -  Internal Server Error
+            The server has encountered a situation it doesn't know how to handle.
+
+   502   -  Bad Gateway
+            This error response means that the server, while working as a gateway to get a response needed to handle the request,
+            got an invalid response.
+*/
+
+//-----------------------------------------------------------------------------------------
+
 // Unhandled rejections
 // If we just forget to append an error handler to the end of the chain
 new Promise(function() {
