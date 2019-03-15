@@ -943,10 +943,11 @@ let urls = [
 let requests = urls.map(url => fetch(url));
 
 // Promise.all waits until all jobs are resolved
-Promise.all(requests)
-   .then(responses => responses.forEach(
-      response => console.log(`${response.url}: ${response.status}`)
-   ));
+Promise.all(requests).then(responses =>
+   responses.forEach(response =>
+      console.log(`${response.url}: ${response.status}`),
+   ),
+);
 /* https://api.github.com/users/iliakan: 200
    https://api.github.com/users/remy: 200
    https://api.github.com/users/jeresig: 200
@@ -959,7 +960,7 @@ let requests = names.map(name => fetch(`https://api.github.com/users/${name}`));
 
 Promise.all(requests)
    .then(responses => {
-      for(let response of responses) {
+      for (let response of responses) {
          console.log(`${response.url}: ${response.status}`);
       }
 
@@ -978,8 +979,10 @@ Promise.all(requests)
 // If any of the promises is rejected, Promise.all immediately rejects with that error.
 Promise.all([
    new Promise(resolve => setTimeout(() => resolve(1), 1000)),
-   new Promise((resolve, reject) => setTimeout(() => reject(new Error('Whooops!')), 2000)),
-   new Promise(resolve => setTimeout(() => resolve(3), 3000))
+   new Promise((resolve, reject) =>
+      setTimeout(() => reject(new Error('Whooops!')), 2000),
+   ),
+   new Promise(resolve => setTimeout(() => resolve(3), 3000)),
 ]).catch(console.log); // Error: Whooops!
 // the rejection error becomes the outcome of the whole Promise.all
 
@@ -997,20 +1000,22 @@ Promise.all([
       setTimeout(() => resolve(1), 1000);
    }),
    2, // treated as Promise.resolve(2)
-   3 // treated as Promise.resolve(3)
-])
+   3, // treated as Promise.resolve(3)
+]);
 
 //-----------------------------------------------------------------------------------------
 
 // Promise.race
-// takes an iterable of promises, but instead of waiting for all of them to finish 
+// takes an iterable of promises, but instead of waiting for all of them to finish
 // - waits for the first result (or error) and goes on with it
 let promise = Promise.race(iterable);
 
 Promise.race([
    new Promise(resolve => setTimeout(() => resolve(1), 1000)),
-   new Promise((resolve, reject) => setTimeout(() => reject(new Error('Whooops!')), 2000)),
-   new Promise(resolve => setTimeout(() => resolve(3), 3000))
+   new Promise((resolve, reject) =>
+      setTimeout(() => reject(new Error('Whooops!')), 2000),
+   ),
+   new Promise(resolve => setTimeout(() => resolve(3), 3000)),
 ]).then(console.log); // 1
 // The first result/error becomes the result of the whole Promise.race.
 // After the first settled promise “wins the race”, all further results/errors are ignored.
@@ -1176,4 +1181,69 @@ new Promise(function(resolve, reject) {
 }).catch(console.log);
 /* There’s an "implicit try..catch" around the function code. So all synchronous errors are handled.
    But here the error is generated not while the executor is running, but later. So the promise can’t handle it.
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 7 - Fault-tolerant Promise.all
+let urls = [
+   'https://api.github.com/users/iliakan',
+   'https://api.github.com/users/hiredgun',
+   'https://api.github.com/users/miguelagol',
+   'https://no-such-url',
+];
+
+let requests = urls.map(url => fetch(url).catch(error => error));
+
+Promise.all(requests)
+   .then(responses => {
+      for (let response of responses) {
+         if (response.status != 200) {
+            console.log(response);
+         } else {
+            console.log(`${response.url}: ${response.status}`);
+         }
+      }
+   });
+/* https://api.github.com/users/iliakan: 200
+   https://api.github.com/users/hiredgun: 200
+   https://api.github.com/users/miguelagol: 200
+   TypeError: Failed to fetch
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 8 - Fault-tolerant fetch with JSON
+let urls = [
+   'https://api.github.com/users/iliakan',
+   'https://api.github.com/users/hiredgun',
+   'https://api.github.com/users/miguelagol',
+   'https://no-such-url',
+   '/',
+];
+
+let requests = urls.map(url => fetch(url).catch(error => error));
+
+Promise.all(requests)
+   .then(responses =>
+      Promise.all(
+         responses.map(response => {
+            if (response instanceof Error) {
+               return response;
+            } else {
+               return response.json().catch(error => error);
+            }
+         }),
+      ),
+   )
+   .then(results => {
+      for (let user of results) {
+         console.log(user.name);
+      }
+   });
+/* Ilya Kantor
+   Konrad Turczyński
+   Michalina Gołąb
+   TypeError
+   SyntaxError
 */
