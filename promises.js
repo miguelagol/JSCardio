@@ -947,6 +947,10 @@ Promise.all(requests)
    .then(responses => responses.forEach(
       response => console.log(`${response.url}: ${response.status}`)
    ));
+/* https://api.github.com/users/iliakan: 200
+   https://api.github.com/users/remy: 200
+   https://api.github.com/users/jeresig: 200
+*/
 
 // the same as (+names)
 let names = ['iliakan', 'hiredgun', 'miguelagol'];
@@ -963,7 +967,54 @@ Promise.all(requests)
    })
    .then(responses => Promise.all(responses.map(response => response.json())))
    .then(users => users.forEach(user => console.log(user.name)));
-   
+/* https://api.github.com/users/iliakan: 200
+   https://api.github.com/users/hiredgun: 200
+   https://api.github.com/users/miguelagol: 200
+   Ilya Kantor
+   Konrad Turczyński
+   Michalina Gołąb
+*/
+
+// If any of the promises is rejected, Promise.all immediately rejects with that error.
+Promise.all([
+   new Promise(resolve => setTimeout(() => resolve(1), 1000)),
+   new Promise((resolve, reject) => setTimeout(() => reject(new Error('Whooops!')), 2000)),
+   new Promise(resolve => setTimeout(() => resolve(3), 3000))
+]).catch(console.log); // Error: Whooops!
+// the rejection error becomes the outcome of the whole Promise.all
+
+/* promises provide no way to “cancel” or “abort” their execution.
+   So other promises continue to execute, and the eventually settle, but all their results are ignored.
+
+   There are ways to avoid this: we can either write additional code to clearTimeout (or otherwise cancel)
+   the promises in case of an error, or we can make errors show up as members in the resulting array
+*/
+
+// Promise.all(...) allows non-promise items in iterable
+// If any of those objects is not a promise, it's wrapped in Promise.resolve
+Promise.all([
+   new Promise((resolve, reject) => {
+      setTimeout(() => resolve(1), 1000);
+   }),
+   2, // treated as Promise.resolve(2)
+   3 // treated as Promise.resolve(3)
+])
+
+//-----------------------------------------------------------------------------------------
+
+// Promise.race
+// takes an iterable of promises, but instead of waiting for all of them to finish 
+// - waits for the first result (or error) and goes on with it
+let promise = Promise.race(iterable);
+
+Promise.race([
+   new Promise(resolve => setTimeout(() => resolve(1), 1000)),
+   new Promise((resolve, reject) => setTimeout(() => reject(new Error('Whooops!')), 2000)),
+   new Promise(resolve => setTimeout(() => resolve(3), 3000))
+]).then(console.log); // 1
+// The first result/error becomes the result of the whole Promise.race.
+// After the first settled promise “wins the race”, all further results/errors are ignored.
+
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - Animated circle with callback
