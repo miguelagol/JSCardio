@@ -1022,6 +1022,104 @@ Promise.race([
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Promisification
+// It’s conversion of a function that accepts a callback into a function returning a promise.
+// We create a wrapper-function that does the same, internally calling the original one, but returns a promise.
+
+// with callback
+function loadScript(src, callback) {
+   let script = document.createElement('script');
+   script.src = src;
+
+   script.onload = () => callback(null, script);
+   script.onerror = () => callback(new Error(`Script load error for ${src}`));
+
+   document.head.append(script);
+}
+// usage:
+// loadScript('path/script.js', (error, script) => {...})
+
+// with promise
+let loadScriptPromise = function(src) {
+   return new Promise((resolve, reject) => {
+      loadScript(src, (error, script) => {
+         if (error) reject(error);
+         else resolve(script);
+      });
+   });
+};
+// usage:
+// loadScriptPromise('path/script.js').then(...)
+
+// As we may need to promisify many functions, it makes sense to use a helper.
+// Here we assume that the original function expects a callback with two arguments (err, result).
+function promisify(func) {
+   return function(...args) {
+      // return a wrapper function
+      return new Promise((resolve, reject) => {
+         function callback(error, result) {
+            // our customj callback for func
+            if (error) {
+               return reject(error);
+            } else {
+               resolve(result);
+            }
+         }
+
+         args.push(callback); // append our custom callback to the end of arguments
+
+         func.call(this, ...args); // call the original function
+      });
+   };
+}
+
+let loadScriptPromise = promisify(loadScript);
+loadScriptPromise(/*...*/).then(/*...*/);
+
+// if the original f expects a callback with more arguments...
+// promisify(func, true) to get array of results
+function promisify(func, manyArgs = false) {
+   return function(...args) {
+      return new Promise((resolve, reject) => {
+         function callback(error, ...results) {
+            // our custom callback for func
+            if (error) {
+               return reject(error);
+            } else {
+               // resolve with all callback results if manyArgs is specified
+               resolve(manyArgs ? results : results[0]);
+            }
+         }
+
+         args.push(callback);
+
+         func.call(this, ...args);
+      });
+   };
+}
+
+func = promisify(func, true);
+func(/*...*/).then(
+   error => {
+      /*...*/
+   },
+   arrayOfResults => {
+      /*...*/
+   },
+);
+
+/* There are also modules with a bit more flexible promisification functions, e.g. es6-promisify.
+In Node.js, there’s a built-in util.promisify function for that.
+*/
+
+//--------------------REMEMBER--------------------
+/* Promisification is a great approach, especially when you use async/await, but not a total replacement for callbacks.
+   A promise may have only one result, but a callback may technically be called many times.
+   So promisification is only meant for functions that call the callback once. Furhter calls will be ignored.
+*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Animated circle with callback
 {
    /* 
@@ -1195,16 +1293,15 @@ let urls = [
 
 let requests = urls.map(url => fetch(url).catch(error => error));
 
-Promise.all(requests)
-   .then(responses => {
-      for (let response of responses) {
-         if (response.status != 200) {
-            console.log(response);
-         } else {
-            console.log(`${response.url}: ${response.status}`);
-         }
+Promise.all(requests).then(responses => {
+   for (let response of responses) {
+      if (response.status != 200) {
+         console.log(response);
+      } else {
+         console.log(`${response.url}: ${response.status}`);
       }
-   });
+   }
+});
 /* https://api.github.com/users/iliakan: 200
    https://api.github.com/users/hiredgun: 200
    https://api.github.com/users/miguelagol: 200
