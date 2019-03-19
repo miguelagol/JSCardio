@@ -1120,6 +1120,58 @@ In Node.js, there’s a built-in util.promisify function for that.
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Microtasks
+
+// Promise handlers .then/.catch/.finally are always asynchronous
+// Even when a Promise is immediately resolved, the code on the line below may still execute first
+let promise = Promise.resolve();
+
+promise.then(() => console.log('Promise done'));
+
+console.log('Code finished'); // Code finished        Promise done
+
+/* Asynchronous tasks need proper management. For that, the standard specifies an internal queue PromiseJobs,
+   more often called the “microtask queue” (v8 term).
+
+   -  The queue is first-in-first-out: tasks that get enqueued first are run first.
+   -  Execution of a task is initiated only when nothing else is running.
+
+   When a promise is ready, its .then/catch/finally handlers are put into the queue.
+   They are not executed yet. Javascript engine takes a task from the queue and executes it, when it becomes free from the current code.
+*/
+
+Promise.resolve()
+   .then(() => console.log('Promise done')) // Promise done
+   .then(() => console.log('Code finished')) // Code finished
+
+// Event loop
+// 'Event loop' is a process when the engine sleeps waits fot events
+// When an event happens, and the engine is busy, it gets into a so-called “macrotask queue” (v8 term).
+// Events from the macrotask queue are processed on “first came – first served” basis. 
+
+//--------------------REMEMBER--------------------
+// Microtask queue has a higher priority than the macrotask queue.
+// In other words, the engine first executes all microtasks, and then takes a macrotask.
+// Promise handling always has the priority.
+setTimeout(() => console.log('timeout'), 0);
+
+Promise.resolve()
+   .then(() => console.log('promise'));
+
+console.log('code'); // code     promise     timeout
+/* 1. code shows first, it’s a regular synchronous call.
+   2. promise shows second, because .then passes through the microtask queue, runs after the current code.
+   3. timeout shows last, because it’s a macrotask.
+*/
+
+Promise.resolve()
+   .then(() => {
+      setTimeout(() => console.log('timeout'), 0) // setTimeout macrotask awaits in the less-priority macrotask queue.
+   })
+   .then(() => console.log('promise')); // promise    timeout
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Animated circle with callback
 {
    /* 
