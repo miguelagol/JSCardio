@@ -1142,12 +1142,12 @@ console.log('Code finished'); // Code finished        Promise done
 
 Promise.resolve()
    .then(() => console.log('Promise done')) // Promise done
-   .then(() => console.log('Code finished')) // Code finished
+   .then(() => console.log('Code finished')); // Code finished
 
 // Event loop
 // 'Event loop' is a process when the engine sleeps waits fot events
 // When an event happens, and the engine is busy, it gets into a so-called “macrotask queue” (v8 term).
-// Events from the macrotask queue are processed on “first came – first served” basis. 
+// Events from the macrotask queue are processed on “first came – first served” basis.
 
 //--------------------REMEMBER--------------------
 // Microtask queue has a higher priority than the macrotask queue.
@@ -1155,8 +1155,7 @@ Promise.resolve()
 // Promise handling always has the priority.
 setTimeout(() => console.log('timeout'), 0);
 
-Promise.resolve()
-   .then(() => console.log('promise'));
+Promise.resolve().then(() => console.log('promise'));
 
 console.log('code'); // code     promise     timeout
 /* 1. code shows first, it’s a regular synchronous call.
@@ -1166,7 +1165,7 @@ console.log('code'); // code     promise     timeout
 
 Promise.resolve()
    .then(() => {
-      setTimeout(() => console.log('timeout'), 0) // setTimeout macrotask awaits in the less-priority macrotask queue.
+      setTimeout(() => console.log('timeout'), 0); // setTimeout macrotask awaits in the less-priority macrotask queue.
    })
    .then(() => console.log('promise')); // promise    timeout
 
@@ -1175,7 +1174,7 @@ Promise.resolve()
 // Async/await
 
 // Async funtions
-// The word “async” before a function means: a function always returns a promise. 
+// The word “async” before a function means: a function always returns a promise.
 async function func() {
    return 1;
 }
@@ -1184,7 +1183,7 @@ func().then(console.log); // 1
 
 // the same as
 async function func2() {
-   return Promise.resolve(1)
+   return Promise.resolve(1);
 }
 
 func2().then(console.log); // 1
@@ -1218,13 +1217,15 @@ async function showAvatar() {
    let user = await response.json();
 
    // read github user
-   let githubResponse = await fetch(`https://api.github.com/users/${user.name}`);
+   let githubResponse = await fetch(
+      `https://api.github.com/users/${user.name}`,
+   );
    let githubUser = await githubResponse.json();
 
    // show the avatar
    let img = document.createElement('img');
    img.src = githubUser.avatar_url;
-   img.className = "promise-avatar-example";
+   img.className = 'promise-avatar-example';
    document.body.append(img);
 
    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
@@ -1235,7 +1236,7 @@ async function showAvatar() {
 }
 
 showAvatar();
-   
+
 //--------------------REMEMBER--------------------
 // await won't work in the top-level code
 
@@ -1274,9 +1275,7 @@ class Waiter {
    }
 }
 
-new Waiter()
-   .wait()
-   .then(console.log); // 1
+new Waiter().wait().then(console.log); // 1
 
 //-----------------------------------------------------------------------------------------
 
@@ -1328,10 +1327,7 @@ func().catch(console.log); // TypeError: Failed to fetch
 */
 
 // async/await works well with Promise.all
-let results = await Promise.all([
-   fetch(url1),
-   fetch(url2),
-]);
+let results = await Promise.all([fetch(url1), fetch(url2)]);
 
 //-----------------------------------------------------------------------------------------
 
@@ -1579,59 +1575,56 @@ Promise.all(requests)
 
 // TASK 9 - Rewrite using async/await
 function loadJson(url) {
-   return fetch(url)
-     .then(response => {
-       if (response.status == 200) {
+   return fetch(url).then(response => {
+      if (response.status == 200) {
          return response.json();
-       } else {
+      } else {
          throw new Error(response.status);
-       }
-     })
- }
- 
+      }
+   });
+}
+
 loadJson('no-such-user.json') // (3)
    .catch(alert); // Error: 404
 
 async function loadJson(url) {
    let response = await fetch(url);
-   
-   if(response.status === 200){
+
+   if (response.status === 200) {
       let json = await response.json();
-      return json;    
+      return json;
    } else {
-      throw new Error(response.status)
+      throw new Error(response.status);
    }
 }
 
-loadJson('no-such-user.json')
-   .catch(console.log); // Error: 404
+loadJson('no-such-user.json').catch(console.log); // Error: 404
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 10 - Rewrite 'rethrow' async/await
 class HttpError extends Error {
    constructor(response) {
-     super(`${response.status} for ${response.url}`);
-     this.name = 'HttpError';
-     this.response = response;
+      super(`${response.status} for ${response.url}`);
+      this.name = 'HttpError';
+      this.response = response;
    }
 }
- 
+
 function loadJson(url) {
-   return fetch(url)
-      .then(response => {
+   return fetch(url).then(response => {
       if (response.status == 200) {
          return response.json();
       } else {
          throw new HttpError(response);
       }
-   })
+   });
 }
- 
+
 // Ask for a user name until github returns a valid user
 function demoGithubUser() {
-   let name = prompt("Enter a name?", "iliakan");
- 
+   let name = prompt('Enter a name?', 'iliakan');
+
    return loadJson(`https://api.github.com/users/${name}`)
       .then(user => {
          alert(`Full name: ${user.name}.`);
@@ -1639,24 +1632,24 @@ function demoGithubUser() {
       })
       .catch(err => {
          if (err instanceof HttpError && err.response.status == 404) {
-            alert("No such user, please reenter.");
+            alert('No such user, please reenter.');
             return demoGithubUser();
          } else {
             throw err;
          }
       });
 }
- 
+
 demoGithubUser();
 
 class HttpError extends Error {
    constructor(response) {
-     super(`${response.status} for ${response.url}`);
-     this.name = 'HttpError';
-     this.response = response;
+      super(`${response.status} for ${response.url}`);
+      this.name = 'HttpError';
+      this.response = response;
    }
- }
- 
+}
+
 async function loadJson(url) {
    let response = await fetch(url);
 
@@ -1669,21 +1662,21 @@ async function loadJson(url) {
 }
 
 async function demoGithubUser() {
-   let name = prompt("Enter a name?", "iliakan");
+   let name = prompt('Enter a name?', 'iliakan');
 
    try {
-      let user = await loadJson(`https://api.github.com/users/${name}`)
+      let user = await loadJson(`https://api.github.com/users/${name}`);
       alert(`Full name: ${user.name}.`);
-   } catch (error){
+   } catch (error) {
       if (error instanceof HttpError && error.response.status == 404) {
-         alert("No such user, please reenter.");
+         alert('No such user, please reenter.');
          return demoGithubUser();
       } else {
          throw error;
       }
    }
 }
- 
+
 demoGithubUser();
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -1696,8 +1689,7 @@ async function wait() {
 }
 
 function func() {
-   wait()
-      .then(console.log)
+   wait().then(console.log);
 }
 
 func(); // 10
