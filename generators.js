@@ -170,12 +170,145 @@ console.log([...range]); // [ 1, 2, 3, 4, 5 ]
 
 // Generator composition
 
+// Generator composition is a special feature of generators that allows to transparently “embed” generators in each other.
+
+/* generateSequence(start, end) generate a sequence of:
+      - digits 0..9 (character codes 48…57),
+      - followed by alphabet letters a..z (character codes 65…90)
+      - followed by uppercased letters A..Z (character codes 97…122)
+*/
+function* generateSequence(start, end) {
+   for (let i = start; i <= end; i++) yield i;
+}
+
+function* generatePasswordCodes() {
+   // 0...9
+   yield* generateSequence(48, 57);
+
+   // A...Z
+   yield* generateSequence(65, 90);
+
+   // a...z
+   yield* generateSequence(97, 122);
+}
+
+let string = '';
+
+for (let code of generatePasswordCodes()) {
+   string += String.fromCharCode(code);
+}
+
+console.log(string); // 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+
+// The special yield* directive is responsible for the composition.
+// It delegates the execution to another generator.
+// It runs generators and transparently forwards their yields outside, as if they were done by the calling generator itself.
+
+// the same as
+function* generateSequence(start, end) {
+   for (let i = start; i <= end; i++) yield i;
+}
+
+function* generatePasswordCodes() {
+   for (let i = 48; i <= 57; i++) yield i;
+
+   for (let i = 65; i <= 90; i++) yield i;
+
+   for (let i = 97; i <= 122; i++) yield i;
+}
+
+let string = '';
+
+for (let code of generatePasswordCodes()) {
+   string += String.fromCharCode(code);
+}
+
+console.log(string); // 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+
 //-----------------------------------------------------------------------------------------
 
 // “yield” is a two-way road
+// Yield not only returns the result outside, but also can pass the value inside the generator.
+
+// To do so, we should call generator.next(arg), with an argument. That argument becomes the result of yield.
+function* gen() {
+   // Pass a question to the outer code and wait for an answer
+   let result = yield '2 + 2?';
+
+   console.log(result);
+}
+
+let generator = gen();
+
+let question = generator.next().value;
+
+console.log(question); // 2 + 2?
+
+generator.next(4); // 4
+
+/* 1. The first call generator.next() is always without an argument. It starts the execution and returns the result of the first yield (“2+2?”). At this point the generator pauses the execution (still on that line).
+Then, as shown at the picture above, the result of yield gets into the question variable in the calling code.
+On generator.next(4), the generator resumes, and 4 gets in as the result: let result = 4. */
+function* gen2() {
+   let ask1 = yield '2 + 2?';
+
+   console.log(ask1); // 4
+
+   let ask2 = yield '3 * 3?';
+
+   console.log(ask2); // 9
+}
+
+let generator2 = gen2();
+
+console.log(generator2.next().value); // "2 + 2?"
+
+console.log(generator2.next(4).value); // "3 * 3?"
+
+console.log(generator2.next(9).done); // true
+
+/* 1. The first .next() starts the execution… It reaches the first yield.
+   2. The result is returned to the outer code.
+   3. The second .next(4) passes 4 back to the generator as the result of the first yield, and resumes the execution.
+   4. …It reaches the second yield, that becomes the result of the generator call.
+   5. The third next(9) passes 9 into the generator as the result of the second yield
+   and resumes the execution that reaches the end of the function, so done: true.
+*/
 
 //-----------------------------------------------------------------------------------------
 
 // generator.throw
+// Generator can also initiate (throw) an error there. That’s natural, as an error is a kind of result.
+// To pass an error into a yield, we should call generator.throw(err). In that case, the err is thrown in the line with that yield.
+function* gen() {
+   try {
+      let result = yield '2 + 2?';
+      console.log(
+         'The execution does not reach here, because the exception is thrown above',
+      );
+   } catch (e) {
+      console.log(e); // shows the error
+   }
+}
+
+let generator = gen();
+
+let question = generator.next().value;
+
+generator.throw(new Error('The answer is not found in my database')); // Error: The answer is not found in my database
+
+function* generate() {
+   let result = yield '2 + 2?';
+}
+
+let generator = generate();
+
+let question = generator.next().value;
+
+try {
+   generator.throw(new Error('The answer is not found in my database'));
+} catch (e) {
+   console.log(e); // Error: The answer is not found in my database
+}
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
