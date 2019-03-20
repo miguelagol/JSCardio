@@ -203,7 +203,7 @@ let promise = new Promise(function(resolve, reject) {
 
 // then
 /* promise.then(
-      functiom(result) { // handle a successful result},
+      function(result) { // handle a successful result},
       function(error) { // handle an error}
    );
 */
@@ -1120,6 +1120,237 @@ In Node.js, there’s a built-in util.promisify function for that.
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
+// Microtasks
+
+// Promise handlers .then/.catch/.finally are always asynchronous
+// Even when a Promise is immediately resolved, the code on the line below may still execute first
+let promise = Promise.resolve();
+
+promise.then(() => console.log('Promise done'));
+
+console.log('Code finished'); // Code finished        Promise done
+
+/* Asynchronous tasks need proper management. For that, the standard specifies an internal queue PromiseJobs,
+   more often called the “microtask queue” (v8 term).
+
+   -  The queue is first-in-first-out: tasks that get enqueued first are run first.
+   -  Execution of a task is initiated only when nothing else is running.
+
+   When a promise is ready, its .then/catch/finally handlers are put into the queue.
+   They are not executed yet. Javascript engine takes a task from the queue and executes it, when it becomes free from the current code.
+*/
+
+Promise.resolve()
+   .then(() => console.log('Promise done')) // Promise done
+   .then(() => console.log('Code finished')) // Code finished
+
+// Event loop
+// 'Event loop' is a process when the engine sleeps waits fot events
+// When an event happens, and the engine is busy, it gets into a so-called “macrotask queue” (v8 term).
+// Events from the macrotask queue are processed on “first came – first served” basis. 
+
+//--------------------REMEMBER--------------------
+// Microtask queue has a higher priority than the macrotask queue.
+// In other words, the engine first executes all microtasks, and then takes a macrotask.
+// Promise handling always has the priority.
+setTimeout(() => console.log('timeout'), 0);
+
+Promise.resolve()
+   .then(() => console.log('promise'));
+
+console.log('code'); // code     promise     timeout
+/* 1. code shows first, it’s a regular synchronous call.
+   2. promise shows second, because .then passes through the microtask queue, runs after the current code.
+   3. timeout shows last, because it’s a macrotask.
+*/
+
+Promise.resolve()
+   .then(() => {
+      setTimeout(() => console.log('timeout'), 0) // setTimeout macrotask awaits in the less-priority macrotask queue.
+   })
+   .then(() => console.log('promise')); // promise    timeout
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Async/await
+
+// Async funtions
+// The word “async” before a function means: a function always returns a promise. 
+async function func() {
+   return 1;
+}
+
+func().then(console.log); // 1
+
+// the same as
+async function func2() {
+   return Promise.resolve(1)
+}
+
+func2().then(console.log); // 1
+
+// Await
+// Works only inside async functions
+// The keyword await makes JavaScript wait until that promise settles and returns its result
+let value = await promise;
+
+async function func() {
+   let promise = new Promise((resolve, reject) => {
+      setTimeout(() => resolve('done!'), 1000);
+   });
+
+   let result = await promise; // wait till the promise resolves
+
+   console.log(result);
+}
+
+func(); // done!
+
+//--------------------REMEMBER--------------------
+// Cant't use await in regular functions
+function f() {
+   let promise = Promise.resolve(1);
+   let result = await promise; // SyntaxError: await is only valid in async function
+}
+
+async function showAvatar() {
+   let response = await fetch('/article/promise-chaining/user.json');
+   let user = await response.json();
+
+   // read github user
+   let githubResponse = await fetch(`https://api.github.com/users/${user.name}`);
+   let githubUser = await githubResponse.json();
+
+   // show the avatar
+   let img = document.createElement('img');
+   img.src = githubUser.avatar_url;
+   img.className = "promise-avatar-example";
+   document.body.append(img);
+
+   await new Promise((resolve, reject) => setTimeout(resolve, 3000));
+
+   img.remove();
+
+   return githubUser;
+}
+
+showAvatar();
+   
+//--------------------REMEMBER--------------------
+// await won't work in the top-level code
+
+// await accepts thenables
+//the idea is that a 3rd-party object may not be a promise, but promise-compatible: if it supports .then, that’s enough to use with await.
+class Thenable {
+   constructor(num) {
+      this.num = num;
+   }
+
+   then(resolve, reject) {
+      console.log(resolve);
+      setTimeout(() => resolve(this.num * 2), 1000);
+   }
+}
+
+async function func() {
+   let result = await new Thenable(1);
+
+   console.log(result);
+}
+
+func(); // [Function]    2
+/* If await gets a non-promise object with .then,
+   it calls that method providing native functions resolve, reject as arguments. Then await waits until one of them is called
+   and then proceeds with the result.
+*/
+
+//-----------------------------------------------------------------------------------------
+
+// Async methods
+// a class method can also be async
+class Waiter {
+   async wait() {
+      return await Promise.resolve(1);
+   }
+}
+
+new Waiter()
+   .wait()
+   .then(console.log); // 1
+
+//-----------------------------------------------------------------------------------------
+
+// Error handling
+// If a promise resolves normally, then await promise returns the result.
+// But in case of a rejection, it throws the error, just as if there were a throw statement at that line.
+async function f() {
+   await Promise.reject(new Error('Whooops!'));
+}
+
+// the same as
+async function f2() {
+   throw new Error('Whooops!');
+}
+
+// In real situations, the promise may take some time before it rejects. So await will wait, and then throw an error.
+async function func() {
+   try {
+      let response = await fetch('http://no-such-url');
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+func(); // TypeError: Failed to fetch
+
+// We can also wrap multiple lines
+async function func() {
+   try {
+      let response = await fetch('/no-user-here');
+      let user = await response.json();
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+func(); // SyntaxError: Unexpected token < in JSON at position 0
+
+// If we don’t have try..catch, then the promise generated by the call of the async function f() becomes rejected
+async function func() {
+   let response = await fetch('http://no-such-url');
+}
+
+func().catch(console.log); // TypeError: Failed to fetch
+
+// async/await and promise.then/catch
+/* When we use async/await, we rarely need .then, because await handles the waiting for us.
+   And we can use a regular try..catch instead of .catch.
+*/
+
+// async/await works well with Promise.all
+let results = await Promise.all([
+   fetch(url1),
+   fetch(url2),
+]);
+
+//-----------------------------------------------------------------------------------------
+
+// Microtask queue
+
+// Async/await is based on promises, so it uses the same microtask queue internally, and has the similar priority over macrotasks.
+async function func() {
+   return 1;
+}
+(async () => {
+   setTimeout(() => console.log('timeout'), 0);
+
+   await func();
+
+   console.log('await');
+})(); // await    timeout
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
 // TASK 1 - Animated circle with callback
 {
    /* 
@@ -1344,3 +1575,129 @@ Promise.all(requests)
    TypeError
    SyntaxError
 */
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 9 - Rewrite using async/await
+function loadJson(url) {
+   return fetch(url)
+     .then(response => {
+       if (response.status == 200) {
+         return response.json();
+       } else {
+         throw new Error(response.status);
+       }
+     })
+ }
+ 
+loadJson('no-such-user.json') // (3)
+   .catch(alert); // Error: 404
+
+async function loadJson(url) {
+   let response = await fetch(url);
+   
+   if(response.status === 200){
+      let json = await response.json();
+      return json;    
+   } else {
+      throw new Error(response.status)
+   }
+}
+
+loadJson('no-such-user.json')
+   .catch(console.log); // Error: 404
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 10 - Rewrite 'rethrow' async/await
+class HttpError extends Error {
+   constructor(response) {
+     super(`${response.status} for ${response.url}`);
+     this.name = 'HttpError';
+     this.response = response;
+   }
+}
+ 
+function loadJson(url) {
+   return fetch(url)
+      .then(response => {
+      if (response.status == 200) {
+         return response.json();
+      } else {
+         throw new HttpError(response);
+      }
+   })
+}
+ 
+// Ask for a user name until github returns a valid user
+function demoGithubUser() {
+   let name = prompt("Enter a name?", "iliakan");
+ 
+   return loadJson(`https://api.github.com/users/${name}`)
+      .then(user => {
+         alert(`Full name: ${user.name}.`);
+         return user;
+      })
+      .catch(err => {
+         if (err instanceof HttpError && err.response.status == 404) {
+            alert("No such user, please reenter.");
+            return demoGithubUser();
+         } else {
+            throw err;
+         }
+      });
+}
+ 
+demoGithubUser();
+
+class HttpError extends Error {
+   constructor(response) {
+     super(`${response.status} for ${response.url}`);
+     this.name = 'HttpError';
+     this.response = response;
+   }
+ }
+ 
+async function loadJson(url) {
+   let response = await fetch(url);
+
+   if (response.status == 200) {
+      let json = await response.json();
+      return json;
+   } else {
+      throw new HttpError(response);
+   }
+}
+
+async function demoGithubUser() {
+   let name = prompt("Enter a name?", "iliakan");
+
+   try {
+      let user = await loadJson(`https://api.github.com/users/${name}`)
+      alert(`Full name: ${user.name}.`);
+   } catch (error){
+      if (error instanceof HttpError && error.response.status == 404) {
+         alert("No such user, please reenter.");
+         return demoGithubUser();
+      } else {
+         throw error;
+      }
+   }
+}
+ 
+demoGithubUser();
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 11 - Call async from non-async
+// How to call async from function wait and use its result?
+async function wait() {
+   await new Promise(resolve => setTimeout(resolve, 1000));
+   return 10;
+}
+
+function func() {
+   wait()
+      .then(console.log)
+}
+
+func(); // 10
