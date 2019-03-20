@@ -312,3 +312,40 @@ try {
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
+
+// TASK 1 - Pseudo-random generator
+/* When we need random data (text, numbers etc), in Javascript, we could use Math.random(). 
+   But if something goes wrong, we’d like to be able to repeat the test, using exactly the same data.
+   For that, so called “seeded pseudo-random generators” are used. They take a “seed”, the first value,
+   and then generate next ones using a formula. So that the same seed yields the same sequence,
+   and hence the whole flow is easily reproducible. We only need to remember the seed to repeat it.
+*/
+function* pseudoRandom(seed) {
+   let value = seed;
+
+   for (let i = 0; i < 5; i++) {
+      value = (value * 16807) % 2147483647;
+      yield value;
+   }
+}
+
+let generator = pseudoRandom(1);
+
+console.log(generator.next().value); // 16807
+console.log(generator.next().value); // 282475249
+console.log(generator.next().value); // 1622650073
+
+function* pseudoRandom2(seed) {
+   let value = seed;
+
+   while (true) {
+      value = (value * 16807) % 2147483647;
+      yield value;
+   }
+}
+
+let generator2 = pseudoRandom2(1);
+
+console.log(generator2.next().value); // 16807
+console.log(generator2.next().value); // 282475249
+console.log(generator2.next().value); // 1622650073
