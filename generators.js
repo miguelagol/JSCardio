@@ -246,9 +246,12 @@ console.log(question); // 2 + 2?
 
 generator.next(4); // 4
 
-/* 1. The first call generator.next() is always without an argument. It starts the execution and returns the result of the first yield (“2+2?”). At this point the generator pauses the execution (still on that line).
-Then, as shown at the picture above, the result of yield gets into the question variable in the calling code.
-On generator.next(4), the generator resumes, and 4 gets in as the result: let result = 4. */
+/* The first call generator.next() is always without an argument.
+   It starts the execution and returns the result of the first yield (“2+2?”). At this point the generator pauses the execution.
+   Then the result of yield gets into the question variable in the calling code.
+   On generator.next(4), the generator resumes, and 4 gets in as the result: let result = 4.
+*/
+
 function* gen2() {
    let ask1 = yield '2 + 2?';
 
@@ -272,7 +275,7 @@ console.log(generator2.next(9).done); // true
    3. The second .next(4) passes 4 back to the generator as the result of the first yield, and resumes the execution.
    4. …It reaches the second yield, that becomes the result of the generator call.
    5. The third next(9) passes 9 into the generator as the result of the second yield
-   and resumes the execution that reaches the end of the function, so done: true.
+      and resumes the execution that reaches the end of the function, so done: true.
 */
 
 //-----------------------------------------------------------------------------------------
@@ -310,6 +313,83 @@ try {
 } catch (e) {
    console.log(e); // Error: The answer is not found in my database
 }
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Async iteration
+// Asynchronous iterators allow to iterate over data that comes asynchronously, on-demand.
+
+// Regular iterable object
+let range = {
+   from: 1,
+   to: 5,
+
+   [Symbol.iterator]() {
+      return {
+         current: this.from,
+         last: this.to,
+
+         next() {
+            if (this.current <= this.last) {
+               return { done: false, value: this.current++ };
+            } else {
+               return { done: true };
+            }
+         },
+      };
+   },
+};
+
+for (let value of range) {
+   console.log(value); // 1  2  3  4  5
+}
+
+//--------------------REMEMBER--------------------
+/* To make the object iterable asynchronously:
+      1. We need to use Symbol.asyncIterator instead of Symbol.iterator.
+      2. next() should return a promise.
+      3. To iterate over such an object, we should use for await (let item of iterable) loop.
+*/
+let asyncRange = {
+   from: 1,
+   to: 5,
+
+   [Symbol.asyncIterator]() {
+      return {
+         current: this.from,
+         last: this.to,
+
+         // The next() method doesn’t have to be async, it may be a regular method returning a promise, but async allows to use await inside
+         async next() {
+            // (automatically wrapped into a promise by async)
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            if (this.current <= this.last) {
+               return { done: false, value: this.current++ };
+            } else {
+               return { done: true };
+            }
+         },
+      };
+   },
+};
+
+// It calls range[Symbol.asyncIterator]() once, and then its next() for values.
+(async () => {
+   for await (let value of asyncRange) {
+      console.log(value)
+   }
+})()
+
+/* 	                                    Iterators	      Async iterators
+Object method to provide iteraterable	   Symbol.iterator	Symbol.asyncIterator
+next() return value is	                  any value	      Promise
+to loop, use	                           for..of	         for await..of
+*/
+
+//--------------------REMEMBER--------------------
+// The spread operator doesn’t work asynchronously
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
