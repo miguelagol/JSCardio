@@ -286,9 +286,7 @@ console.log(generator2.next(9).done); // true
 function* gen() {
    try {
       let result = yield '2 + 2?';
-      console.log(
-         'The execution does not reach here, because the exception is thrown above',
-      );
+      console.log('The execution does not reach here, because the exception is thrown above');
    } catch (e) {
       console.log(e); // shows the error
    }
@@ -378,9 +376,9 @@ let asyncRange = {
 // It calls range[Symbol.asyncIterator]() once, and then its next() for values.
 (async () => {
    for await (let value of asyncRange) {
-      console.log(value)
+      console.log(value);
    }
-})()
+})();
 
 /* 	                                    Iterators	      Async iterators
 Object method to provide iteraterable	   Symbol.iterator	Symbol.asyncIterator
@@ -390,6 +388,42 @@ to loop, use	                           for..of	         for await..of
 
 //--------------------REMEMBER--------------------
 // The spread operator doesn’t work asynchronously
+
+//-----------------------------------------------------------------------------------------
+
+// Async generators
+
+// Regular generator
+function* generateSequence(start, end) {
+   for (let i = start; i <= end; i++) {
+      yield i;
+   }
+}
+
+for (let value of generateSequence(1, 5)) {
+   console.log(value); // 1  2  3  4  5
+}
+
+// async generator
+async function* generateSequence(start, end) {
+   for (let i = start; i <= end; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      yield i;
+   }
+}
+
+(async () => {
+   let generator = generateSequence(1, 5);
+
+   for await (let value of generator) {
+      console.log(value);
+   }
+})(); // 1  2  3  4  5
+
+// Technically, another the difference of an async generator is that
+// its generator.next() method is now asynchronous also, it returns promises.
+// Instead of result = generator.next() for a regular, non-async generator, values can be obtained like this:
+result = await generator.next(); // result = {value: ..., done: true/false}
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
