@@ -12,7 +12,7 @@
 */
 // sayHi.js
 export function sayHi(user) {
-   console.log(`Hello, ${user}!`);
+    console.log(`Hello, ${user}!`);
 }
 
 // main.js
@@ -78,7 +78,7 @@ import './alert.js'; // (nothing)
 // second example
 // admin.js
 export let admin = {
-   name: 'Jack',
+    name: 'Jack',
 };
 
 // 1.js
@@ -92,36 +92,32 @@ console.log(admin.name); // Pete
 
 // third example
 // admin.js
-export let admin = {};
-export function sayHi() {
-   console.log(`Ready to serve, ${admin.name}!`);
-};
+export let admin2 = {};
+export function sayHi2() {
+    console.log(`Ready to serve, ${admin2.name}!`);
+}
 
 // init.js
-import { admin } from './admin.js';
-admin.name = 'Pete';
+import { admin2 } from './admin.js';
+admin2.name = 'Pete';
 
 // other.js
-import { admin, sayHi } from './admin.js';
-console.log(admin.name); // Pete
-sayHi(); // Ready to serve, Pete!
+import { admin2, sayHi2 } from './admin.js';
+console.log(admin2.name); // Pete
+sayHi2(); // Ready to serve, Pete!
 
 //--------------------REMEMBER--------------------
 // 4. The object import.meta contains information about the current module
 // The content depends on the environment. In the browser, it contains the url of the script.
 <script type="module">
-   console.log(import.meta.url); // script url (url of the html page for an inline script)
+    console.log(import.meta.url); // script url (url of the html page for an inline script)
 </script>;
 
 //--------------------REMEMBER--------------------
 // 5. Top-level "this" is undefined
-<script>
-   console.log(this); // window
-</script>;
+<script>console.log(this); // window</script>;
 
-<script type="module">
-   console.log(this); // undefined
-</script>;
+<script type="module">console.log(this); // undefined</script>;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -134,15 +130,11 @@ sayHi(); // Ready to serve, Pete!
    -  Module scripts wait until the HTML document is fullly ready
    -  Relative order is maintained: scripts that go first in the document, execute first
 */
-<script type="module">
-   console.log(typeof button); // object
-</script>;
+<script type="module">console.log(typeof button); // object</script>;
 // the script can 'see' the button below
 // as modules are deferred, the script runs after the whole page is loaded
 
-<script type="module">
-   console.log(typeof button); // undefined
-</script>;
+<script type="module">console.log(typeof button); // undefined</script>;
 // the script can't see elements below
 // regular scripts run immediately, before the rest of the page is processed
 
@@ -160,7 +152,7 @@ sayHi(); // Ready to serve, Pete!
 // if a module script is fetched from another domain, the remote server must supply a header
 // Access-Control-Allow-Origin: * (may use fetching domain instead of *) to indicate that the fetch is allowed.
 /* another-site.com must supply Access-Control-Allow-Origin */
-<script type="module" src="http://another-site.com/their.js"></script>;
+<script type="module" src="http://another-site.com/their.js" />;
 
 //--------------------REMEMBER--------------------
 // 4. No bare modules allowed
@@ -176,13 +168,29 @@ import { sayHi } from 'sayHi'; // Error (must be './sayHi.js' or wherever the mo
 /* Old browsers do not understand type="module". Scripts of the unknown type are just ignored.
    For them, it’s possible to provide a fallback using nomodule attribute
 */
-<script type="module">
-  alert("Runs in modern browsers");
-</script>;
+<script type="module">alert("Runs in modern browsers");</script>;
 
 <script nomodule>
-  alert("Modern browsers know both type=module and nomodule, so skip this")
-  alert("Old browsers ignore script with unknown type=module, but execute this.");
+    alert("Modern browsers know both type=module and nomodule, so skip this") alert("Old browsers
+    ignore script with unknown type=module, but execute this.");
 </script>;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Build tools
+
+// In real-life, browser modules are rarely used in their “raw” form. Usually, we bundle them together with a special tool
+// such as Webpack and deploy to the production server.
+
+/* Build tools do the following:
+    1.  Take a “main” module, the one intended to be put in <script type="module"> in HTML.
+    2.  Analyze its dependencies: imports and then imports of imports etc.
+    3.  Build a single file with all modules (or multiple files, that’s tunable), replacing native import calls with bundler functions,
+        so that it works. “Special” module types like HTML/CSS modules are also supported.
+    4.  In the process, other transforms and optimizations may be applied:
+        -   Unreachable code removed.
+        -   Unused exports removed (“tree-shaking”).
+        -   Development-specific statements like console and debugger removed.
+        -   Modern, bleeding-edge Javascript syntax may be transformed to older one with similar functionality using Babel.
+        -   The resulting file is minified (spaces removed, variables replaced with shorter named etc).
+*/
