@@ -468,6 +468,45 @@ let asyncRange = {
     }
 })(); // 1  2  3  4  5
 
+//-----------------------------------------------------------------------------------------
+
+// Real-life example
+async function* fetchCommits(repo) {
+    let url = `https://api.github.com/repos/${repo}/commits`;
+
+    while (url) {
+        const response = await fetch(url, {
+            // We should make a request to URL in the form https://api.github.com/repos/<repo>/commits.
+            headers: { 'User-Agent': 'Our script' }, // github requires user-agent header
+        });
+
+        const body = await response.json();
+        // It responds with a JSON of 30 commits, and also provides a link to the next page in the Link header.
+
+        let nextPage = response.headers.get('Link').match(/<(.*?)>; rel="next"/);
+        nextPage = nextPage && nextPage[1];
+
+        url = nextPage;
+
+        for (let commit of body) {
+            yield commit;
+        }
+    }
+}
+
+(async () => {
+    let count = 0;
+    let repo = 'iliakan/javascript-tutorial-en';
+
+    for await (const commit of fetchCommits(repo)) {
+        console.log(commit.author.login);
+
+        if (++count == 100) {
+            break;
+        }
+    }
+})();
+
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 // TASK 1 - Pseudo-random generator
