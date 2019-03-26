@@ -109,9 +109,7 @@ sayHi2(); // Ready to serve, Pete!
 //--------------------REMEMBER--------------------
 // 4. The object import.meta contains information about the current module
 // The content depends on the environment. In the browser, it contains the url of the script.
-<script type="module">
-    console.log(import.meta.url); // script url (url of the html page for an inline script)
-</script>;
+<script type="module">console.log(import.meta.url); // script url (url of the html page for an inline script)</script>;
 
 //--------------------REMEMBER--------------------
 // 5. Top-level "this" is undefined
@@ -171,8 +169,8 @@ import { sayHi } from 'sayHi'; // Error (must be './sayHi.js' or wherever the mo
 <script type="module">alert("Runs in modern browsers");</script>;
 
 <script nomodule>
-    alert("Modern browsers know both type=module and nomodule, so skip this") alert("Old browsers
-    ignore script with unknown type=module, but execute this.");
+    alert("Modern browsers know both type=module and nomodule, so skip this") alert("Old browsers ignore script with
+    unknown type=module, but execute this.");
 </script>;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -194,3 +192,115 @@ import { sayHi } from 'sayHi'; // Error (must be './sayHi.js' or wherever the mo
         -   Modern, bleeding-edge Javascript syntax may be transformed to older one with similar functionality using Babel.
         -   The resulting file is minified (spaces removed, variables replaced with shorter named etc).
 */
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Export and import
+
+// Export before declarations
+/* We can label any declaration as exported by placing export before it, be it a variable, function or a class. */
+// export an array
+export let months = ['Jan', 'Feb', 'Mar', 'Apr', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// export a constant
+export const MODULES_BECAME_STANDARD_YEAR = 2015;
+
+// export a class
+export class User {
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+//--------------------REMEMBER--------------------
+// No semicolon after export class/function
+
+//-----------------------------------------------------------------------------------------
+
+// Export apart from declarations
+function sayHi3(user) {
+    alert(`Hello, ${user}`);
+}
+
+function sayBye(user) {
+    alert(`Bye, ${user}`);
+}
+
+export { sayHi3, sayBye }; // a list of exported variables
+
+//-----------------------------------------------------------------------------------------
+
+// Import*
+
+// Usually we import like this
+import { sayHi, sayBye } from './say.js';
+
+sayHi('Pete'); // Hello, Pete
+sayBye('Pete'); // Bye, Pete
+
+// But if the list is long
+import * as say from './say.js';
+
+say.sayHi('Jack'); // Hello, Jack
+say.sayBye('Jack'); // Bye, Jack
+
+// Why should we ever explicitly list what we need to import?
+/*  1.   Modern build tools (webpack and others) bundle modules together and optimize them to speedup loading and remove unused stuff.
+        When we added a 3rd-party library lib.js to our project with many functions and if we in fact need only one of them in our project,
+        then the optimizer will automatically detect it and totally remove the other functions from the bundled code,
+        thus making the build smaller. That is called “tree-shaking”.
+    2.  Explicitly listing what to import gives shorter names: sayHi() instead of lib.sayHi().
+    3.  Explicit imports give better overview of the code structure: what is used and where. It makes code support and refactoring easier.
+*/
+
+//-----------------------------------------------------------------------------------------
+
+// Import "as"
+// to import under different names
+import { sayHi as hi, sayBye as bye } from './say.js';
+
+hi('Pete'); // Hello, Pete
+bye('Pete'); // Bye, Pete
+
+//-----------------------------------------------------------------------------------------
+
+// Export "as"
+// say.js
+export { sayHi as hi, sayBye as bye };
+
+// main.js
+import * as say from './say.js';
+
+say.hi('John'); // Hello, John!
+say.bye('John'); // Bye, John!
+
+//-----------------------------------------------------------------------------------------
+
+// Export default
+// Modules provide special export default syntax to make “one thing per module” way look better.
+/* It requires following export and import statements:
+    -   Put export default before the “main export” of the module.
+    -   Call import without curly braces.
+*/
+// user.js
+export default class User {
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+// main.js
+import User from './user.js'; // not {User}
+
+new User('John');
+
+//--------------------REMEMBER--------------------
+// Import needs curly braces for named imports and doesn’t need them for the default one.
+/* 
+Named export	            Default export
+export class User {...}	    export default class User {...}
+import {User} from ...	    import User from ...
+*/
+
+//--------------------REMEMBER--------------------
+// There may be only one "default" export per file
