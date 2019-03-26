@@ -123,4 +123,66 @@ sayHi(); // Ready to serve, Pete!
    console.log(this); // undefined
 </script>;
 
-//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Browser-specific features
+
+//--------------------REMEMBER--------------------
+// 1. Module scripts are deferred
+// (same effect as defer attribute)
+/* -  External module scripts <script type="module" src="..."> don't block HTML processing
+   -  Module scripts wait until the HTML document is fullly ready
+   -  Relative order is maintained: scripts that go first in the document, execute first
+*/
+<script type="module">
+   console.log(typeof button); // object
+</script>;
+// the script can 'see' the button below
+// as modules are deferred, the script runs after the whole page is loaded
+
+<script type="module">
+   console.log(typeof button); // undefined
+</script>;
+// the script can't see elements below
+// regular scripts run immediately, before the rest of the page is processed
+
+<button id="button">Button</button>;
+
+//--------------------REMEMBER--------------------
+// 2. Async works on inline scripts
+// Async attribute <script async type="module"> is allowed on both inline and external scripts.
+// Async scripts run immediately when imported modules are processed, independantly of other scripts or the HTML document.
+
+//--------------------REMEMBER--------------------
+// 3. External scripts...
+// ... withe the same src run only once
+// ... that are fetched from another domain require CORS headers
+// if a module script is fetched from another domain, the remote server must supply a header
+// Access-Control-Allow-Origin: * (may use fetching domain instead of *) to indicate that the fetch is allowed.
+/* another-site.com must supply Access-Control-Allow-Origin */
+<script type="module" src="http://another-site.com/their.js"></script>;
+
+//--------------------REMEMBER--------------------
+// 4. No bare modules allowed
+// In the browser, in scripts (not in HTML), import must get either a relative or absolute URL.
+// So-called “bare” modules, without a path, are not allowed.
+import { sayHi } from 'sayHi'; // Error (must be './sayHi.js' or wherever the module is)
+/* Certain environments, like Node.js or bundle tools allow bare modules, as they have own ways for finding modules
+   and hooks to fine-tune them. But browsers do not support bare modules yet.
+*/
+
+//--------------------REMEMBER--------------------
+// 5. Compatibility, "nomodule"
+/* Old browsers do not understand type="module". Scripts of the unknown type are just ignored.
+   For them, it’s possible to provide a fallback using nomodule attribute
+*/
+<script type="module">
+  alert("Runs in modern browsers");
+</script>;
+
+<script nomodule>
+  alert("Modern browsers know both type=module and nomodule, so skip this")
+  alert("Old browsers ignore script with unknown type=module, but execute this.");
+</script>;
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
