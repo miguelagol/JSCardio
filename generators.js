@@ -8,9 +8,9 @@
 // Generator function
 // syntax construct: function*
 function* generateSequence() {
-   yield 1;
-   yield 2;
-   return 3;
+    yield 1;
+    yield 2;
+    return 3;
 }
 
 // When generateSequence() is called, it does not execute the code.
@@ -24,9 +24,9 @@ let generator = generateSequence();
 // When called, it resumes execution till the nearest yield <value> statement
 // Then the execution pauses, and the value is returned to the outer code
 function* generateSequence() {
-   yield 1;
-   yield 2;
-   return 3;
+    yield 1;
+    yield 2;
+    return 3;
 }
 
 let generator = generateSequence();
@@ -64,37 +64,37 @@ console.log(JSON.stringify(three)); // {"value":3,"done":true}
 
 // Generators are iterable
 function* generateSequence() {
-   yield 1;
-   yield 2;
-   return 3;
+    yield 1;
+    yield 2;
+    return 3;
 }
 
 let generator = generateSequence();
 
 for (let value of generator) {
-   console.log(value); // 1, 2
+    console.log(value); // 1, 2
 }
 
 // It doesn’t show 3!
 // for..of iteration ignores the last value, when done: true
 // if we want all results to be shown, we must return them with yield
 function* generateSequence() {
-   yield 1;
-   yield 2;
-   yield 3;
+    yield 1;
+    yield 2;
+    yield 3;
 }
 
 let generator = generateSequence();
 
 for (let value of generator) {
-   console.log(value); // 1, 2, 3
+    console.log(value); // 1, 2, 3
 }
 
 // We can call iterable functionality
 function* generateSequence() {
-   yield 1;
-   yield 2;
-   yield 3;
+    yield 1;
+    yield 2;
+    yield 3;
 }
 
 let sequence = [0, ...generateSequence()];
@@ -107,35 +107,35 @@ console.log(sequence); // [ 0, 1, 2, 3 ]
 
 // iterables version
 let range = {
-   from: 1,
-   to: 5,
+    from: 1,
+    to: 5,
 
-   // for..of calls this method once in the very beginning
-   [Symbol.iterator]() {
-      // it returns the iterator object
-      return {
-         current: this.from,
-         last: this.to,
+    // for..of calls this method once in the very beginning
+    [Symbol.iterator]() {
+        // it returns the iterator object
+        return {
+            current: this.from,
+            last: this.to,
 
-         // next() is called on each iteration by the for..of loop
-         next() {
-            if (this.current <= this.last) {
-               return { done: false, value: this.current++ };
-            } else {
-               return { done: true };
-            }
-         },
-      };
-   },
+            // next() is called on each iteration by the for..of loop
+            next() {
+                if (this.current <= this.last) {
+                    return { done: false, value: this.current++ };
+                } else {
+                    return { done: true };
+                }
+            },
+        };
+    },
 };
 
 console.log([...range]); // [ 1, 2, 3, 4, 5 ]
 
 // generators version
 function* generateSequence(start, end) {
-   for (let i = start; i <= end; i++) {
-      yield i;
-   }
+    for (let i = start; i <= end; i++) {
+        yield i;
+    }
 }
 
 let sequence = [...generateSequence(1, 5)];
@@ -146,15 +146,15 @@ console.log(sequence); // [ 1, 2, 3, 4, 5 ]
 
 // Converting Symbol.iterator to generator
 let range = {
-   from: 1,
-   to: 5,
+    from: 1,
+    to: 5,
 
-   *[Symbol.iterator]() {
-      // a shorthand for [Symbol.iterator]: function*()
-      for (let value = this.from; value <= this.to; value++) {
-         yield value;
-      }
-   },
+    *[Symbol.iterator]() {
+        // a shorthand for [Symbol.iterator]: function*()
+        for (let value = this.from; value <= this.to; value++) {
+            yield value;
+        }
+    },
 };
 
 console.log([...range]); // [ 1, 2, 3, 4, 5 ]
@@ -178,24 +178,24 @@ console.log([...range]); // [ 1, 2, 3, 4, 5 ]
       - followed by uppercased letters A..Z (character codes 97…122)
 */
 function* generateSequence(start, end) {
-   for (let i = start; i <= end; i++) yield i;
+    for (let i = start; i <= end; i++) yield i;
 }
 
 function* generatePasswordCodes() {
-   // 0...9
-   yield* generateSequence(48, 57);
+    // 0...9
+    yield* generateSequence(48, 57);
 
-   // A...Z
-   yield* generateSequence(65, 90);
+    // A...Z
+    yield* generateSequence(65, 90);
 
-   // a...z
-   yield* generateSequence(97, 122);
+    // a...z
+    yield* generateSequence(97, 122);
 }
 
 let string = '';
 
 for (let code of generatePasswordCodes()) {
-   string += String.fromCharCode(code);
+    string += String.fromCharCode(code);
 }
 
 console.log(string); // 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
@@ -206,21 +206,21 @@ console.log(string); // 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 // the same as
 function* generateSequence(start, end) {
-   for (let i = start; i <= end; i++) yield i;
+    for (let i = start; i <= end; i++) yield i;
 }
 
 function* generatePasswordCodes() {
-   for (let i = 48; i <= 57; i++) yield i;
+    for (let i = 48; i <= 57; i++) yield i;
 
-   for (let i = 65; i <= 90; i++) yield i;
+    for (let i = 65; i <= 90; i++) yield i;
 
-   for (let i = 97; i <= 122; i++) yield i;
+    for (let i = 97; i <= 122; i++) yield i;
 }
 
 let string = '';
 
 for (let code of generatePasswordCodes()) {
-   string += String.fromCharCode(code);
+    string += String.fromCharCode(code);
 }
 
 console.log(string); // 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
@@ -232,10 +232,10 @@ console.log(string); // 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 
 // To do so, we should call generator.next(arg), with an argument. That argument becomes the result of yield.
 function* gen() {
-   // Pass a question to the outer code and wait for an answer
-   let result = yield '2 + 2?';
+    // Pass a question to the outer code and wait for an answer
+    let result = yield '2 + 2?';
 
-   console.log(result);
+    console.log(result);
 }
 
 let generator = gen();
@@ -253,13 +253,13 @@ generator.next(4); // 4
 */
 
 function* gen2() {
-   let ask1 = yield '2 + 2?';
+    let ask1 = yield '2 + 2?';
 
-   console.log(ask1); // 4
+    console.log(ask1); // 4
 
-   let ask2 = yield '3 * 3?';
+    let ask2 = yield '3 * 3?';
 
-   console.log(ask2); // 9
+    console.log(ask2); // 9
 }
 
 let generator2 = gen2();
@@ -284,12 +284,12 @@ console.log(generator2.next(9).done); // true
 // Generator can also initiate (throw) an error there. That’s natural, as an error is a kind of result.
 // To pass an error into a yield, we should call generator.throw(err). In that case, the err is thrown in the line with that yield.
 function* gen() {
-   try {
-      let result = yield '2 + 2?';
-      console.log('The execution does not reach here, because the exception is thrown above');
-   } catch (e) {
-      console.log(e); // shows the error
-   }
+    try {
+        let result = yield '2 + 2?';
+        console.log('The execution does not reach here, because the exception is thrown above');
+    } catch (e) {
+        console.log(e); // shows the error
+    }
 }
 
 let generator = gen();
@@ -299,7 +299,7 @@ let question = generator.next().value;
 generator.throw(new Error('The answer is not found in my database')); // Error: The answer is not found in my database
 
 function* generate() {
-   let result = yield '2 + 2?';
+    let result = yield '2 + 2?';
 }
 
 let generator = generate();
@@ -307,9 +307,9 @@ let generator = generate();
 let question = generator.next().value;
 
 try {
-   generator.throw(new Error('The answer is not found in my database'));
+    generator.throw(new Error('The answer is not found in my database'));
 } catch (e) {
-   console.log(e); // Error: The answer is not found in my database
+    console.log(e); // Error: The answer is not found in my database
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -319,27 +319,27 @@ try {
 
 // Regular iterable object
 let range = {
-   from: 1,
-   to: 5,
+    from: 1,
+    to: 5,
 
-   [Symbol.iterator]() {
-      return {
-         current: this.from,
-         last: this.to,
+    [Symbol.iterator]() {
+        return {
+            current: this.from,
+            last: this.to,
 
-         next() {
-            if (this.current <= this.last) {
-               return { done: false, value: this.current++ };
-            } else {
-               return { done: true };
-            }
-         },
-      };
-   },
+            next() {
+                if (this.current <= this.last) {
+                    return { done: false, value: this.current++ };
+                } else {
+                    return { done: true };
+                }
+            },
+        };
+    },
 };
 
 for (let value of range) {
-   console.log(value); // 1  2  3  4  5
+    console.log(value); // 1  2  3  4  5
 }
 
 //--------------------REMEMBER--------------------
@@ -349,35 +349,35 @@ for (let value of range) {
       3. To iterate over such an object, we should use for await (let item of iterable) loop.
 */
 let asyncRange = {
-   from: 1,
-   to: 5,
+    from: 1,
+    to: 5,
 
-   [Symbol.asyncIterator]() {
-      return {
-         current: this.from,
-         last: this.to,
+    [Symbol.asyncIterator]() {
+        return {
+            current: this.from,
+            last: this.to,
 
-         // The next() method doesn’t have to be async, it may be a regular method returning a promise, but async allows to use await inside
-         async next() {
-            // (automatically wrapped into a promise by async)
+            // The next() method doesn’t have to be async, it may be a regular method returning a promise, but async allows to use await inside
+            async next() {
+                // (automatically wrapped into a promise by async)
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-            if (this.current <= this.last) {
-               return { done: false, value: this.current++ };
-            } else {
-               return { done: true };
-            }
-         },
-      };
-   },
+                if (this.current <= this.last) {
+                    return { done: false, value: this.current++ };
+                } else {
+                    return { done: true };
+                }
+            },
+        };
+    },
 };
 
 // It calls range[Symbol.asyncIterator]() once, and then its next() for values.
 (async () => {
-   for await (let value of asyncRange) {
-      console.log(value);
-   }
+    for await (let value of asyncRange) {
+        console.log(value);
+    }
 })();
 
 /* 	                                    Iterators	      Async iterators
@@ -395,35 +395,78 @@ to loop, use	                           for..of	         for await..of
 
 // Regular generator
 function* generateSequence(start, end) {
-   for (let i = start; i <= end; i++) {
-      yield i;
-   }
+    for (let i = start; i <= end; i++) {
+        yield i;
+    }
 }
 
 for (let value of generateSequence(1, 5)) {
-   console.log(value); // 1  2  3  4  5
+    console.log(value); // 1  2  3  4  5
 }
 
 // async generator
 async function* generateSequence(start, end) {
-   for (let i = start; i <= end; i++) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      yield i;
-   }
+    for (let i = start; i <= end; i++) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        yield i;
+    }
 }
 
 (async () => {
-   let generator = generateSequence(1, 5);
+    let generator = generateSequence(1, 5);
 
-   for await (let value of generator) {
-      console.log(value);
-   }
+    for await (let value of generator) {
+        console.log(value);
+    }
 })(); // 1  2  3  4  5
 
 // Technically, another the difference of an async generator is that
 // its generator.next() method is now asynchronous also, it returns promises.
 // Instead of result = generator.next() for a regular, non-async generator, values can be obtained like this:
 result = await generator.next(); // result = {value: ..., done: true/false}
+
+//-----------------------------------------------------------------------------------------
+
+// Iterables via async generators
+
+// When we'd like to make an object iterable, we should add Symbol.iterator to it
+// A common practice for Symbol.iterator is to return a generator, rather than a plain object with next
+
+// Iterable generator
+let range = {
+    from: 1,
+    to: 5,
+
+    *[Symbol.iterator]() {
+        for (let value = this.from; value <= this.to; value++) {
+            yield value;
+        }
+    },
+};
+
+for (let value of range) {
+    console.log(value); // 1, 2, 3, 4, 5
+}
+
+// If we'd like to add async actions into the generator, then we should replace Symbol.iterator with async Symbol.asyncIterator
+let asyncRange = {
+    from: 1,
+    to: 5,
+
+    async *[Symbol.asyncIterator]() {
+        for (let value = this.from; value <= this.to; value++) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            yield value;
+        }
+    },
+};
+
+(async () => {
+    for await (let value of asyncRange) {
+        console.log(value);
+    }
+})(); // 1  2  3  4  5
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -435,12 +478,12 @@ result = await generator.next(); // result = {value: ..., done: true/false}
    and hence the whole flow is easily reproducible. We only need to remember the seed to repeat it.
 */
 function* pseudoRandom(seed) {
-   let value = seed;
+    let value = seed;
 
-   for (let i = 0; i < 5; i++) {
-      value = (value * 16807) % 2147483647;
-      yield value;
-   }
+    for (let i = 0; i < 5; i++) {
+        value = (value * 16807) % 2147483647;
+        yield value;
+    }
 }
 
 let generator = pseudoRandom(1);
@@ -450,12 +493,12 @@ console.log(generator.next().value); // 282475249
 console.log(generator.next().value); // 1622650073
 
 function* pseudoRandom2(seed) {
-   let value = seed;
+    let value = seed;
 
-   while (true) {
-      value = (value * 16807) % 2147483647;
-      yield value;
-   }
+    while (true) {
+        value = (value * 16807) % 2147483647;
+        yield value;
+    }
 }
 
 let generator2 = pseudoRandom2(1);
