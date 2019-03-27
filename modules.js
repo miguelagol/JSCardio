@@ -28,7 +28,9 @@ sayHi('Jack'); // Hello, Jack!
 
 //--------------------REMEMBER--------------------
 // 1. Always "use strict"
-<script type="module">a = 5; // modules-intro:2 Uncaught ReferenceError: a is not defined</script>;
+<script type="module">
+    a = 5; // modules-intro:2 Uncaught ReferenceError: a is not defined
+</script>;
 
 //--------------------REMEMBER--------------------
 // 2. Module-level scope
@@ -109,13 +111,19 @@ sayHi2(); // Ready to serve, Pete!
 //--------------------REMEMBER--------------------
 // 4. The object import.meta contains information about the current module
 // The content depends on the environment. In the browser, it contains the url of the script.
-<script type="module">console.log(import.meta.url); // script url (url of the html page for an inline script)</script>;
+<script type="module">
+    console.log(import.meta.url); // script url (url of the html page for an inline script)
+</script>;
 
 //--------------------REMEMBER--------------------
 // 5. Top-level "this" is undefined
-<script>console.log(this); // window</script>;
+<script>
+    console.log(this); // window
+</script>;
 
-<script type="module">console.log(this); // undefined</script>;
+<script type="module">
+    console.log(this); // undefined
+</script>;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -128,11 +136,15 @@ sayHi2(); // Ready to serve, Pete!
    -  Module scripts wait until the HTML document is fullly ready
    -  Relative order is maintained: scripts that go first in the document, execute first
 */
-<script type="module">console.log(typeof button); // object</script>;
+<script type="module">
+    console.log(typeof button); // object
+</script>;
 // the script can 'see' the button below
 // as modules are deferred, the script runs after the whole page is loaded
 
-<script type="module">console.log(typeof button); // undefined</script>;
+<script type="module">
+    console.log(typeof button); // undefined
+</script>;
 // the script can't see elements below
 // regular scripts run immediately, before the rest of the page is processed
 
@@ -166,11 +178,13 @@ import { sayHi } from 'sayHi'; // Error (must be './sayHi.js' or wherever the mo
 /* Old browsers do not understand type="module". Scripts of the unknown type are just ignored.
    For them, it’s possible to provide a fallback using nomodule attribute
 */
-<script type="module">alert("Runs in modern browsers");</script>;
+<script type="module">
+    alert("Runs in modern browsers");
+</script>;
 
 <script nomodule>
-    alert("Modern browsers know both type=module and nomodule, so skip this") alert("Old browsers ignore script with
-    unknown type=module, but execute this.");
+    alert("Modern browsers know both type=module and nomodule, so skip this")
+    alert("Old browsers ignore script with unknown type=module, but execute this.");
 </script>;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -304,3 +318,51 @@ import {User} from ...	    import User from ...
 
 //--------------------REMEMBER--------------------
 // There may be only one "default" export per file
+
+//--------------------REMEMBER--------------------
+// Named imports must have a name, while export default may be anonymous
+export default class {
+    // no class name
+    constructor() {}
+}
+
+export default function(user) {
+    // no function name
+    console.log(`Hello, ${user}`);
+}
+
+export default ['Jan', 'Feb', 'Mar', 'Apr', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export class { // Error! (non-default export needs a name)
+    constructor() {}
+}
+
+//-----------------------------------------------------------------------------------------
+
+// "Default" alias
+
+function sayHi4(user) {
+    console.log(`Hello, ${user}`);
+}
+
+export {sayHi4 as default}; // same as if we added "export default" before the function
+
+// user.js
+export default class User {
+    constructor() {
+        this.name = name;
+    }
+}
+
+export function sayHi5(user) {
+    console.log(`Hello, ${user}`);
+}
+
+// main.js
+import { default as User, sayHi5 } from './user.js';
+
+// or
+import * as user from './user.js';
+
+let User = user.default;
+new User('Pete');
