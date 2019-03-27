@@ -366,3 +366,69 @@ import * as user from './user.js';
 
 let User = user.default;
 new User('Pete');
+//-----------------------------------------------------------------------------------------
+
+// Re-export
+// Syntax: export ... from ...
+// Allows to import things and immediately export them
+export { sayHi } from './say.js';
+export { default as User } from './user.js';
+
+// Why that's needed?
+// we’re writing a “package”: a folder with a lot of modules
+// We’d like to expose the package functionality via a single entry point, the “main file” auth/index.js
+// to be used like this
+import { login, logout } from 'auth/index.js';
+
+// auth/index.js
+import { login, logout } from './helpers.js';
+export { login, logout };
+
+import User from './user.js';
+export { User };
+
+import Github from './providers/github.js';
+export { Github };
+
+// “Re-exporting” is just a shorter notation for that
+export { login, logout } from './helpers.js';
+
+export {default as User} from './user.js';
+
+export {default as Github} from './providers/github.js';
+
+//--------------------REMEMBER--------------------
+// Re-exporting default is tricky
+/*  export User from './user.js' won’t work. It’s actually a syntax error.
+    To re-export the default export, we must mention it explicitly {default as ...}
+
+    Also, there’s another oddity: export * from './user.js' re-exports only named exports,
+    exluding the default one.
+*/
+
+//-----------------------------------------------------------------------------------------
+
+// Summary
+
+/* There are following types of export:
+
+    Before declaration:
+        - export [default] class/function/variable ...
+    Standalone:
+        - export {x [as y], ...}.
+    Re-export:
+        - export {x [as y], ...} from "mod"
+        - export * from "mod" (doesn’t re-export default).
+        - export {default [as y]} from "mod" (re-export default).
+
+Import:
+    Named exports from module:
+        - import {x [as y], ...} from "mod"
+    Default export:
+        - import x from "mod"
+        - import {default as x} from "mod"
+    Everything:
+        - import * as obj from "mod"
+    Only fetch/evalute the module, don’t import:
+        - import "mod"
+*/
