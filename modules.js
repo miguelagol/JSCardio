@@ -432,3 +432,49 @@ Import:
     Only fetch/evalute the module, don’t import:
         - import "mod"
 */
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+// Dynamic imports
+
+// We can’t dynamicaly generate any parameters of import
+//  The module path must be a primitive string, can’t be a function call
+//      import ... from getModuleName(); // Error
+//  we can’t import conditionally or at run-time
+//      if() { import...; } // Error
+
+// The import() function
+// The import(module) function can be called from anywhere. It returns a promise that resolves into a module object.
+let modulePath = prompt("Module path?");
+
+import(modulePath)
+    .then(object => {/*<module object>*/})
+    .catch(error => {/*<loading error, no such module>*/});
+
+// or
+// say.js
+export function hi() {
+    alert(`Hello`);
+}
+  
+export function bye() {
+    alert(`Bye`);
+}
+  
+export default function() {
+    alert("Module loaded (export default)!");
+}
+
+// index.html
+<script>
+  async function load() {
+    /*  let say = await import('./say.js');
+        say.hi(); // Hello!
+        say.bye(); // Bye!
+        say.default(); // Module loaded (export default)!
+    */
+  }
+</script>;
+<button onclick="load()">Click me</button>;
+
+// dynamic imports work in regular scripts, they don’t require script type="module".
