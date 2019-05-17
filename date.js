@@ -402,3 +402,22 @@ console.log(formatDate2(new Date(new Date() - 1))); // right now
 console.log(formatDate2(new Date(new Date() - 30 * 1000))); // 30 sec. ago
 console.log(formatDate2(new Date(new Date() - 5 * 60 * 1000))); // 5 min. ago
 console.log(formatDate2(new Date(new Date(2018, 10, 20) - 86400 * 1000))); // 20.11.2018 22:50
+
+function formatDate2(date) {
+      let d = date;
+      d = [
+         '0' + d.getDate(),
+         '0' + (d.getMonth() + 1),
+         '' + d.getFullYear(),
+         '0' + d.getHours(),
+         '0' + d.getMinutes(),
+      ].map(component => component.slice(-2)); // take last 2 digits of every component
+   
+      // join the components into date
+      return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
+   }
+   
+   console.log(formatDate2(new Date('2019-05-05 21:00:00'))); // right now
+   console.log(formatDate2(new Date(new Date() - 30 * 1000))); // 30 sec. ago
+   console.log(formatDate2(new Date(new Date() - 5 * 60 * 1000))); // 5 min. ago
+   console.log(formatDate2(new Date(new Date(2018, 10, 20) - 86400 * 1000)));
